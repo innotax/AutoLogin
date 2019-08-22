@@ -165,15 +165,7 @@ class Ui_setting(QDialog):
         self.cert_pw = text
     
     def btn1_click(self):
-        # cta_id =  self.cta_id if self.le1.textChanged[str]==True else nts_dict['secret']['세무사관리번호']
-        # bs_id =  self.bs_id if self.le2.textChanged[str]==True else nts_dict['secret']['부서아이디']
-        # super_id =  self.super_id if self.le3.textChanged[str]==True else nts_dict['secret']['수퍼아이디']
-        # cert_name =  self.cert_name if self.le4.textChanged[str]==True else nts_dict['secret']['공인인증서명칭']
-        # cta_pw =  self.cta_pw if self.le11.textChanged[str]==True else nts_dict['secret']['세무사비번']
-        # bs_pw =  self.bs_pw if self.le21.textChanged[str]==True else nts_dict['secret']['부서비번']
-        # delay_time =  self.delay_time if self.le31.textChanged[str]==True else nts_dict['secret']['딜레이타임']
-        # cert_pw =  self.cert_pw if self.le41.textChanged[str]==True else nts_dict['secret']['공인인증서비번']
-
+        
         cta_id =  self.cta_id if self.le1.textChanged[str]==True else self.le1.text()
         bs_id =  self.bs_id if self.le2.textChanged[str]==True else self.le2.text()
         super_id =  self.super_id if self.le3.textChanged[str]==True else self.le3.text()
@@ -212,9 +204,6 @@ class Ui_setting(QDialog):
     
     def btn3_click(self):
         pass
-
-
-
 
 class Ui_nts_login(QWidget):
     def __init__(self, parent=None):
