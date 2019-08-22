@@ -65,7 +65,7 @@ class Ui_setting(QDialog):
         btn3 = QPushButton("인증서정보저장")
 
         QToolTip.setFont(QFont('SansSerif', 10))
-        lb11.setToolTip(' <b>세무사관리번호</b> 비밀번호...')
+        lb11.setToolTip(' <b>세무사관리번호</b> <br>비밀번호...')
         lb21.setToolTip(' <b>부서아이디</b> 비밀번호...')
         lb41.setToolTip(' <b>공인인증서</b> 비밀번호...')
         self.le11.setToolTip(' <b>세무사관리번호</b> 비밀번호...')
