@@ -4,3 +4,5 @@ I found an answer on another forum. I change the line number 427 in the Python\L
 '''
 # 상위폴더 내 파일 import  https://brownbears.tistory.com/296
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
+github
