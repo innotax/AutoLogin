@@ -1,4 +1,4 @@
-import os, sys, time, json, zipfile
+import os, sys, time, json, zipfile, subprocess
 
 import PyQt5
 # from PyQt5.Qt import QApplication
@@ -19,9 +19,20 @@ nts_dict = hometax.nts_dict
 # 브라우저 높이에 따른 크롬 실행환경 변경 flag
 flag_window_height = True
 
+
 class Ui_setting(QDialog):
     def __init__(self, parent=None):
-        super().__init__()        
+        super().__init__()
+         
+        self.cta_id = nts_dict['secret']['세무사관리번호']
+        self.bs_id = nts_dict['secret']['부서아이디']
+        self.super_id = nts_dict['secret']['수퍼아이디'] 
+        self.cert_name = nts_dict['secret']['공인인증서명칭']
+        self.cta_pw = nts_dict['secret']['세무사비번']
+        self.bs_pw = nts_dict['secret']['부서비번'] 
+        self.delay_time = str(nts_dict['secret']['딜레이타임']) 
+        self.cert_pw = nts_dict['secret']['공인인증서비번'] 
+
         self.setWindowTitle("기본사항 저장(변경)")
 
         # self.setGeometry(300,300,500,10)
@@ -36,6 +47,9 @@ class Ui_setting(QDialog):
 
         self.setGeometry(left, top-250, width, height)
 
+        # 인포텍 모쥴 설치 
+        # driverutil.setup_iftCertAdapter()
+        
         self.initUI()
     
     def initUI(self):
@@ -165,15 +179,33 @@ class Ui_setting(QDialog):
         self.cert_pw = text
     
     def btn1_click(self):
+
+        # if self.le1.textChanged[str]!=True:
+        #     cta_id = self.cta_id
+        # elif self.le1.placeholderText()==nts_dict['secret']['세무사관리번호']:
+        #     cta_id = self.le1.placeholderText()
+        # else:
+        #     nts_dict['secret']['세무사관리번호']
         
-        cta_id =  self.cta_id if self.le1.textChanged[str]==True else self.le1.text()
-        bs_id =  self.bs_id if self.le2.textChanged[str]==True else self.le2.text()
-        super_id =  self.super_id if self.le3.textChanged[str]==True else self.le3.text()
-        cert_name =  self.cert_name if self.le4.textChanged[str]==True else self.le4.text()
-        cta_pw =  self.cta_pw if self.le11.textChanged[str]==True else self.le11.text()
-        bs_pw =  self.bs_pw if self.le21.textChanged[str]==True else self.le21.text()
-        delay_time =  self.delay_time if self.le31.textChanged[str]==True else str(0.8)
-        cert_pw =  self.cert_pw if self.le41.textChanged[str]==True else self.le41.text()
+        # cta_id =  self.cta_id if self.le1.textChanged[str]!=True else self.le1.placeholderText() if self.le1.placeholderText()==nts_dict['secret']['세무사관리번호'] else nts_dict['secret']['세무사관리번호'] 
+        # bs_id =  self.bs_id if self.le2.textChanged[str]!=True else self.le2.placeholderText()
+        # super_id =  self.super_id if self.le3.textChanged[str]!=True else self.le3.placeholderText()
+        # cert_name =  self.cert_name if self.le4.textChanged[str]!=True else self.le4.placeholderText()
+        # cta_pw =  self.cta_pw if self.le11.textChanged[str]!=True else self.le11.placeholderText()
+        # bs_pw =  self.bs_pw if self.le21.textChanged[str]!=True else self.le21.placeholderText()
+        # delay_time =  self.delay_time if self.le31.textChanged[str]!=True else str(self.le31.placeholderText())
+        # cert_pw =  self.cert_pw if self.le41.textChanged[str]!=True else self.le41.placeholderText()
+
+
+        cta_id =  self.cta_id if self.le1.textChanged[str]!=True else self.le1.placeholderText() if self.le1.placeholderText()==nts_dict['secret']['세무사관리번호'] else nts_dict['secret']['세무사관리번호'] 
+        print(self.le1.placeholderText(), self.le1.text())
+        bs_id =  self.bs_id if self.le2.textChanged[str]!=True else self.le2.placeholderText()
+        super_id =  self.super_id if self.le3.textChanged[str]!=True else self.le3.placeholderText()
+        cert_name =  self.cert_name if self.le4.textChanged[str]!=True else self.le4.placeholderText()
+        cta_pw =  self.cta_pw if self.le11.textChanged[str]!=True else self.le11.placeholderText()
+        bs_pw =  self.bs_pw if self.le21.textChanged[str]!=True else self.le21.placeholderText()
+        delay_time =  self.delay_time if self.le31.textChanged[str]!=True else str(self.le31.placeholderText())
+        cert_pw =  self.cert_pw if self.le41.textChanged[str]!=True else self.le41.placeholderText()
         # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
         with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
             nts_dict['secret']['세무사관리번호'] = cta_id
@@ -319,12 +351,12 @@ class Ui_nts_login(QWidget):
         # bs_id =  self.bs_id if self.le1.textChanged[str]==True else self.le1.text()
         # delay_time =  self.delay_time if self.le2.textChanged[str]==True else str(0.8)
 
-        bs_id =  self.bs_id if self.le1.textChanged[str]==True else nts_dict['secret']['부서아이디']
-        delay_time =  self.delay_time if self.le2.textChanged[str]==True else nts_dict['secret']['딜레이타임']
+        bs_id =  self.bs_id if self.le1.textChanged[str]!=True else self.le1.placeholderText()              # nts_dict['secret']['부서아이디']
+        delay_time =  self.delay_time if self.le2.textChanged[str]!=True else self.le2.placeholderText()    # nts_dict['secret']['딜레이타임']
         # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
         with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
-            nts_dict['secret']['부서아이디'] = self.bs_id
-            nts_dict['secret']['딜레이타임'] = str(self.delay_time)
+            nts_dict['secret']['부서아이디'] = bs_id
+            nts_dict['secret']['딜레이타임'] = str(delay_time)
             json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
         
         self.le1.setPlaceholderText(nts_dict['secret']['부서아이디'])
@@ -422,6 +454,32 @@ class Main(QMainWindow):  # (QWidget): #
         fileMenu.addAction(exitAction)
         #<<< 메뉴바
         self.statusBar().showMessage('Ready')
+
+        # 인포텍 모쥴 설치 
+        if (nts_dict['secret']['세무사관리번호'] == "" or
+            nts_dict['secret']['공인인증서비번'] == ""):
+
+            if not os.path.isfile(r'C:\Infotech\Common\iftWinExAdapter.dll'):
+
+                title = "공인인증서 모듈설치"
+                msg = "지금 공인인증서 모듈을 설치하시겠습니까 ??<br>나중에 설치가능 합니다!!"
+                inst = Util.MsgBoxTF(title, msg)
+                TF = inst.initUI()
+                print(TF)
+                if TF==True:
+                    driverutil.setup_iftCertAdapter()
+                else:
+                    pass
+
+        if (nts_dict['secret']['세무사관리번호'] == "" or
+            nts_dict['secret']['부서아이디'] == "" or
+            nts_dict['secret']['공인인증서명칭'] == "" or
+            nts_dict['secret']['세무사비번'] == "" or
+            nts_dict['secret']['부서비번'] == "" or            
+            nts_dict['secret']['딜레이타임'] == "" or
+            nts_dict['secret']['공인인증서비번'] == ""):
+
+            self.id_setting()
 
         self.show()
     

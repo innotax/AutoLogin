@@ -1,4 +1,4 @@
-import os, sys, time, json, zipfile
+import os, sys, time, json, zipfile, subprocess
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -9,6 +9,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))                                   # 1단계 상위폴더
 from utils import Util
+from data import setdata
 
 def get_element(driver, id):
     try:
@@ -24,6 +25,13 @@ def get_element(driver, id):
         err_class_name = e.__class__.__name__
         msg = f"selenium id < {id} >에서 예외 < {err_class_name} >가 발생 하였습니다."
         errmsg = Util.Errpop().critical_pop(msg)
+
+def setup_iftCertAdapter():
+    if not os.path.isfile(r'C:\Infotech\Common\iftWinExAdapter.dll'):
+        iftAdapter = "iftNxService_setup_20190304.exe"
+        iftNxService_setup_path = os.path.join(setdata.driver_path, iftAdapter)
+        PIPE = subprocess.PIPE
+        subprocess.Popen(iftNxService_setup_path, stdin=PIPE, stdout=PIPE)
 
 class Get_driver():
     def __init__(self, driver_path, driver_name):
@@ -67,7 +75,6 @@ class IE_driver():
                 
         elif True :
             pass    
-
 
 if __name__ == '__main__':
 

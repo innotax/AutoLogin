@@ -1,49 +1,44 @@
-from PyQt5.QtWidgets import (QMainWindow, QTextEdit, 
-    QAction, QFileDialog, QApplication)
-from PyQt5.QtGui import QIcon
 import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox, QDesktopWidget
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import pyqtSlot
 
-class Example(QMainWindow):
-    
-    def __init__(self):
+class MsgBoxTF(QMessageBox):
+
+    def __init__(self, title="QMessageBox", msg=None):
         super().__init__()
+        self.title = title
+        self.msg = msg
+
+        rect = QDesktopWidget().availableGeometry()   # 작업표시줄 제외한 화면크기 반환
+        max_x = rect.width()
+        max_y = rect.height()
+
+        self.width = 320
+        self.height = 200
+        # self.left = max_x - self.width 
+        # self.top = max_y - self.height
+        # 윈도우 중간
+        self.left = max_x / 2
+        self.top = max_y /2 
         
         self.initUI()
         
-        
-    def initUI(self):      
+    def initUI(self):
+        # self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
 
-        self.textEdit = QTextEdit()
-        self.setCentralWidget(self.textEdit)
-        self.statusBar()
+        buttonReply = QMessageBox.question(self, self.title, self.msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if buttonReply == QMessageBox.Yes:
+            return True
+            # print('Yes clicked.')
+        else:
+            return False
+            # print('No clicked.')
 
-        openFile = QAction(QIcon('open.png'), 'Open', self)
-        openFile.setShortcut('Ctrl+O')
-        openFile.setStatusTip('Open new File')
-        openFile.triggered.connect(self.showDialog)
-
-        menubar = self.menuBar()
-        fileMenu = menubar.addMenu('&File')
-        fileMenu.addAction(openFile)       
-        
-        self.setGeometry(300, 300, 350, 300)
-        self.setWindowTitle('File dialog')
-        self.show()
-        
-        
-    def showDialog(self):
-
-        fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')
-
-        # if fname[0]:
-        #     f = open(fname[0], 'r')
-
-        #     with f:
-        #         data = f.read()
-        #         self.textEdit.setText(data)        
+        # self.show()
         
 if __name__ == '__main__':
-    
     app = QApplication(sys.argv)
-    ex = Example()
-    sys.exit(app.exec_())
+    ex = MsgBoxTF()
+    sys.exit(app.exec_())  
