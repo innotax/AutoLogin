@@ -8,3 +8,4 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 github
 git config --global user.email "you@example.com"
 git config --global user.name "Your Name"
+git config --global user.email "taxkmj@example.com"
