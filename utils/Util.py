@@ -165,11 +165,12 @@ class MsgBoxTF(QMessageBox):
         # self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
 
-        buttonReply = QMessageBox.question(self, self.title, self.msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        buttonReply = QMessageBox.question(self, self.title, self.msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if buttonReply == QMessageBox.Yes:
             return True
             # print('Yes clicked.')
         else:
             return False
             # print('No clicked.')
+
 

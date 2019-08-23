@@ -197,8 +197,7 @@ class Ui_setting(QDialog):
         # cert_pw =  self.cert_pw if self.le41.textChanged[str]!=True else self.le41.placeholderText()
 
 
-        cta_id =  self.cta_id if self.le1.textChanged[str]!=True else self.le1.placeholderText() if self.le1.placeholderText()==nts_dict['secret']['세무사관리번호'] else nts_dict['secret']['세무사관리번호'] 
-        print(self.le1.placeholderText(), self.le1.text())
+        cta_id =  self.cta_id if self.le1.textChanged[str]!=True else self.le1.placeholderText()
         bs_id =  self.bs_id if self.le2.textChanged[str]!=True else self.le2.placeholderText()
         super_id =  self.super_id if self.le3.textChanged[str]!=True else self.le3.placeholderText()
         cert_name =  self.cert_name if self.le4.textChanged[str]!=True else self.le4.placeholderText()
@@ -227,6 +226,13 @@ class Ui_setting(QDialog):
         self.le21.setPlaceholderText(nts_dict['secret']['부서비번'])
         self.le31.setPlaceholderText(str(nts_dict['secret']['딜레이타임']))
         self.le41.setPlaceholderText(nts_dict['secret']['공인인증서비번'])
+
+        # 다른 창과 상호작용  https://wikidocs.net/5249
+        inst = Ui_nts_login()
+        # inst.exec_()
+        inst.reload()
+        self.close()
+        # inst.close()
         
         # Ui_nts_login().le1Changed(self.bs_id)
         # Ui_nts_login().le1Changed(str(self.delay_time))
@@ -360,8 +366,13 @@ class Ui_nts_login(QWidget):
             json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
         
         self.le1.setPlaceholderText(nts_dict['secret']['부서아이디'])
-        self.le2.setPlaceholderText(nts_dict['secret']['딜레이타임'])
-        
+        self.le2.setPlaceholderText(str(nts_dict['secret']['딜레이타임']))
+    
+    def reload(self):
+        print(self.le1.text())
+
+        self.le1.setPlaceholderText(nts_dict['secret']['부서아이디'])
+        self.le2.setPlaceholderText(str(nts_dict['secret']['딜레이타임']))
 
 class Ui_nts_task(QWidget):
     def __init__(self, parent=None):
@@ -456,7 +467,7 @@ class Main(QMainWindow):  # (QWidget): #
         self.statusBar().showMessage('Ready')
 
         # 인포텍 모쥴 설치 
-        if (nts_dict['secret']['세무사관리번호'] == "" or
+        if (nts_dict['secret']['공인인증서명칭'] == "" or
             nts_dict['secret']['공인인증서비번'] == ""):
 
             if not os.path.isfile(r'C:\Infotech\Common\iftWinExAdapter.dll'):
@@ -465,12 +476,15 @@ class Main(QMainWindow):  # (QWidget): #
                 msg = "지금 공인인증서 모듈을 설치하시겠습니까 ??<br>나중에 설치가능 합니다!!"
                 inst = Util.MsgBoxTF(title, msg)
                 TF = inst.initUI()
-                print(TF)
+
                 if TF==True:
-                    driverutil.setup_iftCertAdapter()
+                    driverutil.setup_iftCertAdapter()  
                 else:
                     pass
 
+        self.show()
+
+        # 공란인 변수 있으면 초기세팅
         if (nts_dict['secret']['세무사관리번호'] == "" or
             nts_dict['secret']['부서아이디'] == "" or
             nts_dict['secret']['공인인증서명칭'] == "" or
@@ -478,14 +492,28 @@ class Main(QMainWindow):  # (QWidget): #
             nts_dict['secret']['부서비번'] == "" or            
             nts_dict['secret']['딜레이타임'] == "" or
             nts_dict['secret']['공인인증서비번'] == ""):
+        
+            require_list = []
+            for key, val in nts_dict['secret'].items():
+                if val=="":
+                    require_list.append(key)
 
-            self.id_setting()
+            require_str = " / ".join(require_list)
 
-        self.show()
+            title = "필수사항 초기입력"
+            msg = f"필수사항({require_str})입력이 필요합니다!!<br>지금 필수사항을 입력하시겠습니까??"
+            inst = Util.MsgBoxTF(title, msg)
+            TF = inst.initUI()
+
+            if TF==True:
+                self.id_setting()
+            else:
+                pass
     
     def id_setting(self):
         
         widget = Ui_setting()
+        widget.btn1_click()
         widget.exec_()
 
 if __name__ == "__main__":
