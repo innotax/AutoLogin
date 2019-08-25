@@ -4,7 +4,6 @@
 - https://promobile.tistory.com/378
 - https://shxrecord.tistory.com/116
 - https://potensj.tistory.com/55
-- desktop
 
 ### VSCODE 
 #### 단축키 
@@ -14,4 +13,8 @@
 
 ##### 단축키 사용자지정 : Ctrl + shift + p >>> keybindings.json 에서 추가
 - joinLines (줄연결) : ctrl + j  >>> { "key": "ctrl+j",   "command": "editor.action.joinLines" }
+
+### PYQT5
+#### 참조 사이트
+- QThread-pyqtSignal/Slot  https://blog.naver.com/townpharm/220959370280
 
