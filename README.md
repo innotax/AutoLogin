@@ -17,4 +17,5 @@
 ### PYQT5
 #### 참조 사이트
 - QThread-pyqtSignal/Slot  https://blog.naver.com/townpharm/220959370280
+- QThread thread 간 통신   https://freeprog.tistory.com/351
 
