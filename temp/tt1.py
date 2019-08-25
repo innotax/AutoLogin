@@ -1,111 +1,111 @@
-import os, sys, time, json, zipfile
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 
-import PyQt5
-# from PyQt5.Qt import QApplication
-from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QWidget, QDialog, QPushButton, QRadioButton, QLabel, QLineEdit, QAction, QToolTip,qApp 
-from PyQt5.QtWidgets import QMessageBox, QTabWidget, QGridLayout, QGroupBox, QHBoxLayout, QVBoxLayout, QFormLayout
-from PyQt5.QtGui import QIcon, QRegExpValidator, QDoubleValidator, QIntValidator, QFont
-from PyQt5.QtCore import pyqtSlot, Qt, QRegExp
 
-# class Ui_setting(QWidget):
-class Ui_setting(QDialog):
+class MyMainGUI(QDialog):
     def __init__(self, parent=None):
-        super().__init__()        
-        self.setWindowTitle("기본사항 저장(변경)")
+        super().__init__(parent)
 
-        # self.setGeometry(300,300,500,10)
-        # 우하단 위젯
-        rect = QDesktopWidget().availableGeometry()   # 작업표시줄 제외한 화면크기 반환
-        max_x = rect.width()
-        max_y = rect.height()
+        self.qtxt1 = QTextEdit(self)
+        self.btn1 = QPushButton("Start", self)
+        self.btn2 = QPushButton("Stop", self)
+        self.btn3 = QPushButton("add 100", self)
+        self.btn4 = QPushButton("send instance", self)
 
-        width, height = 500 , 155
-        left = max_x - width 
-        top = max_y - height 
+        vbox = QVBoxLayout()
+        vbox.addWidget(self.qtxt1)
+        vbox.addWidget(self.btn1)
+        vbox.addWidget(self.btn2)
+        vbox.addWidget(self.btn3)
+        vbox.addWidget(self.btn4)
+        self.setLayout(vbox)
 
-        self.setGeometry(left, top-250, width, height)
+        self.setGeometry(100, 50, 300, 300)
 
-        self.initUI()
-    
-    def initUI(self):
+class Test:
+    def __init__(self):
+        name = ""
 
-        lb1 = QLabel("세무사관리번호")        
-        lb2 = QLabel("부서아이디")
-        lb3 = QLabel("홈택스대표아이디")        
-        lb4 = QLabel("공인인증서명칭")                  
-            
-        le1 = QLineEdit()
-        le2 = QLineEdit()
-        le3 = QLineEdit()
-        le4 = QLineEdit()
 
-        lb11 = QLabel("비밀번호")   # 세무사관리번호     
-        lb21 = QLabel("비밀번호")   # 부서아이디 
-        lb31 = QLabel("딜레이타임") 
-        lb41 = QLabel("비밀번호")   # 공인인증서명칭 
-               
+class MyMain(MyMainGUI):
+    add_sec_signal = pyqtSignal()
+    send_instance_singal = pyqtSignal("PyQt_PyObject")
 
-        le11 = QLineEdit()
-        le21 = QLineEdit()
-        le31 = QLineEdit()
-        le41 = QLineEdit()
+    def __init__(self, parent=None):
+        super().__init__(parent)
 
-        btn1 = QPushButton("변경사항 저장")
-        btn2 = QPushButton("인증서선택")
-        btn3 = QPushButton("인증서정보저장")
+        self.btn1.clicked.connect(self.time_start)
+        self.btn2.clicked.connect(self.time_stop)
+        self.btn3.clicked.connect(self.add_sec)
+        self.btn4.clicked.connect(self.send_instance)
 
-        QToolTip.setFont(QFont('SansSerif', 10))
-        lb11.setToolTip(' <b>세무사관리번호</b> 비밀번호...')
-        lb21.setToolTip(' <b>부서아이디</b> 비밀번호...')
-        lb41.setToolTip(' <b>공인인증서</b> 비밀번호...')
-        le11.setToolTip(' <b>세무사관리번호</b> 비밀번호...')
-        le21.setToolTip(' <b>부서아이디</b> 비밀번호...')
-        le41.setToolTip(' <b>공인인증서</b> 비밀번호...')
-        btn3.setToolTip(' <b>공인인증서</b>명칭 비밀번호 저장...')
+        self.th = Worker(parent=self)
+        self.th.sec_changed.connect(self.time_update)  # custom signal from worker thread to main thread
 
-        le31.setStyleSheet(
-                """QLineEdit { background-color: #f0f0f0; color: blue; font: bold }""")
-        le4.setStyleSheet(
-                """QLineEdit { background-color: #f0f0f0; color: blue }""")
-        le41.setStyleSheet(
-                """QLineEdit { background-color: #f0f0f0; color: blue }""")
-        btn1.setStyleSheet(
-                """QPushButton { color: blue; font: bold }""")
-      
-        grid = QGridLayout()
-        
-        grid.addWidget(lb1 , 0, 0)
-        grid.addWidget(le1 , 0, 1)
-        grid.addWidget(lb11, 0, 2)
-        grid.addWidget(le11, 0, 3)
-
-        grid.addWidget(lb2 , 1, 0)
-        grid.addWidget(le2 , 1, 1)
-        grid.addWidget(lb21, 1, 2)
-        grid.addWidget(le21, 1, 3)
-
-        grid.addWidget(lb3 , 2, 0)
-        grid.addWidget(le3 , 2, 1)
-        grid.addWidget(lb31, 2, 2)
-        grid.addWidget(le31, 2, 3)
-
-        grid.addWidget(lb4 , 3, 0)
-        grid.addWidget(le4 , 3, 1)
-        grid.addWidget(lb41, 3, 2)
-        grid.addWidget(le41, 3, 3)
-        
-        grid.addWidget(btn1 , 4, 1)
-        grid.addWidget(btn2, 4, 2)
-        grid.addWidget(btn3, 4, 3)
-     
-        self.setLayout(grid)
-
+        self.add_sec_signal.connect(self.th.add_sec)   # custom signal from main thread to worker thread
+        self.send_instance_singal.connect(self.th.recive_instance_singal)
         self.show()
 
-    
+    @pyqtSlot()
+    def time_start(self):
+        self.th.start()
+        self.th.working = True
+
+    @pyqtSlot()
+    def time_stop(self):
+        self.th.working = False
+
+    @pyqtSlot()
+    def add_sec(self):
+        print(".... add singal emit....")
+        self.add_sec_signal.emit()
+
+    @pyqtSlot(str)
+    def time_update(self, msg):
+        self.qtxt1.append(msg)
+
+    @pyqtSlot()
+    def send_instance(self):
+        t1 = Test()
+        t1.name = "SuperPower!!!"
+        self.send_instance_singal.emit(t1)
+
+
+class Worker(QThread):
+    sec_changed = pyqtSignal(str)
+
+    def __init__(self, sec=0, parent=None):
+        super().__init__()
+        self.main = parent
+        self.working = True
+        self.sec = sec
+
+        # self.main.add_sec_signal.connect(self.add_sec)   # 이것도 작동함. # custom signal from main thread to worker thread
+
+    def __del__(self):
+        print(".... end thread.....")
+        self.wait()
+
+    def run(self):
+        while self.working:
+            self.sec_changed.emit('time (secs)：{}'.format(self.sec))
+            self.sleep(1)
+            self.sec += 1
+
+    @pyqtSlot()
+    def add_sec(self):
+        print("add_sec....")
+        self.sec += 100
+
+    @pyqtSlot("PyQt_PyObject")
+    def recive_instance_singal(self, inst):
+        print(inst.name)
+
+
 
 if __name__ == "__main__":
+    import sys
 
     app = QApplication(sys.argv)
-    ex = Ui_setting()
-    sys.exit(app.exec_())
+    form = MyMain()
+    app.exec_()

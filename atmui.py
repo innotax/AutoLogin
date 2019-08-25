@@ -5,7 +5,7 @@ import PyQt5
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QWidget, QDialog, QPushButton, QRadioButton, QLabel, QLineEdit, QAction, QToolTip, qApp 
 from PyQt5.QtWidgets import QMessageBox, QTabWidget, QGridLayout, QGroupBox, QHBoxLayout, QVBoxLayout, QFormLayout
 from PyQt5.QtGui import QIcon, QRegExpValidator, QDoubleValidator, QIntValidator, QFont
-from PyQt5.QtCore import pyqtSlot, Qt, QRegExp
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QRegExp
 
 # 상위폴더 내 파일 import  https://brownbears.tistory.com/296
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
@@ -227,12 +227,17 @@ class Ui_setting(QDialog):
         self.le31.setPlaceholderText(str(nts_dict['secret']['딜레이타임']))
         self.le41.setPlaceholderText(nts_dict['secret']['공인인증서비번'])
 
-        # 다른 창과 상호작용  https://wikidocs.net/5249
-        inst = Ui_nts_login()
-        # inst.exec_()
-        inst.reload()
-        self.close()
-        # inst.close()
+        # # 다른 창과 상호작용  https://freeprog.tistory.com/351 
+        # https://wikidocs.net/5249     
+        # inst = Ui_nts_login()
+        # # inst.exec_()
+        # inst.reload()
+        # self.close()
+        # # inst.close()
+
+        # https://www.riverbankcomputing.com/static/Docs/PyQt5/signals_slots.html#PyQt5.QtCore.pyqtSignal
+        # valueChanged = pyqtSignal(['QString'],['QString'])
+
         
         # Ui_nts_login().le1Changed(self.bs_id)
         # Ui_nts_login().le1Changed(str(self.delay_time))

@@ -9,7 +9,7 @@ from PyQt5.QtCore import Qt
 
 __author__ = "Deokyu Lim <hong18s@gmail.com>"
 
-
+   
 class Form(QWidget):
     def __init__(self):
         QWidget.__init__(self, flags=Qt.Widget)
@@ -30,8 +30,6 @@ class Form(QWidget):
             lambda v: self.lb.setText(str(v))
         )
 
-        form_lbx.addWidget(self.lb)
-        form_lbx.addWidget(self.lb)
         form_lbx.addWidget(self.lb)
         form_lbx.addWidget(self.sd)
 
