@@ -329,9 +329,16 @@ class Ui_SettingMenu(QDialog):
         self.le31.setPlaceholderText(str(nts_dict['secret']['딜레이타임']))
         self.le41.setPlaceholderText(nts_dict['secret']['공인인증서비번'])
 
-        self.show()
+        # self.show()
+class ChangedVal:
+    def __init__(self):
+        cta_id = ""
+        bs_id = ""
+        delay_time = ""
 
 class SettingMenu(Ui_SettingMenu):
+    send_instance_signal = pyqtSignal("PyQt_PyObject")
+
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -358,7 +365,10 @@ class SettingMenu(Ui_SettingMenu):
         self.btn2.clicked.connect(self.select_cert)
         self.btn3.clicked.connect(self.save_cert)
 
-        # self.show()
+        self.ntslog = Ui_nts_login(parent=self)
+        self.send_instance_signal.connect(self.ntslog.receive_instance_signal)
+
+        self.show()
 
     @pyqtSlot(str)
     def cta_id_changed(self, text):
@@ -415,7 +425,15 @@ class SettingMenu(Ui_SettingMenu):
             nts_dict['secret']['공인인증서비번'] = cert_pw
             json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
         
-        self.setup_value()   
+        changed_values = ChangedVal()  
+        changed_values.cta_id = nts_dict['secret']['세무사관리번호']
+        changed_values.bs_id = nts_dict['secret']['부서아이디']
+        changed_values.delay_time = nts_dict['secret']['딜레이타임']
+        self.close()
+        self.send_instance_signal.emit(changed_values)
+
+
+
     
     def select_cert(self):
         pass
@@ -548,11 +566,16 @@ class Ui_nts_login(QWidget):
         self.le1.setPlaceholderText(nts_dict['secret']['부서아이디'])
         self.le2.setPlaceholderText(str(nts_dict['secret']['딜레이타임']))
     
-    def reload(self):
+    @pyqtSlot("PyQt_PyObject")
+    def receive_instance_signal(self, inst):
+        print(inst.bs_id)
+        print(inst.delay_time)
         print(self.le1.text())
+        # self.le1.setText(inst.bs_id)
+        # self.le2.setText(str(inst.delay_time))
 
-        self.le1.setPlaceholderText(nts_dict['secret']['부서아이디'])
-        self.le2.setPlaceholderText(str(nts_dict['secret']['딜레이타임']))
+        self.le1.setPlaceholderText(inst.bs_id)
+        self.le2.setPlaceholderText(str(inst.delay_time))
 
 class Ui_nts_task(QWidget):
     def __init__(self, parent=None):
@@ -632,9 +655,7 @@ class Main(QMainWindow):  # (QWidget): #
         setAction = QAction(QIcon('exit.png'), '기본사항 저장(변경)', self)
         # setAction.setShortcut('Ctrl+Q')
         setAction.setStatusTip('기본사항 저장(변경)...')
-        # setAction.triggered.connect(self.id_setting)
-        self.setting = SettingMenu()
-        setAction.triggered.connect(self.setting)
+        setAction.triggered.connect(self.id_setting)
 
         exitAction = QAction(QIcon('exit.png'), '종료', self)
         exitAction.setShortcut('Ctrl+Q')
@@ -690,16 +711,15 @@ class Main(QMainWindow):  # (QWidget): #
             TF = inst.initUI()
 
             if TF==True:
-                # self.id_setting()
-                self.setting
+                self.id_setting()
             else:
                 pass
-    
-    # def id_setting(self):
+    @pyqtSlot()
+    def id_setting(self):
         
-    #     widget = SettingMenu()
-    #     widget.btn1_click()
-    #     widget.exec_()
+        widget = SettingMenu()
+        # widget.save_changed_values()
+        widget.exec_()
 
 if __name__ == "__main__":
     print("*"*100)
