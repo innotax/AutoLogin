@@ -29,6 +29,7 @@ class MyMainGUI(QDialog):
 class Test:
     def __init__(self):
         name = ""
+        job = ""
 
 class MyMain(MyMainGUI):
     add_sec_signal = pyqtSignal()
@@ -71,6 +72,7 @@ class MyMain(MyMainGUI):
     def send_instance(self):
         t1 = Test()
         t1.name = "SuperPower!!!"
+        t1.job = "cta"
         self.send_instance_signal.emit(t1)
         
 
@@ -101,6 +103,7 @@ class Worker(QThread):
     @pyqtSlot("PyQt_PyObject")
     def recive_instance_signal(self, inst):
         print(inst.name)
+        print(inst.job)
 
 if __name__ == "__main__":
     import sys
@@ -108,7 +111,3 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     form = MyMain()
     app.exec_()
-        
-        
-        
-        

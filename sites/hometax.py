@@ -1,4 +1,4 @@
-import os, sys, time, json, zipfile
+import os, sys, time, json, zipfile, tkinter
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -20,15 +20,20 @@ from utils.driverutil import get_element
 nts_dict = setdata.set_path_make_json() 
 
 class Nts_Login:
-    def __init__(self, flag_window_height=True):
+    def __init__(self):
         driver_path = nts_dict['secret']['크롬경로']    
         driver_name = nts_dict['secret']['크롬드라이버'] 
         chrome_driver = driverutil.Get_driver(driver_path, driver_name)
         self.driver = chrome_driver.set_driver()
         self.driver.get('https://www.hometax.go.kr/')
-        # 모니터 작은 경우
-        if flag_window_height == False:
+
+        # 모니터 작은 경우 https://code-examples.net/ko/q/2fbfea
+        tk = tkinter.Tk()
+        screen_height = tk.winfo_screenheight()
+        print(screen_height, type(screen_height))
+        if screen_height >= 900:
             self.driver.maximize_window()
+
         self.delay_time = float(nts_dict['secret']['딜레이타임'])
         time.sleep(self.delay_time)
 
