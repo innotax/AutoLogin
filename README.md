@@ -19,4 +19,6 @@
 #### 참조 사이트
 - QThread-pyqtSignal/Slot  https://blog.naver.com/townpharm/220959370280
 - QThread thread 간 통신   https://freeprog.tistory.com/351
+- QLineEdit all example   https://www.tutorialspoint.com/pyqt/pyqt_qlineedit_widget
+- Signals and Slots Reference  https://www.riverbankcomputing.com/static/Docs/PyQt5/signals_slots.html
 

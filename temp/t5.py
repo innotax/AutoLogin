@@ -1,51 +1,50 @@
+from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QPushButton, 
+    QSizePolicy, QLabel, QFontDialog, QApplication)
 import sys
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 
+class Example(QWidget):
+    
+    def __init__(self):
+        super().__init__()
+        
+        self.initUI()
+        
+        
+    def initUI(self):      
 
-class testUI(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+        vbox = QVBoxLayout()
 
-        le1 = QLineEdit()
-        le2 = QLineEdit()
-        le3 = QLineEdit()
+        btn = QPushButton('Dialog', self)
+        btn.setSizePolicy(QSizePolicy.Fixed,
+            QSizePolicy.Fixed)
+        
+        btn.move(20, 20)
 
-        flo1 = QFormLayout()
-        flo1.addRow('에디터 1', le1)
-        flo1.addRow('에디터 2', le2)
-        flo1.addRow('에디터 3', le3)
+        vbox.addWidget(btn)
 
-        le11 = QLineEdit()
-        le21 = QLineEdit()
-        le31 = QLineEdit()
-        btn = QPushButton("save")
-        btn1 = QPushButton("cancel")
-        h = QHBoxLayout()
-        h.addWidget(btn)
-        h.addWidget(btn1)
+        btn.clicked.connect(self.showDialog)
+        
+        self.lbl = QLabel('Knowledge only matters', self)
+        self.lbl.move(130, 20)
 
-        flo2 = QFormLayout()
-        flo2.addRow('에디터 1', le11)
-        flo2.addRow('에디터 2', le21)
-        flo2.addRow('에디터 3', le31)
-        flo2.addRow(h)
-
-        hbox = QHBoxLayout()
-        # hbox = QVBoxLayout()
-        hbox.addLayout(flo1)
-        hbox.addLayout(flo2)
-        # hbox.addWidget(flo1)
-        # hbox.addWidget(flo2)
-
-        self.setLayout(hbox)
-
+        vbox.addWidget(self.lbl)
+        self.setLayout(vbox)          
+        
+        self.setGeometry(300, 300, 250, 180)
+        self.setWindowTitle('Font dialog')
         self.show()
+        
+        
+    def showDialog(self):
 
-
+        font, ok = QFontDialog.getFont()
+        print(font,ok)
+        if ok:
+            self.lbl.setFont(font)
+        
+        
 if __name__ == '__main__':
+    
     app = QApplication(sys.argv)
-    te = testUI()
-    app.exec_()
-
-
+    ex = Example()
+    sys.exit(app.exec_())

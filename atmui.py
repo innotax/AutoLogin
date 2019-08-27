@@ -443,7 +443,7 @@ class SettingMenu(Ui_SettingMenu):
 
 class Ui_nts_login(QWidget):
     def __init__(self, parent=None):
-        super().__init__()
+        super().__init__(parent)
         # super(QWidget,self).__init__(parent)
         self.bs_id = nts_dict['secret']['부서아이디']   
         # self.delay_time = float(nts_dict['secret']['딜레이타임'])
@@ -453,14 +453,7 @@ class Ui_nts_login(QWidget):
 
     def initUI(self):
 
-        grid = QGridLayout()
-        grid.addWidget(self.firstGroup(), 0, 0)
-        grid.addWidget(self.secondGroup(), 0, 1)
-
-        self.setLayout(grid)
-       
-    def firstGroup(self):
-        groupbox = QGroupBox('CTA ID 로그인')
+        groupbox1 = QGroupBox('CTA ID 로그인')
         self.radio1 = QRadioButton('W15960')
         self.radio2 = QRadioButton('P27687')
         self.radio1.setChecked(True)
@@ -477,13 +470,13 @@ class Ui_nts_login(QWidget):
         vbox.addWidget(self.radio1)
         vbox.addWidget(self.radio2)
         vbox.addWidget(btn1)
-        groupbox.setLayout(vbox)
+        groupbox1.setLayout(vbox)
 
-        return groupbox
+        # return groupbox
 
-    def secondGroup(self):
+    # def secondGroup(self):
         # QLineEdit 총괄 : https://www.tutorialspoint.com/pyqt/pyqt_qlineedit_widget
-        groupbox = QGroupBox('부서 ID 및 딜레이 변경 ')
+        groupbox2 = QGroupBox('부서 ID 및 딜레이 변경 ')
 
         self.le1 = QLineEdit()
         self.le2 = QLineEdit()
@@ -508,9 +501,74 @@ class Ui_nts_login(QWidget):
         flo.addRow("부서아이디", self.le1)
         flo.addRow("딜레이타임", self.le2)
         flo.addRow(btn2)
-        groupbox.setLayout(flo)
+        groupbox2.setLayout(flo)
+# ////////////
+        hbox = QHBoxLayout(self)
+        hbox.addWidget(groupbox1)
+        hbox.addWidget(groupbox2)
+        self.setLayout(hbox)
 
-        return groupbox
+
+        # self.grid = QGridLayout(self)
+        # # self.grid.addWidget(self.firstGroup(), 0, 0)
+        # # self.grid.addWidget(self.secondGroup(), 0, 1)
+        # self.grid.addWidget(groupbox1, 0, 0)
+        # self.grid.addWidget(groupbox2, 0, 1)
+
+        # self.setLayout(self.grid)
+       
+    # # def firstGroup(self):
+    #     groupbox1 = QGroupBox('CTA ID 로그인')
+    #     self.radio1 = QRadioButton('W15960')
+    #     self.radio2 = QRadioButton('P27687')
+    #     self.radio1.setChecked(True)
+
+    #     # QRadioButton 예제 https://wikidocs.net/5237
+    #     self.radio1.clicked.connect(self.radioButtonClicked)
+    #     self.radio2.clicked.connect(self.radioButtonClicked)
+
+    #     btn1 = QPushButton('홈택스 로그인')
+    #     btn1.setToolTip('HomeTax Login')
+    #     btn1.clicked.connect(self.btn1_click)
+
+    #     vbox = QVBoxLayout()
+    #     vbox.addWidget(self.radio1)
+    #     vbox.addWidget(self.radio2)
+    #     vbox.addWidget(btn1)
+    #     groupbox1.setLayout(vbox)
+
+    #     # return groupbox
+
+    # # def secondGroup(self):
+    #     # QLineEdit 총괄 : https://www.tutorialspoint.com/pyqt/pyqt_qlineedit_widget
+    #     groupbox2 = QGroupBox('부서 ID 및 딜레이 변경 ')
+
+    #     self.le1 = QLineEdit()
+    #     self.le2 = QLineEdit()
+    #     self.le1.setPlaceholderText(nts_dict['secret']['부서아이디'])
+    #     self.le2.setPlaceholderText(str(nts_dict['secret']['딜레이타임']))
+      
+    #     # 입력제한 http://bitly.kr/wmonM2
+    #     reg_ex = QRegExp("[0-9]+.?[0-9]{,2}")
+    #     input_validator = QRegExpValidator(reg_ex, self.le2)
+    #     # double_validator = QDoubleValidator(-999.0, 999.0, 2)   ### http://bitly.kr/wmonM2
+    #     self.le2.setValidator(input_validator)      # double_validator)  
+    #     self.le2.setMaxLength(3)  
+
+    #     self.le1.textChanged[str].connect(self.le1Changed)
+    #     self.le2.textChanged[str].connect(self.le2Changed)
+
+    #     btn2 = QPushButton('변경사항저장', self)
+    #     btn2.setToolTip('저장하기')
+    #     btn2.clicked.connect(self.btn2_click)
+
+    #     flo = QFormLayout()
+    #     flo.addRow("부서아이디", self.le1)
+    #     flo.addRow("딜레이타임", self.le2)
+    #     flo.addRow(btn2)
+    #     groupbox2.setLayout(flo)
+
+    #     # return groupbox
 
     def radioButtonClicked(self):
       
@@ -554,7 +612,9 @@ class Ui_nts_login(QWidget):
     def btn2_click(self):
         # bs_id =  self.bs_id if self.le1.textChanged[str]==True else self.le1.text()
         # delay_time =  self.delay_time if self.le2.textChanged[str]==True else str(0.8)
-
+        print(type(self.le1.textChanged[str]))
+        
+        # print(self.le1.textChanged[str].text())
         bs_id =  self.bs_id if self.le1.textChanged[str]!=True else self.le1.placeholderText()              # nts_dict['secret']['부서아이디']
         delay_time =  self.delay_time if self.le2.textChanged[str]!=True else self.le2.placeholderText()    # nts_dict['secret']['딜레이타임']
         # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
@@ -573,7 +633,7 @@ class Ui_nts_login(QWidget):
         print(self.le1.text())
         # self.le1.setText(inst.bs_id)
         # self.le2.setText(str(inst.delay_time))
-
+        print(self.le1.placeholderText())
         self.le1.setPlaceholderText(inst.bs_id)
         self.le2.setPlaceholderText(str(inst.delay_time))
 
