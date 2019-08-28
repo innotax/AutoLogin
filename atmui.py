@@ -17,7 +17,7 @@ from utils import Util, driverutil
 
 # 변수의 스코프  https://umbum.tistory.com/823
 nts_dict = hometax.nts_dict
-
+print("atmui id : ", id(nts_dict))
 # class Ui_setting(QDialog):
 #     def __init__(self, parent=None):
 #         super().__init__()
@@ -372,8 +372,10 @@ class SettingMenu(Ui_SettingMenu):
 
     @pyqtSlot(str)
     def cta_id_changed(self, text):
+        print(text)
         self.cta_id = text
-
+        nts_dict['secret']['세무사관리번호'] = text
+        print(nts_dict['secret']['세무사관리번호'])
     @pyqtSlot(str)
     def bs_id_changed(self, text):
         self.bs_id = text
@@ -430,6 +432,7 @@ class SettingMenu(Ui_SettingMenu):
         changed_values.bs_id = nts_dict['secret']['부서아이디']
         changed_values.delay_time = nts_dict['secret']['딜레이타임']
         self.close()
+        
         self.send_instance_signal.emit(changed_values)
 
 
@@ -628,6 +631,7 @@ class Ui_nts_login(QWidget):
     
     @pyqtSlot("PyQt_PyObject")
     def receive_instance_signal(self, inst):
+        print("receive="*10)
         print(inst.bs_id)
         print(inst.delay_time)
         print(self.le1.text())

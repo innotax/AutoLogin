@@ -18,6 +18,7 @@ from utils.driverutil import get_element
 
 
 nts_dict = setdata.set_path_make_json_return_dic() 
+print("hometax id : ", id(nts_dict))
 
 class Nts_Login:
     def __init__(self):

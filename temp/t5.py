@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QPushButton, 
     QSizePolicy, QLabel, QFontDialog, QApplication)
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QRegExp
 import sys
 
 class Example(QWidget):
@@ -22,7 +23,8 @@ class Example(QWidget):
 
         vbox.addWidget(btn)
 
-        btn.clicked.connect(self.showDialog)
+        connect_funcs = [self.showDialog, self.f1, self.f2, self.f3]
+        btn.clicked.connect(lambda x: x for x in connect_funcs)
         
         self.lbl = QLabel('Knowledge only matters', self)
         self.lbl.move(130, 20)
@@ -41,6 +43,19 @@ class Example(QWidget):
         print(font,ok)
         if ok:
             self.lbl.setFont(font)
+    
+    @pyqtSlot()
+    def f1(): 
+        print('*'*10)
+    
+    @pyqtSlot()
+    def f2(): 
+        print('#'*20)
+    
+    @pyqtSlot()
+    def f3(): 
+        print('!'*30)
+
         
         
 if __name__ == '__main__':
