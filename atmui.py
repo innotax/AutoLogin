@@ -368,7 +368,8 @@ class SettingMenu(Ui_SettingMenu):
         self.ntslog = Ui_nts_login(parent=self)
         self.send_instance_signal.connect(self.ntslog.receive_instance_signal)
 
-        self.show()
+        # self.show()
+        # self.exec_()
 
     @pyqtSlot(str)
     def cta_id_changed(self, text):
@@ -434,8 +435,6 @@ class SettingMenu(Ui_SettingMenu):
         self.close()
         
         self.send_instance_signal.emit(changed_values)
-
-
 
     
     def select_cert(self):
