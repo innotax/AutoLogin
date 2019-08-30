@@ -18,232 +18,6 @@ from utils import Util, driverutil
 # 변수의 스코프  https://umbum.tistory.com/823
 nts_dict = hometax.nts_dict
 print("atmui id : ", id(nts_dict))
-# class Ui_setting(QDialog):
-#     def __init__(self, parent=None):
-#         super().__init__()
-         
-#         self.cta_id = nts_dict['secret']['세무사관리번호']
-#         self.bs_id = nts_dict['secret']['부서아이디']
-#         self.super_id = nts_dict['secret']['수퍼아이디'] 
-#         self.cert_name = nts_dict['secret']['공인인증서명칭']
-#         self.cta_pw = nts_dict['secret']['세무사비번']
-#         self.bs_pw = nts_dict['secret']['부서비번'] 
-#         self.delay_time = str(nts_dict['secret']['딜레이타임']) 
-#         self.cert_pw = nts_dict['secret']['공인인증서비번'] 
-
-#         self.setWindowTitle("기본사항 저장(변경)")
-
-#         # 우하단 위젯   # self.setGeometry(300,300,500,10)
-#         rect = QDesktopWidget().availableGeometry()   # 작업표시줄 제외한 화면크기 반환
-#         max_x = rect.width()
-#         max_y = rect.height()
-
-#         width, height = 500 , 155
-#         left = max_x - width 
-#         top = max_y - height 
-
-#         self.setGeometry(left, top-250, width, height)
-
-#         # 인포텍 모쥴 설치 
-#         # driverutil.setup_iftCertAdapter()
-        
-#         self.initUI()
-    
-#     def initUI(self):
-
-#         lb1 = QLabel("세무사관리번호")        
-#         lb2 = QLabel("부서아이디")
-#         lb3 = QLabel("홈택스대표아이디")        
-#         lb4 = QLabel("공인인증서명칭") 
-
-#         lb11 = QLabel("비밀번호")   # 세무사관리번호     
-#         lb21 = QLabel("비밀번호")   # 부서아이디 
-#         lb31 = QLabel("딜레이타임") 
-#         lb41 = QLabel("비밀번호")   # 공인인증서명칭                  
-            
-#         self.le1 = QLineEdit()
-#         self.le2 = QLineEdit()
-#         self.le3 = QLineEdit()
-#         self.le4 = QLineEdit()
-
-#         self.le11 = QLineEdit()
-#         self.le21 = QLineEdit()
-#         self.le31 = QLineEdit()
-#         self.le41 = QLineEdit()
-
-#         btn1 = QPushButton("변경사항 저장")
-#         btn2 = QPushButton("인증서선택")
-#         btn3 = QPushButton("인증서정보저장")
-
-#         QToolTip.setFont(QFont('SansSerif', 10))
-#         lb11.setToolTip(' <b>세무사관리번호</b> <br>비밀번호...')
-#         lb21.setToolTip(' <b>부서아이디</b> 비밀번호...')
-#         lb41.setToolTip(' <b>공인인증서</b> 비밀번호...')
-#         self.le11.setToolTip(' <b>세무사관리번호</b> 비밀번호...')
-#         self.le21.setToolTip(' <b>부서아이디</b> 비밀번호...')
-#         self.le41.setToolTip(' <b>공인인증서</b> 비밀번호...')
-#         btn3.setToolTip(' <b>공인인증서</b>명칭 비밀번호 저장...')
-
-#         self.le31.setStyleSheet(
-#                 """QLineEdit { background-color: #f0f0f0; color: blue; font: bold }""")
-#         self.le4.setStyleSheet(
-#                 """QLineEdit { background-color: #f0f0f0; color: blue }""")
-#         self.le41.setStyleSheet(
-#                 """QLineEdit { background-color: #f0f0f0; color: blue }""")
-#         btn1.setStyleSheet(
-#                 """QPushButton { color: blue; font: bold }""")
-
-#         self.le1.setPlaceholderText(nts_dict['secret']['세무사관리번호'])
-#         self.le2.setPlaceholderText(nts_dict['secret']['부서아이디'])
-#         self.le3.setPlaceholderText(nts_dict['secret']['수퍼아이디'])
-#         self.le4.setPlaceholderText(nts_dict['secret']['공인인증서명칭'])
-
-#         self.le11.setPlaceholderText(nts_dict['secret']['세무사비번'])
-#         self.le21.setPlaceholderText(nts_dict['secret']['부서비번'])
-#         self.le31.setPlaceholderText(str(nts_dict['secret']['딜레이타임']))
-#         self.le41.setPlaceholderText(nts_dict['secret']['공인인증서비번'])
-#         # 입력제한 http://bitly.kr/wmonM2
-#         reg_ex = QRegExp("[0-9]+.?[0-9]{,2}")
-#         input_validator = QRegExpValidator(reg_ex, self.le31)
-#         # double_validator = QDoubleValidator(-999.0, 999.0, 2)   ### http://bitly.kr/wmonM2
-#         self.le31.setValidator(input_validator)      # double_validator)  
-#         self.le31.setMaxLength(3)  
-
-#         self.le1.textChanged[str].connect(self.le1Changed)
-#         self.le2.textChanged[str].connect(self.le2Changed)
-#         self.le3.textChanged[str].connect(self.le3Changed)
-#         self.le4.textChanged[str].connect(self.le4Changed)
-#         self.le11.textChanged[str].connect(self.le11Changed)
-#         self.le21.textChanged[str].connect(self.le21Changed)
-#         self.le31.textChanged[str].connect(self.le31Changed)
-#         self.le41.textChanged[str].connect(self.le41Changed)
-
-#         btn1.clicked.connect(self.btn1_click)
-#         btn2.clicked.connect(self.btn2_click)
-#         btn3.clicked.connect(self.btn3_click)
-      
-#         grid = QGridLayout()
-        
-#         grid.addWidget(lb1 , 0, 0)
-#         grid.addWidget(self.le1 , 0, 1)
-#         grid.addWidget(lb11, 0, 2)
-#         grid.addWidget(self.le11, 0, 3)
-
-#         grid.addWidget(lb2 , 1, 0)
-#         grid.addWidget(self.le2 , 1, 1)
-#         grid.addWidget(lb21, 1, 2)
-#         grid.addWidget(self.le21, 1, 3)
-
-#         grid.addWidget(lb3 , 2, 0)
-#         grid.addWidget(self.le3 , 2, 1)
-#         grid.addWidget(lb31, 2, 2)
-#         grid.addWidget(self.le31, 2, 3)
-
-#         grid.addWidget(lb4 , 3, 0)
-#         grid.addWidget(self.le4 , 3, 1)
-#         grid.addWidget(lb41, 3, 2)
-#         grid.addWidget(self.le41, 3, 3)
-        
-#         grid.addWidget(btn1 , 4, 1)
-#         grid.addWidget(btn2, 4, 2)
-#         grid.addWidget(btn3, 4, 3)
-     
-#         self.setLayout(grid)
-#         # self.show()
-    
-#     def le1Changed(self, text):
-#         self.cta_id = text
-    
-#     def le2Changed(self, text):
-#         self.bs_id = text
-    
-#     def le3Changed(self, text):
-#         self.super_id = text
-    
-#     def le4Changed(self, text):
-#         self.cert_name = text
-    
-#     def le11Changed(self, text):
-#         self.cta_pw = text
-    
-#     def le21Changed(self, text):
-#         self.bs_pw = text
-    
-#     def le31Changed(self, text):
-#         self.delay_time = text
-    
-#     def le41Changed(self, text):
-#         self.cert_pw = text
-    
-#     def btn1_click(self):
-
-#         # if self.le1.textChanged[str]!=True:
-#         #     cta_id = self.cta_id
-#         # elif self.le1.placeholderText()==nts_dict['secret']['세무사관리번호']:
-#         #     cta_id = self.le1.placeholderText()
-#         # else:
-#         #     nts_dict['secret']['세무사관리번호']
-        
-#         # cta_id =  self.cta_id if self.le1.textChanged[str]!=True else self.le1.placeholderText() if self.le1.placeholderText()==nts_dict['secret']['세무사관리번호'] else nts_dict['secret']['세무사관리번호'] 
-#         # bs_id =  self.bs_id if self.le2.textChanged[str]!=True else self.le2.placeholderText()
-#         # super_id =  self.super_id if self.le3.textChanged[str]!=True else self.le3.placeholderText()
-#         # cert_name =  self.cert_name if self.le4.textChanged[str]!=True else self.le4.placeholderText()
-#         # cta_pw =  self.cta_pw if self.le11.textChanged[str]!=True else self.le11.placeholderText()
-#         # bs_pw =  self.bs_pw if self.le21.textChanged[str]!=True else self.le21.placeholderText()
-#         # delay_time =  self.delay_time if self.le31.textChanged[str]!=True else str(self.le31.placeholderText())
-#         # cert_pw =  self.cert_pw if self.le41.textChanged[str]!=True else self.le41.placeholderText()
-
-
-#         cta_id =  self.cta_id if self.le1.textChanged[str]!=True else self.le1.placeholderText()
-#         bs_id =  self.bs_id if self.le2.textChanged[str]!=True else self.le2.placeholderText()
-#         super_id =  self.super_id if self.le3.textChanged[str]!=True else self.le3.placeholderText()
-#         cert_name =  self.cert_name if self.le4.textChanged[str]!=True else self.le4.placeholderText()
-#         cta_pw =  self.cta_pw if self.le11.textChanged[str]!=True else self.le11.placeholderText()
-#         bs_pw =  self.bs_pw if self.le21.textChanged[str]!=True else self.le21.placeholderText()
-#         delay_time =  self.delay_time if self.le31.textChanged[str]!=True else str(self.le31.placeholderText())
-#         cert_pw =  self.cert_pw if self.le41.textChanged[str]!=True else self.le41.placeholderText()
-#         # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-#         with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
-#             nts_dict['secret']['세무사관리번호'] = cta_id
-#             nts_dict['secret']['부서아이디'] = bs_id
-#             nts_dict['secret']['수퍼아이디'] = super_id
-#             nts_dict['secret']['공인인증서명칭'] = cert_name
-#             nts_dict['secret']['세무사비번'] = cta_pw
-#             nts_dict['secret']['부서비번'] = bs_pw            
-#             nts_dict['secret']['딜레이타임'] = str(delay_time)
-#             nts_dict['secret']['공인인증서비번'] = cert_pw
-#             json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
-        
-#         self.le1.setPlaceholderText(nts_dict['secret']['세무사관리번호'])
-#         self.le2.setPlaceholderText(nts_dict['secret']['부서아이디'])
-#         self.le3.setPlaceholderText(nts_dict['secret']['수퍼아이디'])
-#         self.le4.setPlaceholderText(nts_dict['secret']['공인인증서명칭'])
-
-#         self.le11.setPlaceholderText(nts_dict['secret']['세무사비번'])
-#         self.le21.setPlaceholderText(nts_dict['secret']['부서비번'])
-#         self.le31.setPlaceholderText(str(nts_dict['secret']['딜레이타임']))
-#         self.le41.setPlaceholderText(nts_dict['secret']['공인인증서비번'])
-
-#         # # 다른 창과 상호작용  https://freeprog.tistory.com/351 
-#         # https://wikidocs.net/5249     
-#         # inst = Ui_nts_login()
-#         # # inst.exec_()
-#         # inst.reload()
-#         # self.close()
-#         # # inst.close()
-
-#         # https://www.riverbankcomputing.com/static/Docs/PyQt5/signals_slots.html#PyQt5.QtCore.pyqtSignal
-#         # valueChanged = pyqtSignal(['QString'],['QString'])
-
-        
-#         # Ui_nts_login().le1Changed(self.bs_id)
-#         # Ui_nts_login().le1Changed(str(self.delay_time))
-    
-#     def btn2_click(self):
-#         pass
-    
-#     def btn3_click(self):
-#         pass
 
 class Ui_SettingMenu(QDialog):
     def __init__(self, parent=None):
@@ -330,15 +104,13 @@ class Ui_SettingMenu(QDialog):
         self.le41.setPlaceholderText(nts_dict['secret']['공인인증서비번'])
 
         # self.show()
-class ChangedVal:
-    def __init__(self):
-        cta_id = ""
-        bs_id = ""
-        delay_time = ""
 
 class SettingMenu(Ui_SettingMenu):
-    send_instance_signal = pyqtSignal("PyQt_PyObject")
-
+    # 1. Signal 객체를 담을 inst 생성
+    cta_id_changed_signal = pyqtSignal(str)
+    bs_id_changed_signal = pyqtSignal(str)
+    delay_time_changed_signal = pyqtSignal(str)
+    
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -352,70 +124,79 @@ class SettingMenu(Ui_SettingMenu):
         self.cert_pw = nts_dict['secret']['공인인증서비번'] 
 
         # connecting signal to slot 
-        self.le1.textChanged[str].connect(self.cta_id_changed)
-        self.le2.textChanged[str].connect(self.bs_id_changed)
-        self.le3.textChanged[str].connect(self.super_id_changed)
-        self.le4.textChanged[str].connect(self.cert_name_changed)
-        self.le11.textChanged[str].connect(self.cta_pw_changed)
-        self.le21.textChanged[str].connect(self.bs_pw_changed)
-        self.le31.textChanged[str].connect(self.delay_time_changed)
-        self.le41.textChanged[str].connect(self.cert_pw_changed)
+        self.le1.editingFinished.connect(self.cta_id_changed)
+        self.le2.editingFinished.connect(self.bs_id_changed)
+        self.le3.editingFinished.connect(self.super_id_changed)
+        self.le4.editingFinished.connect(self.cert_name_changed)
+        self.le11.editingFinished.connect(self.cta_pw_changed)
+        self.le21.editingFinished.connect(self.bs_pw_changed)
+        self.le31.editingFinished.connect(self.delay_time_changed)
+        self.le41.editingFinished.connect(self.cert_pw_changed)
 
         self.btn1.clicked.connect(self.save_changed_values)
         self.btn2.clicked.connect(self.select_cert)
         self.btn3.clicked.connect(self.save_cert)
-
-        self.ntslog = Ui_nts_login(parent=self)
-        self.send_instance_signal.connect(self.ntslog.receive_instance_signal)
 
         # self.show()
         # self.exec_()
 
     @pyqtSlot(str)
     def cta_id_changed(self, text):
-        print(text)
         self.cta_id = text
         nts_dict['secret']['세무사관리번호'] = text
-        print(nts_dict['secret']['세무사관리번호'])
+        # 2. 시그널 객체 방출
+        self.cta_id_changed_signal.emit(text)
+        
     @pyqtSlot(str)
     def bs_id_changed(self, text):
         self.bs_id = text
+        nts_dict['secret']['부서아이디'] = text
+        # 2. 시그널 객체 방출
+        self.bs_id_changed_signal.emit(text)
 
     @pyqtSlot(str)
     def super_id_changed(self, text):
         self.super_id = text
+        nts_dict['secret']['수퍼아이디'] = text
 
     @pyqtSlot(str)
     def cert_name_changed(self, text):
         self.cert_name = text
+        nts_dict['secret']['공인인증서명칭'] = text
 
     @pyqtSlot(str)
     def cta_pw_changed(self, text):
         self.cta_pw = text
+        nts_dict['secret']['세무사비번'] = text
 
     @pyqtSlot(str)
     def bs_pw_changed(self, text):
         self.bs_pw = text
+        nts_dict['secret']['부서비번'] = text
 
     @pyqtSlot(str)
     def delay_time_changed(self, text):
         self.delay_time = text
+        nts_dict['secret']['딜레이타임'] = text
+        # 2. 시그널 객체 방출
+        self.delay_time_changed_signal.emit(text)
 
     @pyqtSlot(str)
     def cert_pw_changed(self, text):
         self.cert_pw = text
+        nts_dict['secret']['공인인증서비번'] = text
 
     @pyqtSlot()
     def save_changed_values(self):
 
-        cta_id =  self.cta_id if self.le1.textChanged[str]!=True else self.le1.placeholderText()
-        bs_id =  self.bs_id if self.le2.textChanged[str]!=True else self.le2.placeholderText()
-        super_id =  self.super_id if self.le3.textChanged[str]!=True else self.le3.placeholderText()
-        cert_name =  self.cert_name if self.le4.textChanged[str]!=True else self.le4.placeholderText()
-        cta_pw =  self.cta_pw if self.le11.textChanged[str]!=True else self.le11.placeholderText()
-        bs_pw =  self.bs_pw if self.le21.textChanged[str]!=True else self.le21.placeholderText()
-        delay_time =  self.delay_time if self.le31.textChanged[str]!=True else str(self.le31.placeholderText())
-        cert_pw =  self.cert_pw if self.le41.textChanged[str]!=True else self.le41.placeholderText()
+        cta_id =  self.cta_id if self.le1.editingFinished!=True else self.le1.placeholderText()
+        bs_id =  self.bs_id if self.le2.editingFinished!=True else self.le2.placeholderText()
+        super_id =  self.super_id if self.le3.editingFinished!=True else self.le3.placeholderText()
+        cert_name =  self.cert_name if self.le4.editingFinished!=True else self.le4.placeholderText()
+        cta_pw =  self.cta_pw if self.le11.editingFinished!=True else self.le11.placeholderText()
+        bs_pw =  self.bs_pw if self.le21.editingFinished!=True else self.le21.placeholderText()
+        delay_time =  self.delay_time if self.le31.editingFinished!=True else str(self.le31.placeholderText())
+        cert_pw =  self.cert_pw if self.le41.editingFinished!=True else self.le41.placeholderText()
         # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
         with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
             nts_dict['secret']['세무사관리번호'] = cta_id
@@ -427,15 +208,9 @@ class SettingMenu(Ui_SettingMenu):
             nts_dict['secret']['딜레이타임'] = str(delay_time)
             nts_dict['secret']['공인인증서비번'] = cert_pw
             json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
-        
-        changed_values = ChangedVal()  
-        changed_values.cta_id = nts_dict['secret']['세무사관리번호']
-        changed_values.bs_id = nts_dict['secret']['부서아이디']
-        changed_values.delay_time = nts_dict['secret']['딜레이타임']
+       
         self.close()
         
-        self.send_instance_signal.emit(changed_values)
-
     
     def select_cert(self):
         pass
@@ -492,8 +267,8 @@ class Ui_nts_login(QWidget):
         self.le2.setValidator(input_validator)      # double_validator)  
         self.le2.setMaxLength(3)  
 
-        self.le1.textChanged[str].connect(self.le1Changed)
-        self.le2.textChanged[str].connect(self.le2Changed)
+        self.le1.editingFinished.connect(self.le1Changed)
+        self.le2.editingFinished.connect(self.le2Changed)
 
         btn2 = QPushButton('변경사항저장', self)
         btn2.setToolTip('저장하기')
@@ -557,8 +332,8 @@ class Ui_nts_login(QWidget):
     #     self.le2.setValidator(input_validator)      # double_validator)  
     #     self.le2.setMaxLength(3)  
 
-    #     self.le1.textChanged[str].connect(self.le1Changed)
-    #     self.le2.textChanged[str].connect(self.le2Changed)
+    #     self.le1.editingFinished.connect(self.le1Changed)
+    #     self.le2.editingFinished.connect(self.le2Changed)
 
     #     btn2 = QPushButton('변경사항저장', self)
     #     btn2.setToolTip('저장하기')
@@ -612,13 +387,13 @@ class Ui_nts_login(QWidget):
         self.delay_time = text
        
     def btn2_click(self):
-        # bs_id =  self.bs_id if self.le1.textChanged[str]==True else self.le1.text()
-        # delay_time =  self.delay_time if self.le2.textChanged[str]==True else str(0.8)
-        print(type(self.le1.textChanged[str]))
+        # bs_id =  self.bs_id if self.le1.editingFinished==True else self.le1.text()
+        # delay_time =  self.delay_time if self.le2.editingFinished==True else str(0.8)
+        print(type(self.le1.editingFinished))
         
-        # print(self.le1.textChanged[str].text())
-        bs_id =  self.bs_id if self.le1.textChanged[str]!=True else self.le1.placeholderText()              # nts_dict['secret']['부서아이디']
-        delay_time =  self.delay_time if self.le2.textChanged[str]!=True else self.le2.placeholderText()    # nts_dict['secret']['딜레이타임']
+        # print(self.le1.editingFinished.text())
+        bs_id =  self.bs_id if self.le1.editingFinished!=True else self.le1.placeholderText()              # nts_dict['secret']['부서아이디']
+        delay_time =  self.delay_time if self.le2.editingFinished!=True else self.le2.placeholderText()    # nts_dict['secret']['딜레이타임']
         # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
         with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
             nts_dict['secret']['부서아이디'] = bs_id
@@ -677,6 +452,25 @@ class Ui_web_task(QWidget):
 #             https://freeprog.tistory.com/326"""
 #     def __init__(self, parent=None):    
 #         super().__init__(parent)
+
+class Ui_Main(QMainWindow):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        tab1 = self.tab1_layout()
+        tab2 = self.tab2_layout()
+        tab3 = self.tab3_layout()
+
+    def tab1_layout(self):
+        
+        
+    def tab2_layout(self):
+    def tab3_layout(self):
+
+
+
+
+
 
 class Main(QMainWindow):  # (QWidget): #
     def __init__(self):

@@ -44,13 +44,31 @@ class UI_D1(QDialog):
     def leChanged(self):
         # print(self)
         txt = self.le1.text()
+        js_dic['delay'] = txt
         print(txt)
         self.changed_le1.emit(txt)
         print("*"*10)
+    
+    def make_connection(self, main_object):
+        print("="*3)
+        main_object.changed_le1.connect(self.on_receive_signal)
+
+    @pyqtSlot(str)
+    def on_receive_signal(self, val):
+        self.le1.setText(val)
+        self.le1.setPlaceholderText(val)
+
+        cls_name = self.__class__.__name__            # class 이름
+        func_name = sys._getframe().f_code.co_name    # func  이름
+        print(f'Receive at >>> class : < {cls_name} > function : < {func_name} > !!!')
+        # print('from {} receive'.format(self.__class__.__name__))
+        print(val)
+
 
     # self.show()
 
 class UI_Main(QMainWindow):
+    # changed_le1 = pyqtSignal(str)   # 1. Signal 객체를 담을 inst 생성
     def __init__(self):
         super(UI_Main, self).__init__()
 
@@ -66,13 +84,13 @@ class UI_Main(QMainWindow):
         self.le1 = QLineEdit()
         le2 = QLineEdit()
         le3 = QLineEdit()
-        btn = QPushButton("Save")
+        self.btn = QPushButton("Save")
 
         flo = QFormLayout()
         flo.addRow("Delay", self.le1)
         flo.addRow("BsId", le2)
         flo.addRow("CtaId", le3)
-        flo.addRow(btn) 
+        flo.addRow(self.btn) 
 
         gbox = QGroupBox("gbox1")
         gbox2 = QGroupBox("gbox2")
@@ -105,18 +123,13 @@ class UI_Main(QMainWindow):
         fileMenu = menubar.addMenu('&메뉴')
         fileMenu.addAction(setAction)
 
+        print('1'*10,self.le1.text())
+        print('2'*10,self.le1.placeholderText())
+        self.le1.setText(self.le1.placeholderText())
+        print('3'*10,self.le1.text())
+
+
         self.show()
-    
-    # def make_connection(self, d1_object):
-    #     print("="*3)
-    #     d1_object.changed_le1.connect(self.receive_d1)
-    
-    # @pyqtSlot(str)
-    # def receive_d1(self,val):
-        
-    #     print('receive')
-    #     self.le1.setPlaceholderText(val)
-    #     print(val)
 
     
     def setting(self):
@@ -126,6 +139,7 @@ class UI_Main(QMainWindow):
         d1.exec_()
 
 class Main(UI_Main):
+    changed_le1 = pyqtSignal(str)   # 1. Signal 객체를 담을 inst 생성
     def __init__(self, parent=None):
         super(Main, self).__init__( )
 
@@ -137,16 +151,43 @@ class Main(UI_Main):
         fileMenu = menubar.addMenu('&메뉴')
         fileMenu.addAction(setAction)
 
+        self.le1.editingFinished.connect(self.leChanged)
+        self.btn.clicked.connect(self.btn_clicked)
+
         self.show()
     
     def make_connection(self, d1_object):
         print("="*3)
         d1_object.changed_le1.connect(self.receive_d1)
+
+    def leChanged(self):
+        # print(self)
+        txt = self.le1.text()
+        js_dic['delay'] = txt
+        
+        self.changed_le1.emit(txt)
+        print("2"*10)
+        print(self.le1.editingFinished.__class__.__name__)
+        if isinstance(self.le1.editingFinished ,pyqtSignal):
+            print('isinstance')  
+        if self.le1.editingFinished.__class__.__name__ == 'pyqtBoundSignal':
+            print('clsname')
+        if self.le1.editingFinished != True:
+            print(self.le1.editingFinished)
+        print("2"*50)
+    def btn_clicked(self):
+        txt = self.le1.text()
+        self.changed_le1.emit(txt) 
     
     @pyqtSlot(str)
     def receive_d1(self,val):
+        self.le1.setText(val)
         self.le1.setPlaceholderText(val)
-        print('receive')
+
+        cls_name = self.__class__.__name__            # class 이름
+        func_name = sys._getframe().f_code.co_name    # func  이름
+        print(f'Receive at >>> class : < {cls_name} > function : < {func_name} > !!!')
+        # print('from {} receive'.format(self.__class__.__name__))
         print(val)
 
 
@@ -154,6 +195,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     dia = UI_D1()
     main = Main()
-    main.make_connection(dia)
+    # main.make_connection(dia)
+    dia.make_connection(main)
     sys.exit(app.exec_())
 
