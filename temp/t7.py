@@ -10,33 +10,43 @@ class Example(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        tab1 = self.tab1_layout()
-        tab2 = self.tab2_layout()
-        tab3 = self.tab3_layout() 
+        tab1 = QWidget()
+        tab2 = QWidget()
+        tab3 = QWidget() 
+
+        tab1.setLayout(self.tab1_layout())
+        tab2.setLayout(self.tab2_layout())
+        tab3.setLayout(self.tab3_layout())
+        # tab2 = self.tab2_layout()
+        # tab3 = self.tab3_layout() 
 
         tabs = QTabWidget()
-        tabs.addTab(tab1, '1st')
-        tabs.addTab(tab2, '2nd')
-        tabs.addTab(tab3, '3rd')
-        tabs.addTab(tab4, '4th')
+        # tabs.setLayout(tab1)
+        tabs.addTab(tab1, "HomeTax")
+        tabs.addTab(tab2, "2nd Tab")
+        tabs.addTab(tab3, "3rd Tab")
 
-        
-        
+        self.setCentralWidget(tabs)
 
-
+        self.show()
         
 
     def tab1_layout(self):
         self.le_ctaid = QLineEdit()
         self.le_bsid = QLineEdit()
         self.le_delay = QLineEdit()
-        self.btn_login = QPushButton("로그인")
+        self.btn_login = QPushButton("login")
+        self.btn_save = QPushButton("save")
+
+        hbox_s = QHBoxLayout()
+        hbox_s.addWidget(self.btn_login)
+        hbox_s.addWidget(self.btn_save)
 
         flo1 = QFormLayout()
         flo1.addRow("세무사관리번호", self.le_ctaid)
         flo1.addRow("부서아이디", self.le_bsid)
         flo1.addRow("딜레이타임", self.le_delay)
-        flo1.addRow(self.btn_login)
+        flo1.addRow(hbox_s)
 
         gbox1 = QGroupBox("HomeTax Login")
         gbox2 = QGroupBox("GroupBox2")
@@ -51,9 +61,16 @@ class Example(QMainWindow):
         
         
     def tab2_layout(self):
-        pass
+        btn = QPushButton('comming soon...')
+        hbox = QHBoxLayout()
+        hbox.addWidget(btn)
+        return hbox
+
     def tab3_layout(self):
-        pass
+        btn = QPushButton('comming soon...')
+        hbox = QHBoxLayout()
+        hbox.addWidget(btn)
+        return hbox
 
 
 if __name__ == '__main__':

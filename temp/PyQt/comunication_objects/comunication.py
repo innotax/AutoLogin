@@ -193,9 +193,9 @@ class Main(UI_Main):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    dia = UI_D1()
+    # dia = UI_D1()
     main = Main()
     # main.make_connection(dia)
-    dia.make_connection(main)
+    # dia.make_connection(main)
     sys.exit(app.exec_())
 
