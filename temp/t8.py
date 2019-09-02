@@ -1,18 +1,21 @@
+import json
+import win32com.client
 
-'''
-import sys
-from PyQt5.QtWidgets import *
+def cert_nm_pw():
+    iftCertdll = win32com.client.Dispatch("iftCoreEngine.iftGate")
+    req_js_str = ""
+    js_str = iftCertdll.getUserCert(req_js_str)
+    dic = json.loads(js_str)
 
-app = QApplication(sys.argv)
-inputbox = QInputDialog()
-inputbox.show()
-# txt, ok = inputbox.getText('QLineEdit.Normal')
-# if ok:
-#     print(txt)
-sys.exit(app.exec_())
-'''
-from abaqus import getInput
-from math import sqrt
-number = float(getInput('Enter a number:'))
-print (sqrt(number))
+    cert_nm = dic["cert_nm"]
+    cert_pw = dic["cert_pw"]
 
+    return (cert_nm, cert_pw)
+
+# a = cert_nm_pw()
+cert_nm, cert_pw = cert_nm_pw()
+
+print(cert_nm, cert_pw)
+if not cert_nm:
+    print('empt')
+    print(cert_nm)

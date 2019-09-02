@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from data import setdata, data
 from sites import hometax, naver
-from utils import Util, driverutil
+from utils import Util, driverutil, iftutil
 
 # 변수의 스코프  https://umbum.tistory.com/823
 nts_dict = hometax.nts_dict
@@ -37,32 +37,28 @@ class Ui_SettingMenu(QDialog):
         self.le_cta_id = QLineEdit()
         self.le_bs_id = QLineEdit()
         self.le_super_id = QLineEdit()
-        self.le_cert_name = QLineEdit()
+        self.le_cert_nm = QLineEdit()
         self.btn1 = QPushButton("변경사항 저장")
 
         flo1 = QFormLayout()
         flo1.addRow('세무사관리번호', self.le_cta_id)
         flo1.addRow('부서아이디', self.le_bs_id)
         flo1.addRow('홈택스대표아이디', self.le_super_id)
-        flo1.addRow('공인인증서명칭', self.le_cert_name)
+        flo1.addRow('공인인증서명칭', self.le_cert_nm)
         flo1.addRow(self.btn1)
 
         self.le_cta_pw = QLineEdit()
         self.le_bs_pw = QLineEdit()
         self.le_delay_time = QLineEdit()
         self.le_cert_pw = QLineEdit()
-        self.btn2 = QPushButton("인증서선택")
-        self.btn3 = QPushButton("인증서정보저장")
+        self.btn2 = QPushButton("인증서선택(저장) ")
         
         flo2 = QFormLayout()
         flo2.addRow('세무사비번', self.le_cta_pw)
         flo2.addRow('부서비번', self.le_bs_pw)
         flo2.addRow('딜레이타임', self.le_delay_time)
         flo2.addRow('인증서비번', self.le_cert_pw)
-        hbox1 = QHBoxLayout()
-        hbox1.addWidget(self.btn2)      
-        hbox1.addWidget(self.btn3)
-        flo2.addRow(hbox1)
+        flo2.addRow(self.btn2)
 
         hbox2 = QHBoxLayout()
         hbox2.addLayout(flo1)      # 주의 addWidget 아님
@@ -78,14 +74,16 @@ class Ui_SettingMenu(QDialog):
         self.le_delay_time.setMaxLength(3)  
         self.le_delay_time.setToolTip('홈택스 과부하로 로그인이 <br> 원할하지 않은 경우 1 또는 1.5 <br> 평상시 0.8 권장합니다.')
 
-        self.le_delay_time.setStyleSheet(
+        # self.le_delay_time.setStyleSheet(
+        #         """QLineEdit { background-color: #f0f0f0; color: blue; font: bold }""")
+        self.le_cert_nm.setStyleSheet(
                 """QLineEdit { background-color: #f0f0f0; color: blue; font: bold }""")
-        self.le_cert_name.setStyleSheet(
-                """QLineEdit { background-color: #f0f0f0; color: blue }""")
         self.le_cert_pw.setStyleSheet(
-                """QLineEdit { background-color: #f0f0f0; color: blue }""")
+                """QLineEdit { background-color: #f0f0f0; color: blue; font: bold }""")
         self.btn1.setStyleSheet(
                 """QPushButton { color: blue; font: bold }""")
+        self.le_cert_nm.setReadOnly(True)
+        self.le_cert_pw.setReadOnly(True)
 
         # self.show()
 
@@ -101,7 +99,7 @@ class SettingMenu(Ui_SettingMenu):
         self.cta_id = nts_dict['secret']['세무사관리번호']
         self.bs_id = nts_dict['secret']['부서아이디']
         self.super_id = nts_dict['secret']['수퍼아이디'] 
-        self.cert_name = nts_dict['secret']['공인인증서명칭']
+        self.cert_nm = nts_dict['secret']['공인인증서명칭']
         self.cta_pw = nts_dict['secret']['세무사비번']
         self.bs_pw = nts_dict['secret']['부서비번'] 
         self.delay_time = str(nts_dict['secret']['딜레이타임']) 
@@ -111,7 +109,7 @@ class SettingMenu(Ui_SettingMenu):
         self.le_cta_id.editingFinished.connect(self.cta_id_changed)
         self.le_bs_id.editingFinished.connect(self.bs_id_changed)
         self.le_super_id.editingFinished.connect(self.super_id_changed)
-        self.le_cert_name.editingFinished.connect(self.cert_name_changed)
+        self.le_cert_nm.editingFinished.connect(self.cert_nm_changed)
         self.le_cta_pw.editingFinished.connect(self.cta_pw_changed)
         self.le_bs_pw.editingFinished.connect(self.bs_pw_changed)
         self.le_delay_time.editingFinished.connect(self.delay_time_changed)
@@ -119,7 +117,6 @@ class SettingMenu(Ui_SettingMenu):
 
         self.btn1.clicked.connect(self.save_changed_values)
         self.btn2.clicked.connect(self.select_cert)
-        self.btn3.clicked.connect(self.save_cert)
 
         # json 파일에서 불러온 딕셔너리 값으로 초기값 셋팅
         self.set_placeholder()
@@ -129,7 +126,7 @@ class SettingMenu(Ui_SettingMenu):
         self.le_cta_id.setPlaceholderText(nts_dict['secret']['세무사관리번호'])
         self.le_bs_id.setPlaceholderText(nts_dict['secret']['부서아이디'])
         self.le_super_id.setPlaceholderText(nts_dict['secret']['수퍼아이디'])
-        self.le_cert_name.setPlaceholderText(nts_dict['secret']['공인인증서명칭'])
+        self.le_cert_nm.setPlaceholderText(nts_dict['secret']['공인인증서명칭'])
 
         self.le_cta_pw.setPlaceholderText(nts_dict['secret']['세무사비번'])
         self.le_bs_pw.setPlaceholderText(nts_dict['secret']['부서비번'])
@@ -177,12 +174,12 @@ class SettingMenu(Ui_SettingMenu):
                 json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
 
     @pyqtSlot()
-    def cert_name_changed(self):
-        if (self.cert_name != self.le_cert_name.text() and
-            self.le_cert_name.text() != ""):
+    def cert_nm_changed(self):
+        if (self.cert_nm != self.le_cert_nm.text() and
+            self.le_cert_nm.text() != ""):
 
-            text = self.le_cert_name.text()
-            self.cert_name = text
+            text = self.le_cert_nm.text()
+            self.cert_nm = text
             nts_dict['secret']['공인인증서명칭'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
             with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
@@ -241,7 +238,7 @@ class SettingMenu(Ui_SettingMenu):
         nts_dict['secret']['세무사관리번호'] = self.cta_id
         nts_dict['secret']['부서아이디'] = self.bs_id
         nts_dict['secret']['수퍼아이디'] = self.super_id
-        nts_dict['secret']['공인인증서명칭'] = self.cert_name
+        nts_dict['secret']['공인인증서명칭'] = self.cert_nm
         nts_dict['secret']['세무사비번'] = self.cta_pw
         nts_dict['secret']['부서비번'] = self.bs_pw            
         nts_dict['secret']['딜레이타임'] = str(self.delay_time)
@@ -251,12 +248,21 @@ class SettingMenu(Ui_SettingMenu):
         Util.save_dict_to_json(setdata.full_json_fn, nts_dict)
         # setplaceholder QLineEdit
         self.set_placeholder()
+        self.close()
     
     def select_cert(self):
-        pass
+        # 공인인증서 모듈 실행
+        cert_nm, cert_pw = iftutil.cert_nm_pw()
+        if cert_nm:            # 공인인증서 선택이 정상적이면  
+            self.cert_nm = cert_nm
+            self.cert_pw = cert_pw
+            nts_dict['secret']['공인인증서명칭'] = cert_nm
+            nts_dict['secret']['공인인증서비번'] = cert_pw
+            # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
+            with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
+                json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
 
-    def save_cert(self):
-        pass
+            self.set_placeholder()
     
     def make_connection(self, signal_emit_object):
         signal_emit_object.cta_id_changed_signal.connect(self.receive_cta_id)
@@ -336,6 +342,9 @@ class Ui_Main(QMainWindow):
         self.le_delay_time = QLineEdit()
         self.btn_login = QPushButton("로그인")
 
+        self.btn_login.setStyleSheet(
+                """QPushButton { background-color: #ffff00; color: blue; font: bold }""")       
+
         # 입력제한 http://bitly.kr/wmonM2
         reg_ex = QRegExp("[0-9]+.?[0-9]{,2}")
         input_validator = QRegExpValidator(reg_ex, self.le_delay_time)
@@ -381,31 +390,35 @@ class Main(Ui_Main):
         self.cta_id = nts_dict['secret']['세무사관리번호']
         self.bs_id = nts_dict['secret']['부서아이디']
         self.super_id = nts_dict['secret']['수퍼아이디'] 
-        self.cert_name = nts_dict['secret']['공인인증서명칭']
+        self.cert_nm = nts_dict['secret']['공인인증서명칭']
         self.cta_pw = nts_dict['secret']['세무사비번']
         self.bs_pw = nts_dict['secret']['부서비번'] 
         self.delay_time = str(nts_dict['secret']['딜레이타임']) 
         self.cert_pw = nts_dict['secret']['공인인증서비번'] 
 
-        if (self.cert_name == "" or
+        if (self.cert_nm == "" or
             self.cert_pw == ""):
 
-            self.setup_iftAdapter()
+            title = "공인인증서 등록"
+            msg = f"홈택스 로그인 시 공인인증서 정보가 필요합니다 !!!<br>지금 등록 하시겠습니까??"
+            inst = Util.MsgBoxTF(title, msg)
+            TF = inst.initUI()
+
+            if TF==True:
+                self.setup_iftAdapter()
+            else:
+                pass        
         
-        if (self.cta_id=="" or self.bs_id=="" or
-            self.cert_name=="" or self.cta_pw=="" or
-            self.bs_pw=="" or self.delay_time=="" or 
-            self.cert_pw==""):
-
-            require_list = []
-            for key, val in nts_dict['secret'].items():
-                if val=="":
-                    require_list.append(key)
-
-            require_str = " / ".join(require_list)
+        if (self.cta_id=="" or self.cta_pw=="" ):
+            # require_list = []
+            # for key, val in nts_dict['secret'].items():
+            #     if val=="":
+            #         require_list.append(key)
+            # require_str = " / ".join(require_list)
 
             title = "필수사항 초기입력"
-            msg = f"필수사항({require_str})입력이 필요합니다!!<br>지금 필수사항을 입력하시겠습니까??"
+            # msg = f"필수사항({require_str})입력이 필요합니다!!<br>지금 필수사항을 입력하시겠습니까??"
+            msg = f"세무법인은 세무사관리번호, 세무사관리번호 비밀번호는 반드시 입력해야 합니다 !!<br>지금 필수사항을 입력하시겠습니까??"
             inst = Util.MsgBoxTF(title, msg)
             TF = inst.initUI()
 
@@ -431,7 +444,7 @@ class Main(Ui_Main):
         self.le_delay_time.setPlaceholderText(str(nts_dict['secret']['딜레이타임']))
 
     def setup_iftAdapter(self):
-        if not os.path.isfile(r'C:\Infotech\Common\iftWinExAdapter.dll'):
+        if not os.path.isfile(r'C:\Infotech\Common\iftWinExAdapter.dll'):  # 인포텍모듈 없으면
             title = "공인인증서 모듈설치"
             msg = "지금 공인인증서 모듈을 설치하시겠습니까 ??<br>나중에 설치가능 합니다!!"
             inst = Util.MsgBoxTF(title, msg)
@@ -440,6 +453,17 @@ class Main(Ui_Main):
                 driverutil.setup_iftCertAdapter()  
             else:
                 pass
+        elif os.path.isfile(r'C:\Infotech\Common\iftWinExAdapter.dll'):    # 인포텍모듈 있으면
+            # 공인인증서 모듈 실행
+            cert_nm, cert_pw = iftutil.cert_nm_pw()
+            self.cert_nm = cert_nm
+            self.cert_pw = cert_pw
+            nts_dict['secret']['공인인증서명칭'] = cert_nm
+            nts_dict['secret']['공인인증서비번'] = cert_pw
+
+            # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
+            with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
+                json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
 
     @pyqtSlot()
     def cta_id_changed(self):
@@ -478,10 +502,25 @@ class Main(Ui_Main):
 
     @pyqtSlot()
     def login_clicked(self):
+        print(self.le_cta_id.placeholderText())
+        if self.cta_id != self.le_cta_id.placeholderText():
+            nts_dict['secret']['세무사관리번호'] = self.le_cta_id.placeholderText()
+        if self.bs_id != self.le_cta_id.placeholderText():
+            nts_dict['secret']['부서아이디'] = self.le_bs_id.placeholderText()
+        if self.delay_time != self.le_delay_time.placeholderText():
+            nts_dict['secret']['딜레이타임'] = str(self.le_delay_time.placeholderText())
 
-        nts_dict['secret']['세무사관리번호'] = self.cta_id
-        nts_dict['secret']['부서아이디'] = self.bs_id       
-        nts_dict['secret']['딜레이타임'] = str(self.delay_time)
+        if self.le_cta_id.text() != "":
+            nts_dict['secret']['세무사관리번호'] = self.le_cta_id.text()
+        if self.le_bs_id.text() != "":
+            nts_dict['secret']['부서아이디'] = self.le_bs_id.text()
+        if self.le_delay_time.text() != "":
+            nts_dict['secret']['딜레이타임'] = str(self.le_delay_time.text())
+        
+
+        # nts_dict['secret']['세무사관리번호'] = self.cta_id
+        # nts_dict['secret']['부서아이디'] = self.bs_id       
+        # nts_dict['secret']['딜레이타임'] = str(self.delay_time)
         # 2. 수정된 딕셔너리를 json 파일로 만들어 저장  
         Util.save_dict_to_json(setdata.full_json_fn, nts_dict)
         # setplaceholder QLineEdit

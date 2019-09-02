@@ -22,17 +22,29 @@ def get_nts_dict():
     semudaeli = dict()
     singodaeli = dict()
 
+    # # nts_dict > secret
+    # secret['딜레이타임'] = "0.7"
+    # secret['부서아이디'] = "innotax154"
+    # secret['부서비번'] = "dlshxortm14!"
+    # secret['세무사관리번호'] = "W15960"
+    # secret['세무사비번'] = "1234"
+    # secret['공인인증서명칭'] = "세무법인이노택스테헤(BizBank)008802520131101188000459"
+    # secret['공인인증서비번'] = "innotax1260!"
+    # secret['크롬경로'] = "/zz/NTS/driver/"
+    # secret['크롬드라이버'] = "chromedriver.exe"
+    # secret['수퍼아이디'] = "innotax14"
+
     # nts_dict > secret
-    secret['딜레이타임'] = "0.7"
-    secret['부서아이디'] = "innotax154"
-    secret['부서비번'] = "dlshxortm14!"
-    secret['세무사관리번호'] = "W15960"
-    secret['세무사비번'] = "1234"
-    secret['공인인증서명칭'] = "세무법인이노택스테헤(BizBank)008802520131101188000459"
-    secret['공인인증서비번'] = "innotax1260!"
+    secret['딜레이타임'] = "0.8"
+    secret['부서아이디'] = ""
+    secret['부서비번'] = ""
+    secret['세무사관리번호'] = ""
+    secret['세무사비번'] = ""
+    secret['공인인증서명칭'] = ""
+    secret['공인인증서비번'] = ""
     secret['크롬경로'] = "/zz/NTS/driver/"
     secret['크롬드라이버'] = "chromedriver.exe"
-    secret['수퍼아이디'] = "innotax14"
+    secret['수퍼아이디'] = ""
 
     # nts_dict > elem_id > login
     login['최상단로그인'] = "group1544" 
