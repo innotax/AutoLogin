@@ -1,21 +1,40 @@
-import json
-import win32com.client
+import sys
+import pandas as pd
+from PyQt5.QtWidgets import QApplication, QTableView
+from PyQt5.QtCore import QAbstractTableModel, Qt
 
-def cert_nm_pw():
-    iftCertdll = win32com.client.Dispatch("iftCoreEngine.iftGate")
-    req_js_str = ""
-    js_str = iftCertdll.getUserCert(req_js_str)
-    dic = json.loads(js_str)
+df = pd.DataFrame({'a': ['Mary', 'Jim', 'John'],
+                   'b': [100, 200, 300],
+                   'c': ['a', 'b', 'c']})
 
-    cert_nm = dic["cert_nm"]
-    cert_pw = dic["cert_pw"]
+class pandasModel(QAbstractTableModel):
 
-    return (cert_nm, cert_pw)
+    def __init__(self, data):
+        QAbstractTableModel.__init__(self)
+        self._data = data
 
-# a = cert_nm_pw()
-cert_nm, cert_pw = cert_nm_pw()
+    def rowCount(self, parent=None):
+        return self._data.shape[0]
 
-print(cert_nm, cert_pw)
-if not cert_nm:
-    print('empt')
-    print(cert_nm)
+    def columnCount(self, parnet=None):
+        return self._data.shape[1]
+
+    def data(self, index, role=Qt.DisplayRole):
+        if index.isValid():
+            if role == Qt.DisplayRole:
+                return str(self._data.iloc[index.row(), index.column()])
+        return None
+
+    def headerData(self, col, orientation, role):
+        if orientation == Qt.Horizontal and role == Qt.DisplayRole:
+            return self._data.columns[col]
+        return None
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    model = pandasModel(df)
+    view = QTableView()
+    view.setModel(model)
+    view.resize(800, 600)
+    view.show()
+    sys.exit(app.exec_())
