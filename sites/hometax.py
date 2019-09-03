@@ -54,7 +54,7 @@ class Nts_Login:
         # 모니터 작은 경우 https://code-examples.net/ko/q/2fbfea
         tk = tkinter.Tk()
         screen_height = tk.winfo_screenheight()
-        print(screen_height, type(screen_height))
+       
         if screen_height <= 900:
             self.driver.maximize_window()
 
@@ -106,14 +106,16 @@ class Nts_Login:
 
         # 메인영역
         elem = get_element(self.driver, self.main_zone)
-        self.driver.switch_to_frame(elem)
+        self.driver.switch_to.frame(elem)
         time.sleep(self.delay_time)
         
         # 관리자인 경우 공인인증서 직접로그인
         if (self.bs_id==self.super_id or self.bs_id==""):
-            # 공인인증서 로그인 버튼
-            get_element(self.driver, self.cert_login_btn).click()
-            time.sleep(self.delay_time + 2)
+            # get_element(self.driver, self.cert_login_btn).click()
+            # 공인인증서 로그인 버튼 : 클릭 안될 때  http://bitly.kr/ckLhMIb  # 자바 명령어 실행
+            elem = get_element(self.driver, self.cert_login_btn)           # .click()
+            self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행
+            time.sleep(self.delay_time + 0)
 
         # 부서아이디 있고 비번 없는 경우
         elif self.bs_id !="":
@@ -134,22 +136,30 @@ class Nts_Login:
                 Util.save_dict_to_json(setdata.full_json_fn, nts_dict)
             # 부서비밀번호 입력 + 로그인 버튼 클릭
             get_element(self.driver, self.bs_pw_elem).send_keys(self.bs_pw)
-            get_element(self.driver, self.bs_id_login_btn).click()
-            time.sleep(self.delay_time + 2)
+            elem = get_element(self.driver, self.bs_id_login_btn)
+            self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행 http://bitly.kr/ckLhMIb 
+            time.sleep(self.delay_time + 0.5)
+        else:
+            # 공인인증서 로그인 버튼 : 클릭 안될 때  http://bitly.kr/ckLhMIb  # 자바 명령어 실행
+            elem = get_element(self.driver, self.cert_login_btn)           # .click()
+            self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행 http://bitly.kr/ckLhMIb 
+            time.sleep(self.delay_time + 0.5)
 
         # 공인인증서 영역
         elem = get_element(self.driver, self.cert_zone)
-        self.driver.switch_to_frame(elem)
+        self.driver.switch_to.frame(elem)
         time.sleep(self.delay_time + 1)
         
         # 공인인증서 선택
-        get_element(self.driver, self.cert_name_elem).click()
-        time.sleep(self.delay_time +1)
+        get_element(self.driver, self.cert_name_elem, attribute="title").click()
+        # elem = get_element(self.driver, self.cert_name_elem, attribute="title")
+        # self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행 http://bitly.kr/ckLhMIb 
+        time.sleep(self.delay_time + 0.5)
 
         # 인증서 비밀번호 입력 + 인증서 확인 버튼
         get_element(self.driver, self.cert_pw_elem).send_keys(self.cert_pw)
         get_element(self.driver, self.cert_confirm_btn).click()
-        time.sleep(self.delay_time + 1)
+        time.sleep(self.delay_time + 0.5)
 
         # 팝업창 (세무사관리번호 로그인)
         alert = self.driver.switch_to.alert  # print(alert.text)         
@@ -157,7 +167,7 @@ class Nts_Login:
         
         # 메인영역
         elem = get_element(self.driver, self.main_zone)
-        self.driver.switch_to_frame(elem)
+        self.driver.switch_to.frame(elem)
         time.sleep(self.delay_time)
 
         # 세무대리인 관리번호 비번

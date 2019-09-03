@@ -272,11 +272,9 @@ class SettingMenu(Ui_SettingMenu):
         self.le_cta_id.setText(txt)
         self.le_cta_id.setPlaceholderText(txt)
 
-        cls_name = self.__class__.__name__            # class 이름
-        func_name = sys._getframe().f_code.co_name    # func  이름
-        print(f'Receive at >>> class : < {cls_name} > function : < {func_name} > !!!')
-        # print('from {} receive'.format(self.__class__.__name__))
-        print(txt)
+        # cls_name = self.__class__.__name__            # class 이름
+        # func_name = sys._getframe().f_code.co_name    # func  이름
+        # print(f'Receive at >>> class : < {cls_name} > function : < {func_name} > !!!')
 
 
 class Ui_Main(QMainWindow):
@@ -319,9 +317,12 @@ class Ui_Main(QMainWindow):
 
         menubar = self.menuBar()
         menubar.setNativeMenuBar(False)
-        fileMenu = menubar.addMenu('&메뉴')
+        fileMenu = menubar.addMenu('&기본사항 설정')
         fileMenu.addAction(setAction)
         fileMenu.addAction(exitAction)
+
+        self.setStyleSheet(
+                """QMenuBar  { background-color: #7cd3ff; color: blue; font: bold }""")
 
         # 우하단 위젯
         # rect = QDesktopWidget().screenGeometry()    # 화면해상도   class (0, 0, x, y) 
@@ -502,7 +503,7 @@ class Main(Ui_Main):
 
     @pyqtSlot()
     def login_clicked(self):
-        print(self.le_cta_id.placeholderText())
+        
         if self.cta_id != self.le_cta_id.placeholderText():
             nts_dict['secret']['세무사관리번호'] = self.le_cta_id.placeholderText()
         if self.bs_id != self.le_cta_id.placeholderText():
@@ -559,7 +560,6 @@ class Main(Ui_Main):
 
 
 if __name__ == "__main__":
-    print("*"*100)
     app = QApplication(sys.argv)
     main = Main()
     sys.exit(app.exec_())

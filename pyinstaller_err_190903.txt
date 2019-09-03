@@ -1,0 +1,141 @@
+pyinstaller --onefile --windowed --hidden-import=PyQt5.sip --icon=ATT.ico -n AutoLogin -p C:\zz\_dllFiles C:\zz\distribute\AutoLogin\atmui.py
+
+$ pyinstaller --onefile --windowed --hidden-import=PyQt5.sip --icon=ATT.ico -n AutoLogin -p C:\zz\_dllFiles C:\zz\distribute\AutoLogin\atmui.py
+91 INFO: PyInstaller: 3.5
+91 INFO: Python: 3.7.4
+92 INFO: Platform: Windows-10-10.0.18362-SP0
+95 INFO: wrote C:\zz\distribute\AutoLogin\AutoLogin.spec
+112 INFO: UPX is not available.
+113 INFO: Extending PYTHONPATH with paths
+['C:\\zz\\distribute\\AutoLogin',
+ 'C:\\zz\\_dllFiles',
+ 'C:\\zz\\distribute\\AutoLogin']
+113 INFO: checking Analysis
+114 INFO: Building Analysis because Analysis-00.toc is non existent
+114 INFO: Initializing module dependency graph...
+119 INFO: Initializing module graph hooks...
+128 INFO: Analyzing base_library.zip ...
+4789 INFO: Analyzing hidden import 'PyQt5.sip'
+4873 ERROR: Hidden import 'PyQt5.sip' not found
+4873 INFO: running Analysis Analysis-00.toc
+4888 INFO: Adding Microsoft.Windows.Common-Controls to dependent assemblies of final executable
+  required by c:\anaconda3\python.exe
+5121 INFO: Caching module hooks...
+5138 INFO: Analyzing C:\zz\distribute\AutoLogin\atmui.py
+6693 INFO: Processing pre-find module path hook   distutils
+8316 INFO: Processing pre-find module path hook   site
+8317 INFO: site: retargeting to fake-dir 'C:\\Users\\김명중\\AppData\\Roaming\\Python\\Python37\\site-packages\\PyInstaller\\fake-modules'
+11055 INFO: Processing pre-safe import module hook   setuptools.extern.six.moves
+19868 INFO: Processing pre-safe import module hook   urllib3.packages.six.moves
+21480 INFO: Processing pre-safe import module hook   win32com
+22101 INFO: Loading module hooks...
+22101 INFO: Loading module hook "hook-Crypto.py"...
+Traceback (most recent call last):
+  File "<string>", line 2, in <module>
+ModuleNotFoundError: No module named 'Crypto.Math'
+22167 INFO: Loading module hook "hook-distutils.py"...
+22170 INFO: Loading module hook "hook-encodings.py"...
+22255 INFO: Loading module hook "hook-importlib_metadata.py"...
+22257 INFO: Loading module hook "hook-lib2to3.py"...
+22260 INFO: Loading module hook "hook-numpy.core.py"...
+22355 INFO: MKL libraries found when importing numpy. Adding MKL to binaries
+22359 INFO: Loading module hook "hook-numpy.py"...
+22360 INFO: Loading module hook "hook-PIL.Image.py"...
+22864 INFO: Loading module hook "hook-PIL.py"...
+22865 INFO: Excluding import 'PyQt4'
+22867 INFO:   Removing import of PyQt4 from module PIL.ImageQt
+22868 INFO: Import to be excluded not found: 'FixTk'
+22868 INFO: Excluding import 'PyQt5'
+22870 INFO:   Removing import of PyQt5.QtGui from module PIL.ImageQt
+22870 INFO:   Removing import of PyQt5.QtCore from module PIL.ImageQt
+22871 INFO: Excluding import 'tkinter'
+22873 INFO:   Removing import of tkinter from module PIL.ImageTk
+22873 INFO: Excluding import 'PySide'
+22875 INFO:   Removing import of PySide from module PIL.ImageQt
+22876 INFO: Loading module hook "hook-PIL.SpiderImagePlugin.py"...
+22878 INFO: Import to be excluded not found: 'FixTk'
+22878 INFO: Excluding import 'tkinter'
+22879 INFO: Loading module hook "hook-pkg_resources.py"...
+23735 INFO: Loading module hook "hook-pycparser.py"...
+23737 INFO: Loading module hook "hook-pydoc.py"...
+23738 INFO: Loading module hook "hook-PyQt5.py"...
+24077 WARNING: Hidden import "PyQt5.sip" not found!
+24077 INFO: Loading module hook "hook-PyQt5.QtCore.py"...
+24186 INFO: Loading module hook "hook-PyQt5.QtGui.py"...
+24347 INFO: Loading module hook "hook-PyQt5.QtWidgets.py"...
+24600 INFO: Loading module hook "hook-pytest.py"...
+25795 INFO: Loading module hook "hook-pythoncom.py"...
+26266 INFO: Loading module hook "hook-pywintypes.py"...
+26732 INFO: Loading module hook "hook-scipy.py"...
+26739 INFO: Loading module hook "hook-selenium.py"...
+26746 INFO: Loading module hook "hook-setuptools.py"...
+27482 INFO: Loading module hook "hook-sysconfig.py"...
+27484 INFO: Loading module hook "hook-win32com.py"...
+27629 INFO: Loading module hook "hook-xml.dom.domreg.py"...
+27630 INFO: Loading module hook "hook-xml.etree.cElementTree.py"...
+27631 INFO: Loading module hook "hook-xml.py"...
+27632 INFO: Loading module hook "hook-_tkinter.py"...
+27793 INFO: checking Tree
+27793 INFO: Building Tree because Tree-00.toc is non existent
+27794 INFO: Building Tree Tree-00.toc
+27935 INFO: checking Tree
+27936 INFO: Building Tree because Tree-01.toc is non existent
+27936 INFO: Building Tree Tree-01.toc
+27990 INFO: Looking for ctypes DLLs
+28103 INFO: Analyzing run-time hooks ...
+28109 INFO: Including run-time hook 'pyi_rth_win32comgenpy.py'
+28119 INFO: Including run-time hook 'pyi_rth__tkinter.py'
+28129 INFO: Including run-time hook 'pyi_rth_pkgres.py'
+28138 INFO: Including run-time hook 'pyi_rth_multiprocessing.py'
+28149 INFO: Including run-time hook 'pyi_rth_pyqt5.py'
+28184 INFO: Looking for dynamic libraries
+33414 INFO: Looking for eggs
+33414 INFO: Using Python library c:\anaconda3\python37.dll
+33414 INFO: Found binding redirects:
+[]
+33428 INFO: Warnings written to C:\zz\distribute\AutoLogin\build\AutoLogin\warn-AutoLogin.txt
+33559 INFO: Graph cross-reference written to C:\zz\distribute\AutoLogin\build\AutoLogin\xref-AutoLogin.html
+33633 INFO: checking PYZ
+33633 INFO: Building PYZ because PYZ-00.toc is non existent
+33633 INFO: Building PYZ (ZlibArchive) C:\zz\distribute\AutoLogin\build\AutoLogin\PYZ-00.pyz
+35289 INFO: Building PYZ (ZlibArchive) C:\zz\distribute\AutoLogin\build\AutoLogin\PYZ-00.pyz completed successfully.
+35318 INFO: checking PKG
+35319 INFO: Building PKG because PKG-00.toc is non existent
+35319 INFO: Building PKG (CArchive) PKG-00.pkg
+42173 WARNING: One binary added with two internal names.
+42174 WARNING: ('icudt58.dll', 'C:\\Anaconda3\\Library\\bin\\icudt58.dll', 'BINARY')
+42174 WARNING: was placed previously at
+42175 WARNING: ('PyQt5\\Qt\\bin\\icudt58.dll',
+ 'C:\\Anaconda3\\Library\\bin\\icudt58.dll',
+ 'BINARY')
+42311 WARNING: One binary added with two internal names.
+42311 WARNING: ('icuuc58.dll', 'C:\\Anaconda3\\Library\\bin\\icuuc58.dll', 'BINARY')
+42311 WARNING: was placed previously at
+42311 WARNING: ('PyQt5\\Qt\\bin\\icuuc58.dll',
+ 'C:\\Anaconda3\\Library\\bin\\icuuc58.dll',
+ 'BINARY')
+95371 INFO: Building PKG (CArchive) PKG-00.pkg completed successfully.
+95396 INFO: Bootloader C:\Users\김명중\AppData\Roaming\Python\Python37\site-packages\PyInstaller\bootloader\Windows-32bit\runw.exe
+95396 INFO: checking EXE
+95396 INFO: Building EXE because EXE-00.toc is non existent
+95396 INFO: Building EXE from EXE-00.toc
+95507 INFO: Copying icons from ['ATT.ico']
+95508 INFO: Writing RT_GROUP_ICON 0 resource with 20 bytes
+95509 INFO: Writing RT_ICON 1 resource with 67624 bytes
+95562 INFO: Updating manifest in C:\Users\김명중\AppData\Local\Temp\tmp7ha4t24q
+95563 INFO: Updating resource type 24 name 1 language 0
+95620 INFO: Appending archive to EXE C:\zz\distribute\AutoLogin\dist\AutoLogin.exe
+95858 INFO: Building EXE from EXE-00.toc completed successfully.
+
+
+exe err msg
+
+This application failed to start because it could not find or load the Qt platform plugin "windows"
+in "".
+
+Available platform plugin are: minimal, offscreen, windows.
+Reinstalling the application may fix this problem.
+
+해결
+https://github.com/pyinstaller/pyinstaller/issues/3630
+pip install https://github.com/pyinstaller/pyinstaller/archive/develop.zip
