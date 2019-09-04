@@ -159,7 +159,14 @@ def get_nts_dict():
 def get_web_dict():
 
     naver_dict = dict()
+
+    naver_dict['url'] = "https://nid.naver.com/nidlogin.login" 
+    naver_dict['id'] = []
+    naver_dict['pw'] = []
+
     nhis_dict = dict()
 
     nhis_dict['login'] = "wq_uuid_57" # 건강보험공단
+
+
 
