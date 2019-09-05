@@ -30,7 +30,7 @@ def get_nts_dict():
     # secret['세무사비번'] = "1234"
     # secret['공인인증서명칭'] = "세무법인이노택스테헤(BizBank)008802520131101188000459"
     # secret['공인인증서비번'] = "innotax1260!"
-    # secret['크롬경로'] = "/zz/NTS/driver/"
+    # secret['드라이버경로'] = "/zz/NTS/driver/"
     # secret['크롬드라이버'] = "chromedriver.exe"
     # secret['수퍼아이디'] = "innotax14"
 
@@ -42,7 +42,7 @@ def get_nts_dict():
     secret['세무사비번'] = ""
     secret['공인인증서명칭'] = ""
     secret['공인인증서비번'] = ""
-    secret['크롬경로'] = "/zz/NTS/driver/"
+    secret['드라이버경로'] = "/zz/NTS/driver/"
     secret['크롬드라이버'] = "chromedriver.exe"
     secret['수퍼아이디'] = ""
 
@@ -158,15 +158,23 @@ def get_nts_dict():
 
 def get_web_dict():
 
-    naver_dict = dict()
+    web_idpw = dict()
 
-    naver_dict['url'] = "https://nid.naver.com/nidlogin.login" 
-    naver_dict['id'] = []
-    naver_dict['pw'] = []
+    web_idpw['naver'] = []
+    web_idpw['Hanbiro'] = []
+    web_idpw['bizforms'] = []
+    web_idpw['etaxkorea'] = []
+    web_idpw['Thebill'] = []
 
-    nhis_dict = dict()
+    return web_idpw
 
-    nhis_dict['login'] = "wq_uuid_57" # 건강보험공단
+
+    
+
+    
+
+    # nhis_dict = dict()
+    # nhis_dict['login'] = "wq_uuid_57" # 건강보험공단
 
 
 

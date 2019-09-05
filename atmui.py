@@ -2,7 +2,7 @@ import os, sys, time, json, zipfile, subprocess
 
 import PyQt5
 # from PyQt5.Qt import QApplication
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QDesktopWidget, QWidget, QDialog, 
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QDesktopWidget, QWidget, QDialog, QComboBox,
                             QPushButton, QRadioButton, QLabel, QLineEdit, QAction, QToolTip, qApp)
 from PyQt5.QtWidgets import QMessageBox, QTabWidget, QGridLayout, QGroupBox, QHBoxLayout, QVBoxLayout, QFormLayout
 from PyQt5.QtGui import QIcon, QRegExpValidator, QDoubleValidator, QIntValidator, QFont
@@ -12,7 +12,7 @@ from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QRegExp
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from data import setdata, data
-from sites import hometax, naver
+from sites import hometax
 from utils import Util, driverutil, iftutil
 
 # 변수의 스코프  https://umbum.tistory.com/823
@@ -330,7 +330,7 @@ class Ui_Main(QMainWindow):
         max_x = rect.width()
         max_y = rect.height()
 
-        width, height = 350 , 220
+        width, height = 390 , 220
         # width, height = 350 , 250
         left = max_x - width 
         top = max_y - height 
@@ -343,9 +343,6 @@ class Ui_Main(QMainWindow):
         self.le_delay_time = QLineEdit()
         self.btn_login = QPushButton("로그인")
 
-        self.btn_login.setStyleSheet(
-                """QPushButton { background-color: #ffff00; color: blue; font: bold }""")       
-
         # 입력제한 http://bitly.kr/wmonM2
         reg_ex = QRegExp("[0-9]+.?[0-9]{,2}")
         input_validator = QRegExpValidator(reg_ex, self.le_delay_time)
@@ -354,15 +351,35 @@ class Ui_Main(QMainWindow):
         self.le_delay_time.setMaxLength(3) 
 
         flo1 = QFormLayout()
-        flo1.addRow("세무사관리번호", self.le_cta_id)
+        flo1.addRow("CTA관리번호", self.le_cta_id)
         flo1.addRow("부서아이디", self.le_bs_id)
         flo1.addRow("딜레이타임", self.le_delay_time)
         flo1.addRow(self.btn_login)
 
         gbox1 = QGroupBox("HomeTax Login")
-        gbox2 = QGroupBox("GroupBox2")
+        # web id pw
+        gbox2 = QGroupBox('Website Login')
+        flo2 = QFormLayout()
+        self.web_cb = QComboBox()
+        self.web_cb.addItems(['Naver','Hanbiro','bizforms','etaxkorea','The bill'])
+        self.web_id = QLineEdit()
+        self.web_pw = QLineEdit()
+        self.web_login = QPushButton('로그인')
+        # Echomode
+        self.web_pw.setEchoMode(QLineEdit.PasswordEchoOnEdit)  
+        # Style
+        self.btn_login.setStyleSheet(
+                """QPushButton { background-color: #ffff00; color: blue; font: bold }""")       
+        self.web_login.setStyleSheet(
+                """QPushButton { background-color: #7cd3ff; color: blue; font: bold }""")       
+
+        flo2.addRow("Web", self.web_cb)
+        flo2.addRow("ID", self.web_id)
+        flo2.addRow("PW", self.web_pw)
+        flo2.addRow(self.web_login)
 
         gbox1.setLayout(flo1)
+        gbox2.setLayout(flo2)
 
         hbox = QHBoxLayout()
         hbox.addWidget(gbox1)

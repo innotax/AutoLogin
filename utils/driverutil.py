@@ -3,6 +3,7 @@ import os, sys, time, json, zipfile, subprocess
 from PyQt5.QtWidgets import *
 
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -15,16 +16,16 @@ from data import setdata
 
 def get_element(driver, attribute_value, attribute='id'):
     
-    for i in range(3):
+    for i in range(1):
         try:
-            element = WebDriverWait(driver, 3).until(
+            element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, f"//*[@{attribute}=\'{attribute_value}\']")))
             
             return element
         except Exception as e:
             app = QApplication(sys.argv)
             err_class_name = e.__class__.__name__
-            msg = f"selenium id < {id} >에서 예외 < {err_class_name} >가 발생 하였습니다."
+            msg = f"selenium id < {attribute_value} >에서 예외 < {err_class_name} >가 발생 하였습니다."
             errmsg = Util.Errpop().critical_pop(msg)
             sys.exit(app.exec_())
 
@@ -51,48 +52,33 @@ def setup_iftCertAdapter():
         subprocess.Popen(iftNxService_setup_path, stdin=PIPE, stdout=PIPE)
 
 class Get_driver():
-    def __init__(self, driver_path, driver_name):
+    def __init__(self, driver_path=r"C:\Ataxtech\AutoLogin\loginAPP\driver", driver_name="chromedriver.exe"):
         self.driver_path = driver_path
         self.driver_name = driver_name
         self.full_driver_name = os.path.join(self.driver_path, self.driver_name)
 
-    def set_driver(self):
-        
-        if "chrome" in self.full_driver_name:
-            
-            try:
-                chrome_options = webdriver.ChromeOptions()
+    def chrome_driver(self):
+        try:
+            # chrome_options = webdriver.ChromeOptions()
+            chrome_options = Options()
+            chrome_options.add_argument("disable-infobars")  # chrome이 자동화된 테스트 소프트웨어에 의해 제어되고 있습니다
 
-                driver = webdriver.Chrome(self.full_driver_name, options=chrome_options)
-                return driver
-            except:
-                msg = "드라이버 경로( {0} )에 {1}이(가) 없습니다 !!!".format(self.driver_path, self.driver_name)
-                errmsg = Util.Errpop().critical_pop(msg)
-                
-        elif True :
-            pass    
+            driver = webdriver.Chrome(self.full_driver_name, options=chrome_options)
+            return driver
+        except:
+            msg = "드라이버 경로( {0} )에 {1}이(가) 없습니다 !!!".format(self.driver_path, self.driver_name)
+            errmsg = Util.Errpop().critical_pop(msg)
 
-class IE_driver():
-    def __init__(self, driver_path, driver_name):
-        self.driver_path = driver_path
-        self.driver_name = driver_name
-        self.full_driver_name = os.path.join(self.driver_path, self.driver_name)
+    def ie_driver(self):
+        try:
+            driver = webdriver.Chrome(self.full_driver_name, options=chrome_options)
+            return driver
+        except:
+            msg = "드라이버 경로( {0} )에 {1}이(가) 없습니다 !!!".format(self.driver_path, self.driver_name)
+            errmsg = Util.Errpop().critical_pop(msg)
 
-    def set_driver(self):
-        # print(self.full_driver_name )
-        if "IEDriverServer" in self.full_driver_name:
-            try:
-                driver = webdriver.Ie(executable_path=self.full_driver_name)
-                return driver
-            except:
-                msg = "드라이버 경로( {0} )에 {1}이(가) 없습니다 !!!".format(self.driver_path, self.driver_name)
-                errmsg = Util.Errpop().critical_pop(msg)
-                
-        elif True :
-            pass    
-
+  
 if __name__ == '__main__':
 
-    # driver = Get_driver(r'C:\zz\NTS\driver', 'chromedriver.exe')
-    driver = IE_driver(r'C:\zz\NTS\driver', 'IEDriverServer.exe')
-    driver = driver.set_driver()
+    driver = Get_driver()
+    driver = driver.chrome_driver()

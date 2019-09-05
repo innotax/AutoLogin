@@ -69,7 +69,7 @@ def set_path_make_json_return_dic():
 
                 # 2. 딕셔너리를 json 파일로 만들어 저장
                 nts_dict = data.get_nts_dict()
-                nts_dict['secret']['크롬경로'] = driver_path      
+                nts_dict['secret']['드라이버경로'] = driver_path      
                 with open(full_json_fn, 'w', encoding='utf-8') as fn:
                     json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
                     # json_data = json.dumps(_dict_data, ensure_ascii=False, indent=4)

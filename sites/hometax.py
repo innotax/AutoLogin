@@ -14,12 +14,13 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))    
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__)))))) # 2단계 상위폴더
 
 from data import setdata, data
-from sites import hometax, naver
 from utils import Util, driverutil
-from utils.driverutil import get_element
+# from utils.driverutil import get_element
 
+get_element = driverutil.get_element
 
 nts_dict = setdata.set_path_make_json_return_dic() 
+
 
 class InputDlg(QInputDialog):
     def __init__(self, parent=None):
@@ -45,10 +46,10 @@ class InputDlg(QInputDialog):
 
 class Nts_Login:
     def __init__(self):
-        driver_path = nts_dict['secret']['크롬경로']    
+        driver_path = nts_dict['secret']['드라이버경로']    
         driver_name = nts_dict['secret']['크롬드라이버'] 
-        chrome_driver = driverutil.Get_driver(driver_path, driver_name)
-        self.driver = chrome_driver.set_driver()
+        driver = driverutil.Get_driver(driver_path, driver_name)
+        self.driver = driver.chrome_driver()
         self.driver.get('https://www.hometax.go.kr/')
 
         # 모니터 작은 경우 https://code-examples.net/ko/q/2fbfea
@@ -85,7 +86,7 @@ class Nts_Login:
         self.bs_pw_elem = nts_dict['elem_id']['login']['부서비번']
         self.cert_pw_elem = nts_dict['elem_id']['login']['공인인증서비번']
 
-        time.sleep(self.delay_time)
+        time.sleep(self.delay_time + 2)
 
     # 홈택스 별도페이지
     def path2(self):
@@ -96,7 +97,7 @@ class Nts_Login:
             self.loginnts()
         except:
             self.loginnts()
-            time.sleep(self.delay_time + 3)
+            time.sleep(self.delay_time)
 
     def loginnts(self):
         
@@ -107,7 +108,7 @@ class Nts_Login:
         # 메인영역
         elem = get_element(self.driver, self.main_zone)
         self.driver.switch_to.frame(elem)
-        time.sleep(self.delay_time)
+        time.sleep(self.delay_time + 1)
         
         # 관리자인 경우 공인인증서 직접로그인
         if (self.bs_id==self.super_id or self.bs_id==""):
@@ -115,14 +116,14 @@ class Nts_Login:
             # 공인인증서 로그인 버튼 : 클릭 안될 때  http://bitly.kr/ckLhMIb  # 자바 명령어 실행
             elem = get_element(self.driver, self.cert_login_btn)           # .click()
             self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행
-            time.sleep(self.delay_time + 0)
+            time.sleep(self.delay_time + 2)
 
-        # 부서아이디 있고 비번 없는 경우
+        # 부서아이디 유무
         elif self.bs_id !="":
             # 부서아이디 입력
             get_element(self.driver, self.bs_id_elem).send_keys(self.bs_id)
 
-            if self.bs_pw=="":
+            if self.bs_pw=="":               # 부서비번 없으면
                 # 부서 비밀번호 입력 QInputDialog
                 app = QApplication(sys.argv)
                 inputdlg = InputDlg()
@@ -134,21 +135,23 @@ class Nts_Login:
                 nts_dict['secret']['부서비번'] = bs_pw
                 # 2. 수정된 딕셔너리를 json 파일로 만들어 저장  
                 Util.save_dict_to_json(setdata.full_json_fn, nts_dict)
-            # 부서비밀번호 입력 + 로그인 버튼 클릭
-            get_element(self.driver, self.bs_pw_elem).send_keys(self.bs_pw)
-            elem = get_element(self.driver, self.bs_id_login_btn)
-            self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행 http://bitly.kr/ckLhMIb 
-            time.sleep(self.delay_time + 0.5)
+            else:
+                # 부서비밀번호 입력 + 로그인 버튼 클릭
+                get_element(self.driver, self.bs_pw_elem).send_keys(self.bs_pw)
+                # time.sleep(self.delay_time + 1)
+                elem = get_element(self.driver, self.bs_id_login_btn)
+                self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행 http://bitly.kr/ckLhMIb 
+                time.sleep(self.delay_time + 2)
         else:
             # 공인인증서 로그인 버튼 : 클릭 안될 때  http://bitly.kr/ckLhMIb  # 자바 명령어 실행
             elem = get_element(self.driver, self.cert_login_btn)           # .click()
             self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행 http://bitly.kr/ckLhMIb 
-            time.sleep(self.delay_time + 0.5)
+            time.sleep(self.delay_time + 2)
 
         # 공인인증서 영역
         elem = get_element(self.driver, self.cert_zone)
         self.driver.switch_to.frame(elem)
-        time.sleep(self.delay_time + 1)
+        time.sleep(self.delay_time + 2)
         
         # 공인인증서 선택
         get_element(self.driver, self.cert_name_elem, attribute="title").click()
