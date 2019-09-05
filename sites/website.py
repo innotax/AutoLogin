@@ -18,7 +18,7 @@ from utils import Util, driverutil
 # driver.implicitly_wait(3)
 # driver.get('https://nid.naver.com/nidlogin.login')
 
-nts_dict = setdata.set_path_make_json_return_dic() 
+nts_dict, web_dict = setdata.set_path_make_json_return_dic() 
 
 class NaverLogin:
     def __init__(self, id="innotax14", pw=""):

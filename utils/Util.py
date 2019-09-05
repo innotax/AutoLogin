@@ -8,10 +8,11 @@ import pyperclip
 
 import PyQt5
 # from PyQt5.Qt import QApplication
-from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QWidget, QPushButton, QRadioButton, QLabel, QLineEdit, QAction, qApp 
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QDesktopWidget, QWidget, QDialog, QComboBox, QInputDialog,
+                            QPushButton, QRadioButton, QLabel, QLineEdit, QAction, QToolTip, qApp)
 from PyQt5.QtWidgets import QMessageBox, QTabWidget, QGridLayout, QGroupBox, QHBoxLayout, QVBoxLayout, QFormLayout
-from PyQt5.QtGui import QIcon, QRegExpValidator, QDoubleValidator, QIntValidator
-from PyQt5.QtCore import pyqtSlot, Qt, QRegExp
+from PyQt5.QtGui import QIcon, QRegExpValidator, QDoubleValidator, QIntValidator, QFont
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QRegExp
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -172,5 +173,27 @@ class MsgBoxTF(QMessageBox):
         else:
             return False
             # print('No clicked.')
+
+class InputDlg(QInputDialog):
+    def __init__(self, parent=None):
+        super().__init__()
+
+        rect = QDesktopWidget().availableGeometry()   # 작업표시줄 제외한 화면크기 반환
+        max_x = rect.width()
+        max_y = rect.height()
+
+        width, height = 350 , 250
+        left = max_x - width 
+        top = max_y - height
+        self.setGeometry(left, top, width, height)  
+        # self.show()
+            
+    def initUi(self, title="", input_label="입력값 :"):
+        text, ok = QInputDialog.getText(self, title, input_label)
+        if ok:
+            return text #, sys.exit(self) 
+        else:
+            pass
+            # sys.exit(self)
 
 

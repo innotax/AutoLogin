@@ -2,8 +2,10 @@ import os, sys, time, json, zipfile
 
 # 상위폴더 내 파일 import  https://brownbears.tistory.com/296
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__)))))) # 2단계 상위폴더
 
-from data import data
+import data
+# from data import data
 from utils import Util
 
 # 처음시작시 경로설정
@@ -21,6 +23,9 @@ data_path = os.path.join(st1_app_path, "data")        # json 파일 등 저장�
 json_fn = "data.json"                                 # 
 full_json_fn = os.path.join(data_path, json_fn)       # json 파일 full 경로
 
+web_json_fn = "web.json"  
+full_web_json_fn = os.path.join(data_path, web_json_fn) 
+
 def set_path_make_json_return_dic():   
     """ 앱 경로설정
     """
@@ -34,11 +39,15 @@ def set_path_make_json_return_dic():
         subprocess.Popen(full_ift_setup_path, stdin=PIPE, stdout=PIPE)
     """
     # json 파일이 있으면 dic 변환후 리턴
-    if os.path.isfile(full_json_fn):
+    if os.path.isfile(full_json_fn) and os.path.isfile(full_web_json_fn) :
         # 3. 저장된 json 파일을 파이썬 객체(딕셔너리)로...
         with open(full_json_fn, encoding='utf-8') as fn:
             nts_dict = json.load(fn) 
-        return nts_dict
+        # 3. 저장된 web json 파일을 파이썬 객체(딕셔너리)로...
+        with open(full_web_json_fn, encoding='utf-8') as fn:
+            web_dict = json.load(fn)
+
+        return nts_dict, web_dict
         
     else:
         try:
@@ -78,6 +87,17 @@ def set_path_make_json_return_dic():
                 with open(full_json_fn, encoding='utf-8') as fn:
                     nts_dict = json.load(fn)
 
+                # 2. web 딕셔너리를 json 파일로 만들어 저장
+                web_dict = data.get_web_dict()
+                nts_dict['secret']['드라이버경로'] = driver_path      
+                with open(full_web_json_fn, 'w', encoding='utf-8') as fn:
+                    json.dump(web_dict, fn, ensure_ascii=False, indent=4)
+                    # json_data = json.dumps(_dict_data, ensure_ascii=False, indent=4)
+
+                # 3. 저장된 web json 파일을 파이썬 객체(딕셔너리)로...
+                with open(full_web_json_fn, encoding='utf-8') as fn:
+                    web_dict = json.load(fn)
+
             elif os.path.isdir(st1_app_path):
                 if not os.path.isfile(full_json_fn):
                 # 2. 딕셔너리를 json 파일로 만들어 저장
@@ -94,12 +114,30 @@ def set_path_make_json_return_dic():
                     # 3. 저장된 json 파일을 파이썬 객체(딕셔너리)로...
                     with open(full_json_fn, encoding='utf-8') as fn:
                         nts_dict = json.load(fn) 
+                # web
+                if not os.path.isfile(full_web_json_fn):
+                    # 2. web 딕셔너리를 json 파일로 만들어 저장
+                    web_dict = data.get_web_dict()
+                    nts_dict['secret']['드라이버경로'] = driver_path      
+                    with open(full_web_json_fn, 'w', encoding='utf-8') as fn:
+                        json.dump(web_dict, fn, ensure_ascii=False, indent=4)
+                        # json_data = json.dumps(_dict_data, ensure_ascii=False, indent=4)
+
+                    # 3. 저장된 web json 파일을 파이썬 객체(딕셔너리)로...
+                    with open(full_web_json_fn, encoding='utf-8') as fn:
+                        web_dict = json.load(fn) 
+
+                elif os.path.isfile(full_json_fn):
+                    # 3. 저장된 web json 파일을 파이썬 객체(딕셔너리)로...
+                    with open(full_web_json_fn, encoding='utf-8') as fn:
+                        web_dict = json.load(fn) 
         except:
             pass
         finally:
-            return nts_dict
+            return (nts_dict , web_dict)
 
 
 if __name__ == '__main__':
     
-    nts_dic = set_path_make_json_return_dic()
+    nts_dic, web_dict = set_path_make_json_return_dic()
+    print(web_dict)

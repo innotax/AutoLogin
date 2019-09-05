@@ -2,10 +2,10 @@ import os, sys, time, json, zipfile, subprocess
 
 import PyQt5
 # from PyQt5.Qt import QApplication
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QDesktopWidget, QWidget, QDialog, QComboBox,
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QDesktopWidget, QWidget, QDialog, QComboBox, QInputDialog,
                             QPushButton, QRadioButton, QLabel, QLineEdit, QAction, QToolTip, qApp)
 from PyQt5.QtWidgets import QMessageBox, QTabWidget, QGridLayout, QGroupBox, QHBoxLayout, QVBoxLayout, QFormLayout
-from PyQt5.QtGui import QIcon, QRegExpValidator, QDoubleValidator, QIntValidator, QFont
+from PyQt5.QtGui import QIcon, QRegExpValidator, QDoubleValidator, QIntValidator, QFont ,QPixmap
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QRegExp
 
 # 상위폴더 내 파일 import  https://brownbears.tistory.com/296
@@ -17,6 +17,7 @@ from utils import Util, driverutil, iftutil
 
 # 변수의 스코프  https://umbum.tistory.com/823
 nts_dict = hometax.nts_dict
+web_dict = hometax.web_dict
 
 class Ui_SettingMenu(QDialog):
     def __init__(self, parent=None):
@@ -293,7 +294,7 @@ class Ui_Main(QMainWindow):
         tab3.setLayout(self.tab3_layout())
 
         tabs = QTabWidget()
-        tabs.addTab(tab1, "HomeTax")
+        tabs.addTab(tab1, "Auto Login")
         tabs.addTab(tab2, "2nd Tab")
         tabs.addTab(tab3, "3rd Tab")
 
@@ -330,7 +331,7 @@ class Ui_Main(QMainWindow):
         max_x = rect.width()
         max_y = rect.height()
 
-        width, height = 390 , 220
+        width, height = 380 , 220
         # width, height = 350 , 250
         left = max_x - width 
         top = max_y - height 
@@ -349,22 +350,37 @@ class Ui_Main(QMainWindow):
         # double_validator = QDoubleValidator(-999.0, 999.0, 2)   ### http://bitly.kr/wmonM2
         self.le_delay_time.setValidator(input_validator)      # double_validator)  
         self.le_delay_time.setMaxLength(3) 
+        # 가로 조정
+        self.le_cta_id.setFixedWidth(90)
 
         flo1 = QFormLayout()
-        flo1.addRow("CTA관리번호", self.le_cta_id)
-        flo1.addRow("부서아이디", self.le_bs_id)
-        flo1.addRow("딜레이타임", self.le_delay_time)
+        flo1.addRow("CTA No", self.le_cta_id)
+        flo1.addRow("부서ID", self.le_bs_id)
+        flo1.addRow("delay", self.le_delay_time)
         flo1.addRow(self.btn_login)
 
         gbox1 = QGroupBox("HomeTax Login")
         # web id pw
         gbox2 = QGroupBox('Website Login')
+
         flo2 = QFormLayout()
         self.web_cb = QComboBox()
         self.web_cb.addItems(['Naver','Hanbiro','bizforms','etaxkorea','The bill'])
+        self.web_id_cb = QComboBox()
+
+        self.web_id_cb.addItems([])
+
         self.web_id = QLineEdit()
         self.web_pw = QLineEdit()
-        self.web_login = QPushButton('로그인')
+        hbox_idpw = QHBoxLayout()
+        hbox_idpw.addWidget(self.web_id)
+        hbox_idpw.addWidget(self.web_pw)
+
+        # self.web_login = QPushButton('로그인')
+        # rMyIcon = QPixmap("printer.tif")
+        self.web_login = QPushButton()
+        # self.web_login.setIcon(QIcon(QPixmap("SP_TitleBarMaxButton")))
+        self.web_login.setIcon(self.style().standardIcon(getattr(QStyle,'SP_TitleBarUnshadeButton')))
         # Echomode
         self.web_pw.setEchoMode(QLineEdit.PasswordEchoOnEdit)  
         # Style
@@ -373,14 +389,18 @@ class Ui_Main(QMainWindow):
         self.web_login.setStyleSheet(
                 """QPushButton { background-color: #7cd3ff; color: blue; font: bold }""")       
 
-        flo2.addRow("Web", self.web_cb)
-        flo2.addRow("ID", self.web_id)
-        flo2.addRow("PW", self.web_pw)
+        # QToolTip.setFont(QFont('SansSerif', 10))
+        self.web_id.setToolTip("<b>ID 입력란</b>")
+        self.web_pw.setToolTip("<b>Password 입력란</b>")
+
+        flo2.addRow("Website", self.web_cb)
+        flo2.addRow("ID select", self.web_id_cb)
+        flo2.addRow(hbox_idpw)
         flo2.addRow(self.web_login)
 
         gbox1.setLayout(flo1)
         gbox2.setLayout(flo2)
-
+        
         hbox = QHBoxLayout()
         hbox.addWidget(gbox1)
         hbox.addWidget(gbox2)

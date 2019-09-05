@@ -19,30 +19,8 @@ from utils import Util, driverutil
 
 get_element = driverutil.get_element
 
-nts_dict = setdata.set_path_make_json_return_dic() 
+nts_dict, web_dict = setdata.set_path_make_json_return_dic() 
 
-
-class InputDlg(QInputDialog):
-    def __init__(self, parent=None):
-        super().__init__()
-
-        rect = QDesktopWidget().availableGeometry()   # 작업표시줄 제외한 화면크기 반환
-        max_x = rect.width()
-        max_y = rect.height()
-
-        width, height = 350 , 250
-        left = max_x - width 
-        top = max_y - height
-        self.setGeometry(left, top, width, height)  
-        # self.show()
-            
-    def initUi(self, title="", input_label="입력값 :"):
-        text, ok = QInputDialog.getText(self, title, input_label)
-        if ok:
-            return text #, sys.exit(self) 
-        else:
-            pass
-            # sys.exit(self)
 
 class Nts_Login:
     def __init__(self):
@@ -126,7 +104,7 @@ class Nts_Login:
             if self.bs_pw=="":               # 부서비번 없으면
                 # 부서 비밀번호 입력 QInputDialog
                 app = QApplication(sys.argv)
-                inputdlg = InputDlg()
+                inputdlg = Util.InputDlg()
                 title = "부서비밀번호 입력!"
                 input_label = "부서비밀번호 :"
                 bs_pw = inputdlg.initUi(title=title, input_label=input_label)
