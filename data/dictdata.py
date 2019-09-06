@@ -35,7 +35,7 @@ def get_nts_dict():
     # secret['수퍼아이디'] = "innotax14"
 
     # nts_dict > secret
-    secret['딜레이타임'] = "0.8"
+    secret['딜레이타임'] = "1.0"
     secret['부서아이디'] = ""
     secret['부서비번'] = ""
     secret['세무사관리번호'] = ""

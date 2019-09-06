@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))                                   # 1단계 상위폴더
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__)))))) # 2단계 상위폴더
 
-from data import setdata, data
+from data import setdata, dictdata
 from utils import Util, driverutil
 
 # 네이버 캡차(Captcha) 무력화 https://hyrama.com/?p=693

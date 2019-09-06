@@ -4,8 +4,8 @@ import os, sys, time, json, zipfile
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__)))))) # 2단계 상위폴더
 
-import data
-# from data import data
+import data.dictdata
+# from data import dictdata
 from utils import Util
 
 # 처음시작시 경로설정
@@ -46,7 +46,7 @@ def set_path_make_json_return_dic():
         # 3. 저장된 web json 파일을 파이썬 객체(딕셔너리)로...
         with open(full_web_json_fn, encoding='utf-8') as fn:
             web_dict = json.load(fn)
-
+        
         return nts_dict, web_dict
         
     else:
@@ -75,9 +75,10 @@ def set_path_make_json_return_dic():
                         zf.extractall(driver_path)
                 except:
                     pass
-
+                
                 # 2. 딕셔너리를 json 파일로 만들어 저장
-                nts_dict = data.get_nts_dict()
+                nts_dict = data.dictdata.get_nts_dict()
+                
                 nts_dict['secret']['드라이버경로'] = driver_path      
                 with open(full_json_fn, 'w', encoding='utf-8') as fn:
                     json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
@@ -88,8 +89,7 @@ def set_path_make_json_return_dic():
                     nts_dict = json.load(fn)
 
                 # 2. web 딕셔너리를 json 파일로 만들어 저장
-                web_dict = data.get_web_dict()
-                nts_dict['secret']['드라이버경로'] = driver_path      
+                web_dict = data.dictdata.get_web_dict()    
                 with open(full_web_json_fn, 'w', encoding='utf-8') as fn:
                     json.dump(web_dict, fn, ensure_ascii=False, indent=4)
                     # json_data = json.dumps(_dict_data, ensure_ascii=False, indent=4)
@@ -99,9 +99,11 @@ def set_path_make_json_return_dic():
                     web_dict = json.load(fn)
 
             elif os.path.isdir(st1_app_path):
+                
                 if not os.path.isfile(full_json_fn):
                 # 2. 딕셔너리를 json 파일로 만들어 저장
-                    nts_dict = data.get_nts_dict()        
+                    nts_dict = data.dictdata.get_nts_dict()  
+                    nts_dict['secret']['드라이버경로'] = driver_path         
                     with open(full_json_fn, 'w', encoding='utf-8') as fn:
                         json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
                         # json_data = json.dumps(_dict_data, ensure_ascii=False, indent=4)
@@ -117,8 +119,7 @@ def set_path_make_json_return_dic():
                 # web
                 if not os.path.isfile(full_web_json_fn):
                     # 2. web 딕셔너리를 json 파일로 만들어 저장
-                    web_dict = data.get_web_dict()
-                    nts_dict['secret']['드라이버경로'] = driver_path      
+                    web_dict = data.dictdata.get_web_dict()    
                     with open(full_web_json_fn, 'w', encoding='utf-8') as fn:
                         json.dump(web_dict, fn, ensure_ascii=False, indent=4)
                         # json_data = json.dumps(_dict_data, ensure_ascii=False, indent=4)
@@ -138,6 +139,6 @@ def set_path_make_json_return_dic():
 
 
 if __name__ == '__main__':
-    
+    print('start')
     nts_dic, web_dict = set_path_make_json_return_dic()
     print(web_dict)

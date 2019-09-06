@@ -11,7 +11,7 @@ from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QRegExp
 # 상위폴더 내 파일 import  https://brownbears.tistory.com/296
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
-from data import setdata, data
+from data import setdata, dictdata
 from sites import hometax
 from utils import Util, driverutil, iftutil
 
@@ -299,16 +299,16 @@ class Ui_Main(QMainWindow):
         tabs.addTab(tab3, "3rd Tab")
 
         self.setCentralWidget(tabs)
-        self.setWindowTitle("자동로그인 !!!")
+        self.setWindowTitle("AutoTaxTech V1.0 Designed by M.J.Kim ")
         # self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.WindowTitleHint)  # | Qt.FramelessWindowHint)  항상 위에
-        self.setWindowFlags(Qt.FramelessWindowHint)   # windowtitle 제외
+        # self.setWindowFlags(Qt.FramelessWindowHint)   # windowtitle 제외
 
         #>>> 메뉴바 https://wikidocs.net/21866  
         # 메뉴바 위젯연결 https://stackoverflow.com/questions/45688873/pyqt5-click-menu-and-open-new-window
-        setAction = QAction(QIcon('exit.png'), '기본사항 저장(변경)', self)
+        setAction = QAction(QIcon('exit.png'), 'HomeTax Setting', self)
         # setAction.setShortcut('Ctrl+Q')
-        setAction.setStatusTip('기본사항 저장(변경)...')
-        setAction.triggered.connect(self.id_setting)
+        # setAction.setStatusTip('HomeTax Setting...')
+        setAction.triggered.connect(self.nts_set_clicked)
 
         exitAction = QAction(QIcon('exit.png'), '종료', self)
         exitAction.setShortcut('Ctrl+Q')
@@ -318,7 +318,7 @@ class Ui_Main(QMainWindow):
 
         menubar = self.menuBar()
         menubar.setNativeMenuBar(False)
-        fileMenu = menubar.addMenu('&기본사항 설정')
+        fileMenu = menubar.addMenu('&설정/종료')
         fileMenu.addAction(setAction)
         fileMenu.addAction(exitAction)
 
@@ -342,7 +342,14 @@ class Ui_Main(QMainWindow):
         self.le_cta_id = QLineEdit()
         self.le_bs_id = QLineEdit()
         self.le_delay_time = QLineEdit()
-        self.btn_login = QPushButton("로그인")
+        self.btn_nts_login = QPushButton("로그인")
+        self.btn_nts_set = QPushButton()
+        hbox_nts_btn = QHBoxLayout()
+        hbox_nts_btn.addWidget(self.btn_nts_login)
+        hbox_nts_btn.addWidget(self.btn_nts_set)
+        # QIcon width
+        self.btn_nts_set.setIcon(QIcon('data/set.ico'))
+        self.btn_nts_set.setFixedWidth(30)
 
         # 입력제한 http://bitly.kr/wmonM2
         reg_ex = QRegExp("[0-9]+.?[0-9]{,2}")
@@ -357,7 +364,7 @@ class Ui_Main(QMainWindow):
         flo1.addRow("CTA No", self.le_cta_id)
         flo1.addRow("부서ID", self.le_bs_id)
         flo1.addRow("delay", self.le_delay_time)
-        flo1.addRow(self.btn_login)
+        flo1.addRow(hbox_nts_btn)
 
         gbox1 = QGroupBox("HomeTax Login")
         # web id pw
@@ -376,27 +383,38 @@ class Ui_Main(QMainWindow):
         hbox_idpw.addWidget(self.web_id)
         hbox_idpw.addWidget(self.web_pw)
 
-        # self.web_login = QPushButton('로그인')
-        # rMyIcon = QPixmap("printer.tif")
-        self.web_login = QPushButton()
-        # self.web_login.setIcon(QIcon(QPixmap("SP_TitleBarMaxButton")))
-        self.web_login.setIcon(self.style().standardIcon(getattr(QStyle,'SP_TitleBarUnshadeButton')))
+        self.btn_web_login = QPushButton("로그인")
+        self.btn_web_set = QPushButton()
+        hbox_web_btn = QHBoxLayout()
+        hbox_web_btn.addWidget(self.btn_web_login)
+        hbox_web_btn.addWidget(self.btn_web_set)
+        # QIcon width
+        self.btn_web_set.setIcon(QIcon('data/set.ico'))
+        self.btn_web_set.setFixedWidth(30)
         # Echomode
         self.web_pw.setEchoMode(QLineEdit.PasswordEchoOnEdit)  
         # Style
-        self.btn_login.setStyleSheet(
+        self.btn_nts_login.setStyleSheet(
                 """QPushButton { background-color: #ffff00; color: blue; font: bold }""")       
-        self.web_login.setStyleSheet(
-                """QPushButton { background-color: #7cd3ff; color: blue; font: bold }""")       
+        self.btn_web_login.setStyleSheet(
+                """QPushButton { background-color: #7cd3ff; color: blue; font: bold }""") 
+        
+        # pyinstaller image err solution
+        self.btn_nts_set.setStyleSheet(            
+                """QPushButton { border-image: url(:data/set.ico); width:20px; height:20px }""")   # ; width:30px; height:30px           
+        self.btn_web_set.setStyleSheet(            
+                """QPushButton { border-image: url(:data/set.ico); width:20px; height:20px }""")              
 
-        # QToolTip.setFont(QFont('SansSerif', 10))
-        self.web_id.setToolTip("<b>ID 입력란</b>")
-        self.web_pw.setToolTip("<b>Password 입력란</b>")
+        QToolTip.setFont(QFont('SansSerif', 10))
+        self.web_id.setToolTip("<h3>ID 입력</h3>")
+        self.web_pw.setToolTip("<h3>Password 입력</h3>")
+        self.btn_nts_set.setToolTip("<h3>HomeTax 설정</h3>")
+        self.btn_web_set.setToolTip("<h3>Web 설정</h3>")
 
         flo2.addRow("Website", self.web_cb)
         flo2.addRow("ID select", self.web_id_cb)
         flo2.addRow(hbox_idpw)
-        flo2.addRow(self.web_login)
+        flo2.addRow(hbox_web_btn)
 
         gbox1.setLayout(flo1)
         gbox2.setLayout(flo2)
@@ -468,11 +486,20 @@ class Main(Ui_Main):
 
         self.set_placeholder() 
 
-        # Signal connect Slot
+        # Nts login Signal connect Slot
         self.le_cta_id.editingFinished.connect(self.cta_id_changed) 
         self.le_bs_id.editingFinished.connect(self.bs_id_changed) 
         self.le_delay_time.editingFinished.connect(self.delay_time_changed) 
-        self.btn_login.clicked.connect(self.login_clicked)
+        self.btn_nts_login.clicked.connect(self.nts_login_clicked)
+        self.btn_nts_set.clicked.connect(self.nts_set_clicked)
+
+        # Web login Signal connect Slot
+        self.web_cb.activated[str].connect(self.on_web_activated)
+        self.web_id_cb.activated[str].connect(self.on_webid_activated)
+        self.web_id.editingFinished.connect(self.web_id_changed)
+        self.web_pw.editingFinished.connect(self.web_pw_changed)
+        self.btn_web_login.clicked.connect(self.web_login_clicked)
+        self.btn_web_set.clicked.connect(self.web_set_clicked)
 
         self.show()
 
@@ -539,7 +566,7 @@ class Main(Ui_Main):
             Util.save_dict_to_json(setdata.full_json_fn, nts_dict)
 
     @pyqtSlot()
-    def login_clicked(self):
+    def nts_login_clicked(self):
         
         if self.cta_id != self.le_cta_id.placeholderText():
             nts_dict['secret']['세무사관리번호'] = self.le_cta_id.placeholderText()
@@ -567,12 +594,39 @@ class Main(Ui_Main):
         login = hometax.Nts_Login()
         login.path2()
 
-
     @pyqtSlot()
-    def id_setting(self):       
+    def nts_set_clicked(self):       
         widget = SettingMenu()
         self.make_connection(widget)
         widget.exec_()
+
+    # web Slot
+    @pyqtSlot()
+    def on_web_activated(self):       
+        pass
+
+    @pyqtSlot()
+    def on_webid_activated(self):       
+        pass
+    @pyqtSlot()
+    def web_id_changed(self):       
+        pass
+
+    @pyqtSlot()
+    def web_pw_changed(self):       
+        pass
+
+    @pyqtSlot()
+    def web_login_clicked(self):   
+        popup = Util.Errpop()    
+        msg = "개발중...<br>comming soon..."
+        popup.critical_pop(msg)
+
+    @pyqtSlot()
+    def web_set_clicked(self):       
+        popup = Util.Errpop()    
+        msg = "개발중...<br>comming soon..."
+        popup.critical_pop(msg)
 
     def make_connection(self, signal_emit_object):
         signal_emit_object.cta_id_changed_signal.connect(self.receive_cta_id)

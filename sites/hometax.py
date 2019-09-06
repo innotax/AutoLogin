@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QDesktopWidget
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))                                   # 1단계 상위폴더
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__)))))) # 2단계 상위폴더
 
-from data import setdata, data
+from data import setdata, dictdata
 from utils import Util, driverutil
 # from utils.driverutil import get_element
 
