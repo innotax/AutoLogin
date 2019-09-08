@@ -158,15 +158,20 @@ def get_nts_dict():
 
 def get_web_dict():
 
-    web_idpw = dict()
+    web_dict = dict()
+    idpw = dict()
+    
+    web_dict['드라이버경로'] = ""
+    
+    idpw['naver'] = []
+    idpw['Hanbiro'] = []
+    idpw['bizforms'] = []
+    idpw['etaxkorea'] = []
+    idpw['Thebill'] = []
 
-    web_idpw['naver'] = []
-    web_idpw['Hanbiro'] = []
-    web_idpw['bizforms'] = []
-    web_idpw['etaxkorea'] = []
-    web_idpw['Thebill'] = []
+    web_dict['idpw'] = idpw
 
-    return web_idpw
+    return web_dict
 
 
     

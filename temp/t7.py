@@ -1,80 +1,31 @@
-import sys
-from PyQt5.QtCore import (Qt)
-from PyQt5.QtWidgets import (QWidget, QLCDNumber, QSlider, QFormLayout, QGroupBox, QHBoxLayout,
-    QVBoxLayout, QApplication, QMainWindow, QTabWidget, QLineEdit, QPushButton)
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QRegExp
+from selenium import webdriver
+# from selenium.webdriver.chrome.options import Options
+import os
+
+chrome_path = r"C:\Ataxtech\AutoLogin\loginAPP\driver\chromedriver"
+# chrome_option = Options()
+# chrome_option.add_argument("--headless")
+# chrome_option.add_argument("--window-size=1920*1080")
+# chrome_option.add_argument("disable-gpu")
+# chrome_option.add_argument("""user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4)
+#      AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36""")
+
+# chrome_option.binary_location= r"C:\Users\taxkm\AppData\Local\Google\Chrome\User Data\PepperFlash\32.0.0.238\pepflashplayer.dll"
+# driver = webdriver.Chrome(executable_path=chrome_path,
+#                             chrome_options=chrome_option)
+# driver.execute_script("Object.defineProperty(navigator, 'languages', 
+#                       {get: function() {return ['ko-KR', 'ko']})")
+# driver.execute_script("Object.defineProperty(navigator, 'plugins', 
+#                       {get: function() {return[1, 2, 3, 4, 5]}})")
 
 
-class Example(QMainWindow):
+# 크롬 headless 모드 실행
+chrome_options = webdriver.ChromeOptions()
+# chrome_options.add_argument('headless')
+chrome_options.add_argument('--disable-gpu')
+chrome_options.add_argument('lang=ko_KR')
 
-    def __init__(self):
-        super().__init__()
+driver = webdriver.Chrome(chrome_path, chrome_options=chrome_options)
+driver.implicitly_wait(3)
 
-        tab1 = QWidget()
-        tab2 = QWidget()
-        tab3 = QWidget() 
-
-        tab1.setLayout(self.tab1_layout())
-        tab2.setLayout(self.tab2_layout())
-        tab3.setLayout(self.tab3_layout())
-        # tab2 = self.tab2_layout()
-        # tab3 = self.tab3_layout() 
-
-        tabs = QTabWidget()
-        # tabs.setLayout(tab1)
-        tabs.addTab(tab1, "HomeTax")
-        tabs.addTab(tab2, "2nd Tab")
-        tabs.addTab(tab3, "3rd Tab")
-
-        self.setCentralWidget(tabs)
-
-        self.show()
-        
-
-    def tab1_layout(self):
-        self.le_ctaid = QLineEdit()
-        self.le_bsid = QLineEdit()
-        self.le_delay = QLineEdit()
-        self.btn_login = QPushButton("login")
-        self.btn_save = QPushButton("save")
-
-        hbox_s = QHBoxLayout()
-        hbox_s.addWidget(self.btn_login)
-        hbox_s.addWidget(self.btn_save)
-
-        flo1 = QFormLayout()
-        flo1.addRow("세무사관리번호", self.le_ctaid)
-        flo1.addRow("부서아이디", self.le_bsid)
-        flo1.addRow("딜레이타임", self.le_delay)
-        flo1.addRow(hbox_s)
-
-        gbox1 = QGroupBox("HomeTax Login")
-        gbox2 = QGroupBox("GroupBox2")
-
-        gbox1.setLayout(flo1)
-
-        hbox = QHBoxLayout()
-        hbox.addWidget(gbox1)
-        hbox.addWidget(gbox2)
-
-        return hbox
-        
-        
-    def tab2_layout(self):
-        btn = QPushButton('comming soon...')
-        hbox = QHBoxLayout()
-        hbox.addWidget(btn)
-        return hbox
-
-    def tab3_layout(self):
-        btn = QPushButton('comming soon...')
-        hbox = QHBoxLayout()
-        hbox.addWidget(btn)
-        return hbox
-
-
-if __name__ == '__main__':
-
-    app = QApplication(sys.argv)
-    ex = Example()
-    sys.exit(app.exec_())
+driver.get('https://developer-ankiwoong.tistory.com/60')

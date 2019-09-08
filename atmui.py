@@ -15,9 +15,13 @@ from data import setdata, dictdata
 from sites import hometax
 from utils import Util, driverutil, iftutil
 
+# ===== Config =====
 # 변수의 스코프  https://umbum.tistory.com/823
 nts_dict = hometax.nts_dict
 web_dict = hometax.web_dict
+FULLPATH_NTS_JSON = setdata.FULLPATH_NTS_JSON
+FULLPATH_WEB_JSON = setdata.FULLPATH_WEB_JSON
+## ==================
 
 class Ui_SettingMenu(QDialog):
     def __init__(self, parent=None):
@@ -143,7 +147,7 @@ class SettingMenu(Ui_SettingMenu):
             self.cta_id = text
             nts_dict['secret']['세무사관리번호'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
+            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
                 json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
             # 2. 시그널 객체 방출
             self.cta_id_changed_signal.emit(text)
@@ -157,7 +161,7 @@ class SettingMenu(Ui_SettingMenu):
             self.bs_id = text
             nts_dict['secret']['부서아이디'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
+            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
                 json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
             # 2. 시그널 객체 방출
             self.bs_id_changed_signal.emit(text)
@@ -171,7 +175,7 @@ class SettingMenu(Ui_SettingMenu):
             self.super_id = text
             nts_dict['secret']['수퍼아이디'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
+            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
                 json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
 
     @pyqtSlot()
@@ -183,7 +187,7 @@ class SettingMenu(Ui_SettingMenu):
             self.cert_nm = text
             nts_dict['secret']['공인인증서명칭'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
+            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
                 json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
 
     @pyqtSlot()
@@ -195,7 +199,7 @@ class SettingMenu(Ui_SettingMenu):
             self.cta_pw = text
             nts_dict['secret']['세무사비번'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
+            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
                 json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
 
     @pyqtSlot()
@@ -207,7 +211,7 @@ class SettingMenu(Ui_SettingMenu):
             self.bs_pw = text
             nts_dict['secret']['부서비번'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장  
-            Util.save_dict_to_json(setdata.full_json_fn, nts_dict)
+            Util.save_dict_to_json(FULLPATH_NTS_JSON, nts_dict)
 
     @pyqtSlot()
     def delay_time_changed(self):
@@ -218,7 +222,7 @@ class SettingMenu(Ui_SettingMenu):
             self.delay_time = text
             nts_dict['secret']['딜레이타임'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장  
-            Util.save_dict_to_json(setdata.full_json_fn, nts_dict)
+            Util.save_dict_to_json(FULLPATH_NTS_JSON, nts_dict)
             # 2. 시그널 객체 방출
             self.delay_time_changed_signal.emit(text)
 
@@ -231,7 +235,7 @@ class SettingMenu(Ui_SettingMenu):
             self.cert_pw = text
             nts_dict['secret']['공인인증서비번'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장  
-            Util.save_dict_to_json(setdata.full_json_fn, nts_dict)
+            Util.save_dict_to_json(FULLPATH_NTS_JSON, nts_dict)
 
     @pyqtSlot()
     def save_changed_values(self):
@@ -246,7 +250,7 @@ class SettingMenu(Ui_SettingMenu):
         nts_dict['secret']['공인인증서비번'] = self.cert_pw
 
         # 2. 수정된 딕셔너리를 json 파일로 만들어 저장  
-        Util.save_dict_to_json(setdata.full_json_fn, nts_dict)
+        Util.save_dict_to_json(FULLPATH_NTS_JSON, nts_dict)
         # setplaceholder QLineEdit
         self.set_placeholder()
         self.close()
@@ -260,7 +264,7 @@ class SettingMenu(Ui_SettingMenu):
             nts_dict['secret']['공인인증서명칭'] = cert_nm
             nts_dict['secret']['공인인증서비번'] = cert_pw
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
+            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
                 json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
 
             self.set_placeholder()
@@ -452,6 +456,16 @@ class Main(Ui_Main):
         self.delay_time = str(nts_dict['secret']['딜레이타임']) 
         self.cert_pw = nts_dict['secret']['공인인증서비번'] 
 
+        self.naver_idpw_lst_of_dic = web_dict['idpw']['naver']
+        self.Hanbiro_idpw_lst_of_dic = web_dict['idpw']['Hanbiro']
+        self.bizforms_idpw_lst_of_dic = web_dict['idpw']['bizforms']
+        self.etaxkorea_idpw_lst_of_dic = web_dict['idpw']['etaxkorea']
+        self.Thebill_idpw_lst_of_dic = web_dict['idpw']['Thebill']
+
+        self.add_idpw = dict()
+
+
+
         if (self.cert_nm == "" or
             self.cert_pw == ""):
 
@@ -474,7 +488,7 @@ class Main(Ui_Main):
 
             title = "필수사항 초기입력"
             # msg = f"필수사항({require_str})입력이 필요합니다!!<br>지금 필수사항을 입력하시겠습니까??"
-            msg = f"세무법인은 세무사관리번호, 세무사관리번호 비밀번호는 반드시 입력해야 합니다 !!<br>지금 필수사항을 입력하시겠습니까??"
+            msg = f"세무법인은 <b>세무사관리번호, 세무사관리번호 비밀번호</b>는 반드시 입력해야 합니다 !!<br>지금 필수사항을 입력하시겠습니까??"
             inst = Util.MsgBoxTF(title, msg)
             TF = inst.initUI()
 
@@ -527,7 +541,7 @@ class Main(Ui_Main):
             nts_dict['secret']['공인인증서비번'] = cert_pw
 
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
+            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
                 json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
 
     @pyqtSlot()
@@ -539,7 +553,7 @@ class Main(Ui_Main):
             self.cta_id = text
             nts_dict['secret']['세무사관리번호'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
+            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
                 json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
         
     @pyqtSlot()
@@ -551,7 +565,7 @@ class Main(Ui_Main):
             self.bs_id = text
             nts_dict['secret']['부서아이디'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(setdata.full_json_fn, 'w', encoding='utf-8') as fn:
+            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
                 json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
 
     @pyqtSlot()
@@ -563,7 +577,7 @@ class Main(Ui_Main):
             self.delay_time = text
             nts_dict['secret']['딜레이타임'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장  
-            Util.save_dict_to_json(setdata.full_json_fn, nts_dict)
+            Util.save_dict_to_json(FULLPATH_NTS_JSON, nts_dict)
 
     @pyqtSlot()
     def nts_login_clicked(self):
@@ -587,11 +601,12 @@ class Main(Ui_Main):
         # nts_dict['secret']['부서아이디'] = self.bs_id       
         # nts_dict['secret']['딜레이타임'] = str(self.delay_time)
         # 2. 수정된 딕셔너리를 json 파일로 만들어 저장  
-        Util.save_dict_to_json(setdata.full_json_fn, nts_dict)
+        Util.save_dict_to_json(FULLPATH_NTS_JSON, nts_dict)
         # setplaceholder QLineEdit
         self.set_placeholder()
         # 홈택스 로그인
         login = hometax.Nts_Login()
+
         login.path2()
 
     @pyqtSlot()
@@ -601,12 +616,19 @@ class Main(Ui_Main):
         widget.exec_()
 
     # web Slot
+    @pyqtSlot(str)
+    def on_web_activated(self, text):       
+        if text == "Naver":
+            if self.naver_idpw_lst_of_dic:   # len(list) > 0
+                id_lst_of_tup = [(x['id'], x['pw']) for x in self.naver_idpw_lst_of_dic]
+                id_lst = [x[0] for x in id_lst_of_tup]
+                self.web_id_cb.clear()
+                self.web_id_cb.addItems(id_lst)
+                
     @pyqtSlot()
-    def on_web_activated(self):       
-        pass
-
-    @pyqtSlot()
-    def on_webid_activated(self):       
+    def on_webid_activated(self): 
+        if self.web_cb.currentText() == "Naver":
+            pass      
         pass
     @pyqtSlot()
     def web_id_changed(self):       

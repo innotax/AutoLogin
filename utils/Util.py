@@ -21,6 +21,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
+# https://5kyc1ad.tistory.com/326 Copyright (c) 2018 Sanghyeon Jeon
+def Mkdirs(filePath):
+    # dirPath = os.path.sep.join(filePath.split(os.path.sep)[:-1])
+    dirPath = os.path.sep.join(filePath.split(os.path.sep)[:])
+
+    if not os.path.exists(dirPath):
+        os.makedirs(dirPath)
+## =================
 
 def get_dic_file_path(path):
     """ 경로 받아서 전체경로파일명 딕셔너리 리턴: 파일명(확장자제외): 전체경로 

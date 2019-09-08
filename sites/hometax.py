@@ -19,7 +19,7 @@ from utils import Util, driverutil
 
 get_element = driverutil.get_element
 
-nts_dict, web_dict = setdata.set_path_make_json_return_dic() 
+nts_dict, web_dict = setdata.setup_path_json_dict() 
 
 
 class Nts_Login:
@@ -29,7 +29,7 @@ class Nts_Login:
         driver = driverutil.Get_driver(driver_path, driver_name)
         self.driver = driver.chrome_driver()
         self.driver.get('https://www.hometax.go.kr/')
-
+      
         # 모니터 작은 경우 https://code-examples.net/ko/q/2fbfea
         tk = tkinter.Tk()
         screen_height = tk.winfo_screenheight()
@@ -94,7 +94,7 @@ class Nts_Login:
             # 공인인증서 로그인 버튼 : 클릭 안될 때  http://bitly.kr/ckLhMIb  # 자바 명령어 실행
             elem = get_element(self.driver, self.cert_login_btn)           # .click()
             self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행
-            time.sleep(self.delay_time + 2)
+            time.sleep(self.delay_time + 1)
 
         # 부서아이디 유무
         elif self.bs_id !="":
@@ -119,17 +119,17 @@ class Nts_Login:
                 # time.sleep(self.delay_time + 1)
                 elem = get_element(self.driver, self.bs_id_login_btn)
                 self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행 http://bitly.kr/ckLhMIb 
-                time.sleep(self.delay_time + 2)
+                time.sleep(self.delay_time + 1)
         else:
             # 공인인증서 로그인 버튼 : 클릭 안될 때  http://bitly.kr/ckLhMIb  # 자바 명령어 실행
             elem = get_element(self.driver, self.cert_login_btn)           # .click()
             self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행 http://bitly.kr/ckLhMIb 
-            time.sleep(self.delay_time + 2)
+            time.sleep(self.delay_time + 1)
 
         # 공인인증서 영역
         elem = get_element(self.driver, self.cert_zone)
         self.driver.switch_to.frame(elem)
-        time.sleep(self.delay_time + 2)
+        time.sleep(self.delay_time + 1)
         
         # 공인인증서 선택
         get_element(self.driver, self.cert_name_elem, attribute="title").click()

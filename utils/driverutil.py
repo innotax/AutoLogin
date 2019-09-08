@@ -7,8 +7,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+import pyperclip
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))                                   # 1단계 상위폴더
 from utils import Util
@@ -16,33 +17,17 @@ from data import setdata
 
 def get_element(driver, attribute_value, attribute='id'):
     
-    for i in range(1):
-        try:
-            element = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, f"//*[@{attribute}=\'{attribute_value}\']")))
-            
-            return element
-        except Exception as e:
-            app = QApplication(sys.argv)
-            err_class_name = e.__class__.__name__
-            msg = f"selenium id < {attribute_value} >에서 예외 < {err_class_name} >가 발생 하였습니다."
-            errmsg = Util.Errpop().critical_pop(msg)
-            sys.exit(app.exec_())
-
-# def get_element(driver, id):
-#     try:
-#         if "세무법인이노택스테헤" not in id:
-#             wait = WebDriverWait(driver, 10)
-#             element = wait.until(EC.presence_of_element_located((By.XPATH, f"//*[@id=\'{id}\']")))
-#         elif "세무법인이노택스테헤" in id:
-#             wait = WebDriverWait(driver, 10)
-#             element = wait.until(EC.presence_of_element_located((By.XPATH, f"//*[@title=\'{id}\']")))
-#         return element
-
-#     except Exception as e:
-#         err_class_name = e.__class__.__name__
-#         msg = f"selenium id < {id} >에서 예외 < {err_class_name} >가 발생 하였습니다."
-#         errmsg = Util.Errpop().critical_pop(msg)
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, f"//*[@{attribute}=\'{attribute_value}\']")))
+        
+        return element
+    except Exception as e:
+        app = QApplication(sys.argv)
+        err_class_name = e.__class__.__name__
+        msg = f"selenium id < {attribute_value} >에서 예외 < {err_class_name} >가 발생 하였습니다."
+        errmsg = Util.Errpop().critical_pop(msg)
+        sys.exit(app.exec_())
 
 def setup_iftCertAdapter():
     if not os.path.isfile(r'C:\Infotech\Common\iftWinExAdapter.dll'):
@@ -50,6 +35,27 @@ def setup_iftCertAdapter():
         iftNxService_setup_path = os.path.join(setdata.driver_path, iftAdapter)
         PIPE = subprocess.PIPE
         subprocess.Popen(iftNxService_setup_path, stdin=PIPE, stdout=PIPE)
+
+class DriverUtils(object):
+    """ https://github.com/lumyjuwon/NaverCaptcha
+    """
+    def __init__(self, driver):
+        self.driver = driver
+
+    def focus_frame(self, explicit_wait_time, element):
+        # 프레임이 생성되기 전 까지 기다렸다가 생성이 완료 되면 프레임을 옮김
+        WebDriverWait(self.driver, explicit_wait_time).until(EC.frame_to_be_available_and_switch_to_it(element))
+
+    def clipboard_input(self, user_xpath, user_input):
+        temp_user_input = pyperclip.paste()  # 사용자 클립보드를 따로 저장
+
+        pyperclip.copy(user_input)
+        self.driver.find_element_by_xpath(user_xpath).click()
+        ActionChains(self.driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+
+        pyperclip.copy(temp_user_input)  # 사용자 클립보드에 저장 된 내용을 다시 가져 옴
+        time.sleep(0.5)
+
 
 class Get_driver():
     def __init__(self, driver_path=r"C:\Ataxtech\AutoLogin\loginAPP\driver", driver_name="chromedriver.exe"):
