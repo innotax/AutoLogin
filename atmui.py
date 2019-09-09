@@ -371,7 +371,7 @@ class Ui_Main(QMainWindow):
 
         flo2 = QFormLayout()
         self.web_cb = QComboBox()
-        self.web_cb.addItems(['Naver','Hanbiro','bizforms','etaxkorea','The bill'])
+        # self.web_cb.addItems(['Naver','Hanbiro','bizforms','etaxkorea','The bill'])
         self.web_id_cb = QComboBox()
 
         self.web_id_cb.addItems([])
@@ -458,6 +458,9 @@ class Main(Ui_Main):
         self.Thebill_idpw_lst_of_dic = web_dict['idpw']['Thebill']
 
         self.add_idpw = [None, None]   # [None for i in range(2)]
+
+        self.website_lst =  web_dict['websites']
+        self.web_cb.addItems(self.website_lst)
 
 
 
@@ -609,7 +612,11 @@ class Main(Ui_Main):
 
     # web Slot
     @pyqtSlot(str)
-    def on_web_activated(self, text):       
+    def on_web_activated(self, text):
+        self.add_idpw = [None, None]    # 리스트 초기화 
+        # self.web_id.clear()    
+        # self.web_pw.clear()    
+
         if text == "Naver":
             if self.naver_idpw_lst_of_dic:   # len(list) > 0
                 key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.naver_idpw_lst_of_dic)
@@ -721,59 +728,49 @@ class Main(Ui_Main):
             print("4>>",self.add_idpw)
             add_idpw_dic['id'] = self.add_idpw[0]
             add_idpw_dic['pw'] = self.add_idpw[1]
+
             if self.web_cb.currentText() == "Naver":
-                # id 유무 확인하여 pw 만 업데이트
-                key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.naver_idpw_lst_of_dic)
-                id_lst = [idpw[0] for idpw in idpw_lst]
-                if add_idpw_dic['id'] in id_lst:   # 동일 id 있으면
-                    for idpw in idpw_lst:
-                        print(idpw)
-                        if idpw[0] != add_idpw_dic['id']:      # id 일치하지 않으면
-                            continue
-                        elif idpw[0] == add_idpw_dic['id']:    # id 일치하면
-                            if idpw[1] == add_idpw_dic['pw']:  # pw 일치하면
-                                print("pw 일치")
-                                continue
-                            else:                              # pw 불일치
-                                print(">>>pw 불일치")
-                                # idpw[0] = add_idpw_dic['id']
-                                idpw[1] = add_idpw_dic['pw']
-                                print(idpw_lst)
-                                self.naver_idpw_lst_of_dic = jsconverter.lstOFlst_to_lstOFdic(key_lst, idpw_lst)
-                                jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
-                                # self.add_idpw = [None, None]                            # 리스트 초기화 
-                                break
-                else:                                        # 동일 id 없으면
-                    self.naver_idpw_lst_of_dic.append(add_idpw_dic)
+                # 최초 입력시 빈리스트 인 경우
+                if not self.naver_idpw_lst_of_dic:
+                    self.naver_idpw_lst_of_dic.insert(0, add_idpw_dic)      # 제일 앞으로
                     jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
-                    # self.add_idpw = [None, None]                            # 리스트 초기화  
-                    print("5>>",self.add_idpw) 
+                        # self.add_idpw = [None, None]                            # 리스트 초기화  
+                else:
+                    # id 유무 확인하여 pw 만 업데이트
+                    key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.naver_idpw_lst_of_dic)
+                    id_lst = [idpw[0] for idpw in idpw_lst]
+                    if add_idpw_dic['id'] in id_lst:       # 동일 id 있으면
+                        for i, id in enumerate(id_lst):    # index 구하기 위해서
+                            if id != add_idpw_dic['id']:   # id 가 일치하지 않으면
+                                continue
+                            else:                          # id 가 일치하면
+                                idx = i                    # index 구하고
+                        # pw 일치 확인
+                        if idpw_lst[idx][1] == self.add_idpw[1]:   # pw 동일하면 즉시 로그인
+                            pop_idpw = idpw_lst.pop(idx)     # 순서교체
+                            idpw_lst.insert(0,pop_idpw)      # 순서교체
+                            self.naver_idpw_lst_of_dic = jsconverter.lstOFlst_to_lstOFdic(key_lst, idpw_lst)   #######
+                            web_dict['idpw']['naver'] = self.naver_idpw_lst_of_dic  
+                            jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
+                            
+
+                        elif idpw_lst[idx][1] != self.add_idpw[1]: # pw 다르면 업데이트 후 로그인
+                            idpw_lst[idx][0] = self.add_idpw[0]
+                            idpw_lst[idx][1] = self.add_idpw[1]
+                            
+                            pop_idpw = idpw_lst.pop(idx)     # 순서교체
+                            idpw_lst.insert(0,pop_idpw)      # 순서교체
+                            self.naver_idpw_lst_of_dic = jsconverter.lstOFlst_to_lstOFdic(key_lst, idpw_lst)   #######
+                            web_dict['idpw']['naver'] = self.naver_idpw_lst_of_dic  
+                            jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
+
+                    else:                                        # 동일 id 없으면
+                        self.naver_idpw_lst_of_dic.insert(0, add_idpw_dic)      # 제일 앞으로
+                        jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
+                
+                        
+                        
                     
-
-                # for idpw in idpw_lst:
-                #     print(idpw)
-                #     if idpw[0] == add_idpw_dic['id']:      # 동일 id 있으면
-                #         if idpw[1] == add_idpw_dic['pw']:  # pw 일치하면
-                #             continue
-                #         else:                              # pw 불일치
-                #             idpw[0] = add_idpw_dic['id']
-                #             idpw[1] = add_idpw_dic['pw']
-                #             self.naver_idpw_lst_of_dic = jsconverter.lstOFlst_to_lstOFdic(key_lst, idpw_lst)
-                #             jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
-                #             # self.add_idpw = [None, None]                            # 리스트 초기화 
-                #             break
-                #     else:                                  # 동일 id 없으면
-                #         self.naver_idpw_lst_of_dic.append(add_idpw_dic)
-                #         jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
-                #         # self.add_idpw = [None, None]                            # 리스트 초기화  
-                #         print("5>>",self.add_idpw) 
-                #         break               
-
-
-        popup = Util.Errpop()    
-        msg = "개발중...<br>comming soon..."
-        popup.critical_pop(msg)
-
     @pyqtSlot()
     def web_set_clicked(self):       
         popup = Util.Errpop()    

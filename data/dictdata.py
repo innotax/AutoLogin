@@ -162,6 +162,7 @@ def get_web_dict():
     idpw = dict()
     
     web_dict['드라이버경로'] = ""
+    web_dict['websites'] = ['Naver','Hanbiro','bizforms','etaxkorea','The bill']
     
     idpw['naver'] = []
     idpw['Hanbiro'] = []
