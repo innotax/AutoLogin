@@ -21,6 +21,7 @@ nts_dict = hometax.nts_dict
 web_dict = hometax.web_dict
 FULLPATH_NTS_JSON = setdata.FULLPATH_NTS_JSON
 FULLPATH_WEB_JSON = setdata.FULLPATH_WEB_JSON
+jsconverter = Util.JsonConverter()
 ## ==================
 
 class Ui_SettingMenu(QDialog):
@@ -147,8 +148,7 @@ class SettingMenu(Ui_SettingMenu):
             self.cta_id = text
             nts_dict['secret']['세무사관리번호'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
-                json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
+            jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
             # 2. 시그널 객체 방출
             self.cta_id_changed_signal.emit(text)
         
@@ -161,8 +161,7 @@ class SettingMenu(Ui_SettingMenu):
             self.bs_id = text
             nts_dict['secret']['부서아이디'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
-                json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
+            jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
             # 2. 시그널 객체 방출
             self.bs_id_changed_signal.emit(text)
 
@@ -175,8 +174,7 @@ class SettingMenu(Ui_SettingMenu):
             self.super_id = text
             nts_dict['secret']['수퍼아이디'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
-                json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
+            jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
 
     @pyqtSlot()
     def cert_nm_changed(self):
@@ -187,8 +185,7 @@ class SettingMenu(Ui_SettingMenu):
             self.cert_nm = text
             nts_dict['secret']['공인인증서명칭'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
-                json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
+            jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
 
     @pyqtSlot()
     def cta_pw_changed(self):
@@ -199,8 +196,7 @@ class SettingMenu(Ui_SettingMenu):
             self.cta_pw = text
             nts_dict['secret']['세무사비번'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
-                json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
+            jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
 
     @pyqtSlot()
     def bs_pw_changed(self):
@@ -211,7 +207,7 @@ class SettingMenu(Ui_SettingMenu):
             self.bs_pw = text
             nts_dict['secret']['부서비번'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장  
-            Util.save_dict_to_json(FULLPATH_NTS_JSON, nts_dict)
+            jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
 
     @pyqtSlot()
     def delay_time_changed(self):
@@ -222,7 +218,7 @@ class SettingMenu(Ui_SettingMenu):
             self.delay_time = text
             nts_dict['secret']['딜레이타임'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장  
-            Util.save_dict_to_json(FULLPATH_NTS_JSON, nts_dict)
+            jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
             # 2. 시그널 객체 방출
             self.delay_time_changed_signal.emit(text)
 
@@ -235,7 +231,7 @@ class SettingMenu(Ui_SettingMenu):
             self.cert_pw = text
             nts_dict['secret']['공인인증서비번'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장  
-            Util.save_dict_to_json(FULLPATH_NTS_JSON, nts_dict)
+            jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
 
     @pyqtSlot()
     def save_changed_values(self):
@@ -250,7 +246,7 @@ class SettingMenu(Ui_SettingMenu):
         nts_dict['secret']['공인인증서비번'] = self.cert_pw
 
         # 2. 수정된 딕셔너리를 json 파일로 만들어 저장  
-        Util.save_dict_to_json(FULLPATH_NTS_JSON, nts_dict)
+        jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
         # setplaceholder QLineEdit
         self.set_placeholder()
         self.close()
@@ -264,8 +260,7 @@ class SettingMenu(Ui_SettingMenu):
             nts_dict['secret']['공인인증서명칭'] = cert_nm
             nts_dict['secret']['공인인증서비번'] = cert_pw
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
-                json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
+            jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
 
             self.set_placeholder()
     
@@ -396,7 +391,7 @@ class Ui_Main(QMainWindow):
         self.btn_web_set.setIcon(QIcon('data/set.ico'))
         self.btn_web_set.setFixedWidth(30)
         # Echomode
-        self.web_pw.setEchoMode(QLineEdit.PasswordEchoOnEdit)  
+        # self.web_pw.setEchoMode(QLineEdit.PasswordEchoOnEdit)  
         # Style
         self.btn_nts_login.setStyleSheet(
                 """QPushButton { background-color: #ffff00; color: blue; font: bold }""")       
@@ -462,7 +457,7 @@ class Main(Ui_Main):
         self.etaxkorea_idpw_lst_of_dic = web_dict['idpw']['etaxkorea']
         self.Thebill_idpw_lst_of_dic = web_dict['idpw']['Thebill']
 
-        self.add_idpw = dict()
+        self.add_idpw = [None, None]   # [None for i in range(2)]
 
 
 
@@ -541,8 +536,7 @@ class Main(Ui_Main):
             nts_dict['secret']['공인인증서비번'] = cert_pw
 
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
-                json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
+            jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
 
     @pyqtSlot()
     def cta_id_changed(self):
@@ -553,8 +547,7 @@ class Main(Ui_Main):
             self.cta_id = text
             nts_dict['secret']['세무사관리번호'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
-                json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
+            jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
         
     @pyqtSlot()
     def bs_id_changed(self):
@@ -565,8 +558,7 @@ class Main(Ui_Main):
             self.bs_id = text
             nts_dict['secret']['부서아이디'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장      
-            with open(FULLPATH_NTS_JSON, 'w', encoding='utf-8') as fn:
-                json.dump(nts_dict, fn, ensure_ascii=False, indent=4)
+            jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
 
     @pyqtSlot()
     def delay_time_changed(self):
@@ -577,7 +569,7 @@ class Main(Ui_Main):
             self.delay_time = text
             nts_dict['secret']['딜레이타임'] = text
             # 2. 수정된 딕셔너리를 json 파일로 만들어 저장  
-            Util.save_dict_to_json(FULLPATH_NTS_JSON, nts_dict)
+            jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
 
     @pyqtSlot()
     def nts_login_clicked(self):
@@ -601,7 +593,7 @@ class Main(Ui_Main):
         # nts_dict['secret']['부서아이디'] = self.bs_id       
         # nts_dict['secret']['딜레이타임'] = str(self.delay_time)
         # 2. 수정된 딕셔너리를 json 파일로 만들어 저장  
-        Util.save_dict_to_json(FULLPATH_NTS_JSON, nts_dict)
+        jsconverter.dict_to_json(nts_dict, FULLPATH_NTS_JSON)
         # setplaceholder QLineEdit
         self.set_placeholder()
         # 홈택스 로그인
@@ -620,26 +612,164 @@ class Main(Ui_Main):
     def on_web_activated(self, text):       
         if text == "Naver":
             if self.naver_idpw_lst_of_dic:   # len(list) > 0
-                id_lst_of_tup = [(x['id'], x['pw']) for x in self.naver_idpw_lst_of_dic]
-                id_lst = [x[0] for x in id_lst_of_tup]
+                key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.naver_idpw_lst_of_dic)
+                id_lst = [x[0] for x in idpw_lst]
                 self.web_id_cb.clear()
                 self.web_id_cb.addItems(id_lst)
+            else:
+                self.web_id_cb.clear()
+        elif text == "Hanbiro":
+            if self.Hanbiro_idpw_lst_of_dic:   # len(list) > 0
+                key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Hanbiro_idpw_lst_of_dic)
+                id_lst = [x[0] for x in idpw_lst]
+                self.web_id_cb.clear()
+                self.web_id_cb.addItems(id_lst)
+            else:
+                self.web_id_cb.clear()
+        elif text == "bizforms":
+            if self.bizforms_idpw_lst_of_dic:   # len(list) > 0
+                key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.bizforms_idpw_lst_of_dic)
+                id_lst = [x[0] for x in idpw_lst]
+                self.web_id_cb.clear()
+                self.web_id_cb.addItems(id_lst)
+            else:
+                self.web_id_cb.clear()
+        elif text == "etaxkorea":
+            if self.etaxkorea_idpw_lst_of_dic:   # len(list) > 0
+                key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.etaxkorea_idpw_lst_of_dic)
+                id_lst = [x[0] for x in idpw_lst]
+                self.web_id_cb.clear()
+                self.web_id_cb.addItems(id_lst)
+            else:
+                self.web_id_cb.clear()
+        elif text == "The bill":
+            if self.Thebill_idpw_lst_of_dic:   # len(list) > 0
+                key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Thebill_idpw_lst_of_dic)
+                id_lst = [x[0] for x in idpw_lst]
+                self.web_id_cb.clear()
+                self.web_id_cb.addItems(id_lst)
+            else:
+                self.web_id_cb.clear()
                 
-    @pyqtSlot()
-    def on_webid_activated(self): 
+    @pyqtSlot(str)
+    def on_webid_activated(self, text): 
+        # text == self.web_id_cb.currentText()
         if self.web_cb.currentText() == "Naver":
-            pass      
-        pass
+            self.web_id.setPlaceholderText(text)    
+            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.naver_idpw_lst_of_dic)
+            for id, pw in idpw_lst:
+                if id == text:
+                    _pw = pw
+                    break
+            self.web_pw.setPlaceholderText(_pw)
+        elif self.web_cb.currentText() == "Hanbiro":
+            self.web_id.setPlaceholderText(text)
+            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Hanbiro_idpw_lst_of_dic)
+            for id, pw in idpw_lst:
+                if id == text:
+                    _pw = pw
+                    break
+            self.web_pw.setPlaceholderText(_pw) 
+        elif self.web_cb.currentText() == "bizforms":
+            self.web_id.setPlaceholderText(text)
+            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.bizforms_idpw_lst_of_dic)
+            for id, pw in idpw_lst:
+                if id == text:
+                    _pw = pw
+                    break
+            self.web_pw.setPlaceholderText(_pw) 
+        elif self.web_cb.currentText() == "etaxkorea":
+            self.web_id.setPlaceholderText(text)
+            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.etaxkorea_idpw_lst_of_dic)
+            for id, pw in idpw_lst:
+                if id == text:
+                    _pw = pw
+                    break
+            self.web_pw.setPlaceholderText(_pw) 
+        elif self.web_cb.currentText() == "The bill":
+            self.web_id.setPlaceholderText(text)
+            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Thebill_idpw_lst_of_dic)
+            for id, pw in idpw_lst:
+                if id == text:
+                    _pw = pw
+                    break
+            self.web_pw.setPlaceholderText(_pw)      
+        
     @pyqtSlot()
     def web_id_changed(self):       
-        pass
+        temp_id = self.web_id.text()
+        if self.web_cb.currentText() == "Naver":
+            self.add_idpw.pop(0)
+            self.add_idpw.insert(0, temp_id)
+            print("1>>",self.add_idpw)
 
     @pyqtSlot()
     def web_pw_changed(self):       
-        pass
+        temp_pw = self.web_pw.text()
+        if self.web_cb.currentText() == "Naver":
+            self.add_idpw.pop(1)
+            self.add_idpw.insert(1, temp_pw)
+            print("2>>", self.add_idpw)
+
 
     @pyqtSlot()
-    def web_login_clicked(self):   
+    def web_login_clicked(self):
+        add_idpw_dic = dict()
+        print("3>>",self.add_idpw)
+        if (self.add_idpw[0] != None and self.add_idpw[1] != None and
+            self.add_idpw[0] != "" and self.add_idpw[1] != ""):     # id / pw 모두 입력
+            print("4>>",self.add_idpw)
+            add_idpw_dic['id'] = self.add_idpw[0]
+            add_idpw_dic['pw'] = self.add_idpw[1]
+            if self.web_cb.currentText() == "Naver":
+                # id 유무 확인하여 pw 만 업데이트
+                key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.naver_idpw_lst_of_dic)
+                id_lst = [idpw[0] for idpw in idpw_lst]
+                if add_idpw_dic['id'] in id_lst:   # 동일 id 있으면
+                    for idpw in idpw_lst:
+                        print(idpw)
+                        if idpw[0] != add_idpw_dic['id']:      # id 일치하지 않으면
+                            continue
+                        elif idpw[0] == add_idpw_dic['id']:    # id 일치하면
+                            if idpw[1] == add_idpw_dic['pw']:  # pw 일치하면
+                                print("pw 일치")
+                                continue
+                            else:                              # pw 불일치
+                                print(">>>pw 불일치")
+                                # idpw[0] = add_idpw_dic['id']
+                                idpw[1] = add_idpw_dic['pw']
+                                print(idpw_lst)
+                                self.naver_idpw_lst_of_dic = jsconverter.lstOFlst_to_lstOFdic(key_lst, idpw_lst)
+                                jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
+                                # self.add_idpw = [None, None]                            # 리스트 초기화 
+                                break
+                else:                                        # 동일 id 없으면
+                    self.naver_idpw_lst_of_dic.append(add_idpw_dic)
+                    jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
+                    # self.add_idpw = [None, None]                            # 리스트 초기화  
+                    print("5>>",self.add_idpw) 
+                    
+
+                # for idpw in idpw_lst:
+                #     print(idpw)
+                #     if idpw[0] == add_idpw_dic['id']:      # 동일 id 있으면
+                #         if idpw[1] == add_idpw_dic['pw']:  # pw 일치하면
+                #             continue
+                #         else:                              # pw 불일치
+                #             idpw[0] = add_idpw_dic['id']
+                #             idpw[1] = add_idpw_dic['pw']
+                #             self.naver_idpw_lst_of_dic = jsconverter.lstOFlst_to_lstOFdic(key_lst, idpw_lst)
+                #             jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
+                #             # self.add_idpw = [None, None]                            # 리스트 초기화 
+                #             break
+                #     else:                                  # 동일 id 없으면
+                #         self.naver_idpw_lst_of_dic.append(add_idpw_dic)
+                #         jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
+                #         # self.add_idpw = [None, None]                            # 리스트 초기화  
+                #         print("5>>",self.add_idpw) 
+                #         break               
+
+
         popup = Util.Errpop()    
         msg = "개발중...<br>comming soon..."
         popup.critical_pop(msg)

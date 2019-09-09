@@ -108,6 +108,57 @@ def make_sub_dirs(base_path, *new_dirs):
     return lst_new_dir
 ##############################           
 ### json 파일 다루기 
+class JsonConverter(object):
+    """ func(param) : use
+            json_to_dict(jsonfile): json 파일을 받아 딕셔너리 객체를 반환한다.
+            dict_to_json(jsonfile, dic_obj): 딕셔너리 객체를 json 파일로 저장한다. 
+            lstOFdic_to_tupKeysVals(list_of_dict): 리스트[{딕셔너리...},...] 를 key값을 제외한 value값 이중리스트[[v1,v2,..],...]로 변환후 tuple(keys, list_of_list)반환
+            lstOFlst_to_lstOFdic(key_list, list_of_list): 이차원(이중) 리스트의 내부 리스트를 전달된 key_list로 딕셔너리로 변환후 리스트[딕셔너리] 반환
+    """   
+    def __init__(self):
+        pass
+        
+    def json_to_dict(self, jsonfile):
+        """ json 파일을 받아 딕셔너리 객체를 반환한다.
+            param : jsonfile = full_path_jsonfile_name
+        """
+        with open(fulljs, encoding='utf-8') as fn:
+            dic_obj = json.load(fn)
+        return dic_obj
+
+    def dict_to_json(self, dic_obj, jsonfile):
+        """ 딕셔너리 객체를 json 파일로 저장한다.
+            param : jsonfile = full_path_jsonfile_name
+                    dic_obj = python 딕셔너리 type
+        """
+        with open(jsonfile, 'w', encoding='utf-8') as fn:
+            json.dump(dic_obj, fn, ensure_ascii=False, indent=4)
+
+    def lstOFdic_to_tupKeysVals(self, list_of_dict):
+        """ 리스트[{딕셔너리...},...] 를 key값을 제외한 value값 이중리스트[[v1,v2,..],...]로 변환후 tuple(keys, list_of_list)반환
+            Caution : len(key_list) == len(list_of_list[i]) 
+            parm : list_of_dict = [{'id': 'user1_id', 'pw': 'user1_pw'},
+                                   {'id': 'user1_id', 'pw': 'user1_pw'}]                 
+            return(tuple) : key_list = ['id', 'pw']
+                            list_of_list = [['user1_id','user1_pw'],
+                                            ['user2_id','user2_pw']]       
+        """
+        key_list = list(list_of_dict[0].keys())
+        list_of_list = [[dic[key] for key in list_of_dict[0].keys()] for dic in list_of_dict]
+        return (key_list, list_of_list)
+
+    def lstOFlst_to_lstOFdic(self, key_list, list_of_list):
+        """ 이차원(이중) 리스트의 내부 리스트를 전달된 key_list로 딕셔너리로 변환후 리스트[딕셔너리] 반환
+            Caution : len(key_list) == len(list_of_list[i])
+            parm : key_list = ['id', 'pw']
+                   list_of_list = [['user1_id','user1_pw'],
+                                   ['user2_id','user2_pw']]
+            return : [{'id': 'user1_id', 'pw': 'user1_pw'},
+                      {'id': 'user1_id', 'pw': 'user1_pw'}]
+        """
+        list_of_dict = [dict(zip(key_list, lst)) for lst in list_of_list]
+        return list_of_dict
+
 def save_dict_to_json(full_json_fn, dict_obj):
     """딕셔너리 객체를 json 파일로 저장한다. 
     :param  full_json_fn: 저장경로+ {}.json "C:/zz/data.json"
