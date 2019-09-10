@@ -134,8 +134,9 @@ class JsonConverter(object):
         with open(jsonfile, 'w', encoding='utf-8') as fn:
             json.dump(dic_obj, fn, ensure_ascii=False, indent=4)
 
-    def lstOFdic_to_tupKeysVals(self, list_of_dict):
-        """ 리스트[{딕셔너리...},...] 를 key값을 제외한 value값 이중리스트[[v1,v2,..],...]로 변환후 tuple(keys, list_of_list)반환
+    def lstOFdic_to_tupKeysVals(self, list_of_dict=None): 
+        """ 파이썬 코딩의 기술 79p 동적 기본 인수를 지정하려면 None과 docstring를 사용하자
+            리스트[{딕셔너리...},...] 를 key값을 제외한 value값 이중리스트[[v1,v2,..],...]로 변환후 tuple(keys, list_of_list)반환
             Caution : len(key_list) == len(list_of_list[i]) 
             parm : list_of_dict = [{'id': 'user1_id', 'pw': 'user1_pw'},
                                    {'id': 'user1_id', 'pw': 'user1_pw'}]                 
@@ -143,9 +144,11 @@ class JsonConverter(object):
                             list_of_list = [['user1_id','user1_pw'],
                                             ['user2_id','user2_pw']]       
         """
-        key_list = list(list_of_dict[0].keys())
-        list_of_list = [[dic[key] for key in list_of_dict[0].keys()] for dic in list_of_dict]
-        return (key_list, list_of_list)
+        if list_of_dict:
+            key_list = list(list_of_dict[0].keys())
+            list_of_list = [[dic[key] for key in list_of_dict[0].keys()] for dic in list_of_dict]
+            return (key_list, list_of_list)
+        return ([], [['ID입력요망', 'PW입력요망']])
 
     def lstOFlst_to_lstOFdic(self, key_list, list_of_list):
         """ 이차원(이중) 리스트의 내부 리스트를 전달된 key_list로 딕셔너리로 변환후 리스트[딕셔너리] 반환

@@ -162,13 +162,18 @@ def get_web_dict():
     idpw = dict()
     
     web_dict['드라이버경로'] = ""
-    web_dict['websites'] = ['Naver','Hanbiro','bizforms','etaxkorea','The bill']
+    web_dict['gubun'] = ['email','websites','banks']
+    web_dict['email'] = ['Naver','Hanbiro','nate','daum','gmail']
+    web_dict['websites'] = ['bizforms','etaxkorea','TheBill']
     
     idpw['naver'] = []
     idpw['Hanbiro'] = []
+    idpw['nate'] = []
+    idpw['daum'] = []
+    idpw['gmail'] = []
     idpw['bizforms'] = []
     idpw['etaxkorea'] = []
-    idpw['Thebill'] = []
+    idpw['TheBill'] = []
 
     web_dict['idpw'] = idpw
 

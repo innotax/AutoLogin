@@ -12,7 +12,7 @@ from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QRegExp
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from data import setdata, dictdata
-from sites import hometax
+from sites import hometax, website
 from utils import Util, driverutil, iftutil
 
 # ===== Config =====
@@ -370,8 +370,15 @@ class Ui_Main(QMainWindow):
         gbox2 = QGroupBox('Website Login')
 
         flo2 = QFormLayout()
+        self.web_gubun_cb = QComboBox()
+        # 가로 조정
+        self.web_gubun_cb.setFixedWidth(65)
         self.web_cb = QComboBox()
-        # self.web_cb.addItems(['Naver','Hanbiro','bizforms','etaxkorea','The bill'])
+        # self.web_cb.addItems(['Naver','Hanbiro','bizforms','etaxkorea','TheBill'])
+        hbox_web_gubun = QHBoxLayout()
+        hbox_web_gubun.addWidget(self.web_gubun_cb)
+        hbox_web_gubun.addWidget(self.web_cb)
+
         self.web_id_cb = QComboBox()
 
         self.web_id_cb.addItems([])
@@ -410,7 +417,7 @@ class Ui_Main(QMainWindow):
         self.btn_nts_set.setToolTip("<h3>HomeTax 설정</h3>")
         self.btn_web_set.setToolTip("<h3>Web 설정</h3>")
 
-        flo2.addRow("Website", self.web_cb)
+        flo2.addRow(hbox_web_gubun)
         flo2.addRow("ID select", self.web_id_cb)
         flo2.addRow(hbox_idpw)
         flo2.addRow(hbox_web_btn)
@@ -451,17 +458,42 @@ class Main(Ui_Main):
         self.delay_time = str(nts_dict['secret']['딜레이타임']) 
         self.cert_pw = nts_dict['secret']['공인인증서비번'] 
 
+        # web Item list
+        self.web_gubun_lst = web_dict['gubun']
+        self.email_lst = web_dict['email']
+        self.website_lst =  web_dict['websites']
+        # combobox additems
+        self.web_gubun_cb.addItems(self.web_gubun_lst)
+        if self.web_gubun_cb.currentText() == "email":
+            self.web_cb.addItems(self.email_lst)
+        elif self.web_gubun_cb.currentText() == "websites":
+            self.web_cb.addItems(self.website_lst)
+        
+        # web list included dic(keys['id','pw'])
         self.naver_idpw_lst_of_dic = web_dict['idpw']['naver']
         self.Hanbiro_idpw_lst_of_dic = web_dict['idpw']['Hanbiro']
         self.bizforms_idpw_lst_of_dic = web_dict['idpw']['bizforms']
         self.etaxkorea_idpw_lst_of_dic = web_dict['idpw']['etaxkorea']
-        self.Thebill_idpw_lst_of_dic = web_dict['idpw']['Thebill']
+        self.Thebill_idpw_lst_of_dic = web_dict['idpw']['TheBill']
+        
+        # 초기 id/pw 세팅 위한  self.setup_web_idpw()
+        naver_key_list, naver_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.naver_idpw_lst_of_dic)
+        Hanbiro_key_list, Hanbiro_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Hanbiro_idpw_lst_of_dic)
+        bizforms_key_list, bizforms_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.bizforms_idpw_lst_of_dic)
+        etaxkorea_key_list, etaxkorea_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.etaxkorea_idpw_lst_of_dic)
+        Thebill_key_list, Thebill_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Thebill_idpw_lst_of_dic)
+        
+        
+        self.st1_naver_id, self.st1_naver_pw = naver_idpw_lst[0][0], naver_idpw_lst[0][1]
+        self.st1_Hanbiro_id, self.st1_Hanbiro_pw = Hanbiro_idpw_lst[0][0], Hanbiro_idpw_lst[0][1]
+        self.st1_bizforms_id, self.st1_bizforms_pw = bizforms_idpw_lst[0][0], bizforms_idpw_lst[0][1]
+        self.st1_etaxkorea_id, self.st1_etaxkorea_pw = etaxkorea_idpw_lst[0][0], etaxkorea_idpw_lst[0][1]
+        self.st1_Thebill_id, self.st1_Thebill_pw = Thebill_idpw_lst[0][0], Thebill_idpw_lst[0][1]
 
+        self.setup_web_idpw()        
+        ##
+        # id / pw 추가 입력을 위한 리스트(2)
         self.add_idpw = [None, None]   # [None for i in range(2)]
-
-        self.website_lst =  web_dict['websites']
-        self.web_cb.addItems(self.website_lst)
-
 
 
         if (self.cert_nm == "" or
@@ -506,6 +538,7 @@ class Main(Ui_Main):
         self.btn_nts_set.clicked.connect(self.nts_set_clicked)
 
         # Web login Signal connect Slot
+        self.web_gubun_cb.activated[str].connect(self.on_webgubun_activated)
         self.web_cb.activated[str].connect(self.on_web_activated)
         self.web_id_cb.activated[str].connect(self.on_webid_activated)
         self.web_id.editingFinished.connect(self.web_id_changed)
@@ -519,6 +552,31 @@ class Main(Ui_Main):
         self.le_cta_id.setPlaceholderText(nts_dict['secret']['세무사관리번호'])
         self.le_bs_id.setPlaceholderText(nts_dict['secret']['부서아이디'])
         self.le_delay_time.setPlaceholderText(str(nts_dict['secret']['딜레이타임']))
+    
+    def setup_web_idpw(self):
+        self.web_id.clear()
+        self.web_pw.clear()
+        if self.web_cb.currentText() == "Naver":
+            self.web_id.setPlaceholderText(self.st1_naver_id)
+            self.web_pw.setPlaceholderText(self.st1_naver_pw)
+            self.web_id_cb.addItem(self.st1_naver_id)
+        elif self.web_cb.currentText() == "Hanbiro":
+            self.web_id.setPlaceholderText(self.st1_Hanbiro_id)
+            self.web_pw.setPlaceholderText(self.st1_Hanbiro_pw)
+            self.web_id_cb.addItem(self.st1_Hanbiro_id)
+        elif self.web_cb.currentText() == "bizforms":
+            self.web_id.setPlaceholderText(self.st1_bizforms_id)
+            self.web_pw.setPlaceholderText(self.st1_bizforms_pw)
+            self.web_id_cb.addItem(self.st1_bizforms_id)
+        elif self.web_cb.currentText() == "etaxkorea":
+            self.web_id.setPlaceholderText(self.st1_etaxkorea_id)
+            self.web_pw.setPlaceholderText(self.st1_etaxkorea_pw)
+            self.web_id_cb.addItem(self.st1_etaxkorea_id)
+        elif self.web_cb.currentText() == "TheBill":
+            self.web_id.setPlaceholderText(self.st1_Thebill_id)
+            self.web_pw.setPlaceholderText(self.st1_Thebill_pw)
+            self.web_id_cb.addItem(self.st1_Thebill_id)
+        
 
     def setup_iftAdapter(self):
         if not os.path.isfile(r'C:\Infotech\Common\iftWinExAdapter.dll'):  # 인포텍모듈 없으면
@@ -612,10 +670,24 @@ class Main(Ui_Main):
 
     # web Slot
     @pyqtSlot(str)
+    def on_webgubun_activated(self, text):
+        if text == "email":
+            self.web_cb.clear()
+            self.web_cb.addItems(self.email_lst)
+        elif text == "websites":
+            self.web_cb.clear()
+            self.web_cb.addItems(self.website_lst)
+        elif text == "banks":
+            self.web_cb.clear()
+            popup = Util.Errpop()    
+            msg = "개발중...<br>comming soon..."
+            popup.critical_pop(msg)
+
+    @pyqtSlot(str)
     def on_web_activated(self, text):
         self.add_idpw = [None, None]    # 리스트 초기화 
-        # self.web_id.clear()    
-        # self.web_pw.clear()    
+        self.web_id.setPlaceholderText("")    
+        self.web_pw.setPlaceholderText("")    
 
         if text == "Naver":
             if self.naver_idpw_lst_of_dic:   # len(list) > 0
@@ -623,6 +695,8 @@ class Main(Ui_Main):
                 id_lst = [x[0] for x in idpw_lst]
                 self.web_id_cb.clear()
                 self.web_id_cb.addItems(id_lst)
+                self.web_id.setPlaceholderText(idpw_lst[0][0])    
+                self.web_pw.setPlaceholderText(idpw_lst[0][1])
             else:
                 self.web_id_cb.clear()
         elif text == "Hanbiro":
@@ -631,14 +705,19 @@ class Main(Ui_Main):
                 id_lst = [x[0] for x in idpw_lst]
                 self.web_id_cb.clear()
                 self.web_id_cb.addItems(id_lst)
+                self.web_id.setPlaceholderText(idpw_lst[0][0])    
+                self.web_pw.setPlaceholderText(idpw_lst[0][1])
             else:
                 self.web_id_cb.clear()
+                print(">"*50,self.web_id.placeholderText())
         elif text == "bizforms":
             if self.bizforms_idpw_lst_of_dic:   # len(list) > 0
                 key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.bizforms_idpw_lst_of_dic)
                 id_lst = [x[0] for x in idpw_lst]
                 self.web_id_cb.clear()
                 self.web_id_cb.addItems(id_lst)
+                self.web_id.setPlaceholderText(idpw_lst[0][0])    
+                self.web_pw.setPlaceholderText(idpw_lst[0][1])
             else:
                 self.web_id_cb.clear()
         elif text == "etaxkorea":
@@ -647,23 +726,29 @@ class Main(Ui_Main):
                 id_lst = [x[0] for x in idpw_lst]
                 self.web_id_cb.clear()
                 self.web_id_cb.addItems(id_lst)
+                self.web_id.setPlaceholderText(idpw_lst[0][0])    
+                self.web_pw.setPlaceholderText(idpw_lst[0][1])
             else:
                 self.web_id_cb.clear()
-        elif text == "The bill":
+        elif text == "TheBill":
             if self.Thebill_idpw_lst_of_dic:   # len(list) > 0
                 key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Thebill_idpw_lst_of_dic)
                 id_lst = [x[0] for x in idpw_lst]
                 self.web_id_cb.clear()
                 self.web_id_cb.addItems(id_lst)
+                self.web_id.setPlaceholderText(idpw_lst[0][0])    
+                self.web_pw.setPlaceholderText(idpw_lst[0][1])
             else:
                 self.web_id_cb.clear()
                 
     @pyqtSlot(str)
     def on_webid_activated(self, text): 
         # text == self.web_id_cb.currentText()
+        self.web_id.clear()
+        self.web_pw.clear()
         if self.web_cb.currentText() == "Naver":
             self.web_id.setPlaceholderText(text)    
-            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.naver_idpw_lst_of_dic)
+            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(web_dict['idpw']['naver'])
             for id, pw in idpw_lst:
                 if id == text:
                     _pw = pw
@@ -671,7 +756,7 @@ class Main(Ui_Main):
             self.web_pw.setPlaceholderText(_pw)
         elif self.web_cb.currentText() == "Hanbiro":
             self.web_id.setPlaceholderText(text)
-            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Hanbiro_idpw_lst_of_dic)
+            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(web_dict['idpw']['Hanbiro'])
             for id, pw in idpw_lst:
                 if id == text:
                     _pw = pw
@@ -679,7 +764,7 @@ class Main(Ui_Main):
             self.web_pw.setPlaceholderText(_pw) 
         elif self.web_cb.currentText() == "bizforms":
             self.web_id.setPlaceholderText(text)
-            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.bizforms_idpw_lst_of_dic)
+            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(web_dict['idpw']['bizforms'])
             for id, pw in idpw_lst:
                 if id == text:
                     _pw = pw
@@ -687,15 +772,15 @@ class Main(Ui_Main):
             self.web_pw.setPlaceholderText(_pw) 
         elif self.web_cb.currentText() == "etaxkorea":
             self.web_id.setPlaceholderText(text)
-            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.etaxkorea_idpw_lst_of_dic)
+            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(web_dict['idpw']['etaxkorea'])
             for id, pw in idpw_lst:
                 if id == text:
                     _pw = pw
                     break
             self.web_pw.setPlaceholderText(_pw) 
-        elif self.web_cb.currentText() == "The bill":
+        elif self.web_cb.currentText() == "TheBill":
             self.web_id.setPlaceholderText(text)
-            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Thebill_idpw_lst_of_dic)
+            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(web_dict['idpw']['TheBill'])
             for id, pw in idpw_lst:
                 if id == text:
                     _pw = pw
@@ -708,6 +793,7 @@ class Main(Ui_Main):
         if self.web_cb.currentText() == "Naver":
             self.add_idpw.pop(0)
             self.add_idpw.insert(0, temp_id)
+
             print("1>>",self.add_idpw)
 
     @pyqtSlot()
@@ -718,48 +804,90 @@ class Main(Ui_Main):
             self.add_idpw.insert(1, temp_pw)
             print("2>>", self.add_idpw)
 
-
-    @pyqtSlot()
-    def web_login_clicked(self):
+    def web_login_pretest(self):
         add_idpw_dic = dict()
-        print("3>>",self.add_idpw)
         if (self.add_idpw[0] != None and self.add_idpw[1] != None and
             self.add_idpw[0] != "" and self.add_idpw[1] != ""):     # id / pw 모두 입력
-            print("4>>",self.add_idpw)
-            add_idpw_dic['id'] = self.add_idpw[0]
-            add_idpw_dic['pw'] = self.add_idpw[1]
+            new_id = self.add_idpw[0]
+            new_pw = self.add_idpw[1]
+            add_idpw_dic['id'] = new_id
+            add_idpw_dic['pw'] = new_pw
+
+            return (True, add_idpw_dic)
+        # ID입력요망 from Util.py 
+        elif (self.web_id.placeholderText() != "ID입력요망" and   
+            self.web_id.placeholderText() != "" and
+            self.web_pw.placeholderText() != "PW입력요망" and
+            self.web_pw.placeholderText() != ""):
+
+            new_id = self.web_id.placeholderText()
+            new_pw = self.web_pw.placeholderText()
+            add_idpw_dic['id'] = new_id
+            add_idpw_dic['pw'] = new_pw
+
+            return (True, add_idpw_dic)
+        # ID입력요망 from Util.py 
+        elif (self.web_id.placeholderText() == "ID입력요망" or   
+            self.web_id.placeholderText() == "" or
+            self.web_pw.placeholderText() == "PW입력요망" or
+            self.web_pw.placeholderText() == ""):
+
+            return (False, False)
+        else:
+            return (False, False)
+        
+
+    @pyqtSlot()
+    def web_login_clicked(self):   # >>> web_login_pretest()로 분기
+        is_idpw_flag, add_idpw_dic = self.web_login_pretest()
+        print("test>>> ", is_idpw_flag, add_idpw_dic)
+        if is_idpw_flag==True:
+            user_id = add_idpw_dic['id']
+            user_pw = add_idpw_dic['pw']
+        # if (self.add_idpw[0] != None and self.add_idpw[1] != None and
+        #     self.add_idpw[0] != "" and self.add_idpw[1] != ""):     # id / pw 모두 입력
+        #     print("4>>",self.add_idpw)
+        #     new_id = self.add_idpw[0]
+        #     new_pw = self.add_idpw[1]
+        #     add_idpw_dic['id'] = new_id
+        #     add_idpw_dic['pw'] = new_pw
 
             if self.web_cb.currentText() == "Naver":
                 # 최초 입력시 빈리스트 인 경우
                 if not self.naver_idpw_lst_of_dic:
                     self.naver_idpw_lst_of_dic.insert(0, add_idpw_dic)      # 제일 앞으로
                     jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
-                        # self.add_idpw = [None, None]                            # 리스트 초기화  
+                    self.web_id.clear()
+                    self.web_pw.clear()
+                    self.web_id.setPlaceholderText(user_id)
+                    self.web_pw.setPlaceholderText(user_pw)
+                    self.web_id_cb.clear()
+                    self.web_id_cb.addItem(user_id)
                 else:
                     # id 유무 확인하여 pw 만 업데이트
                     key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.naver_idpw_lst_of_dic)
                     id_lst = [idpw[0] for idpw in idpw_lst]
-                    if add_idpw_dic['id'] in id_lst:       # 동일 id 있으면
+                    if user_id in id_lst:       # 동일 id 있으면
                         for i, id in enumerate(id_lst):    # index 구하기 위해서
                             if id != add_idpw_dic['id']:   # id 가 일치하지 않으면
                                 continue
                             else:                          # id 가 일치하면
                                 idx = i                    # index 구하고
                         # pw 일치 확인
-                        if idpw_lst[idx][1] == self.add_idpw[1]:   # pw 동일하면 즉시 로그인
-                            pop_idpw = idpw_lst.pop(idx)     # 순서교체
-                            idpw_lst.insert(0,pop_idpw)      # 순서교체
+                        if idpw_lst[idx][1] == user_pw:   # pw 동일하면 즉시 로그인
+                            pop_idpw = idpw_lst.pop(idx)     # json file 순서교체를 위해
+                            idpw_lst.insert(0,pop_idpw)      # json file 순서교체를 위해
                             self.naver_idpw_lst_of_dic = jsconverter.lstOFlst_to_lstOFdic(key_lst, idpw_lst)   #######
                             web_dict['idpw']['naver'] = self.naver_idpw_lst_of_dic  
                             jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
                             
 
-                        elif idpw_lst[idx][1] != self.add_idpw[1]: # pw 다르면 업데이트 후 로그인
-                            idpw_lst[idx][0] = self.add_idpw[0]
-                            idpw_lst[idx][1] = self.add_idpw[1]
+                        elif idpw_lst[idx][1] != user_pw: # pw 다르면 업데이트 후 로그인
+                            idpw_lst[idx][0] = user_id
+                            idpw_lst[idx][1] = user_pw
                             
-                            pop_idpw = idpw_lst.pop(idx)     # 순서교체
-                            idpw_lst.insert(0,pop_idpw)      # 순서교체
+                            pop_idpw = idpw_lst.pop(idx)     # json file 순서교체를 위해
+                            idpw_lst.insert(0,pop_idpw)      # json file 순서교체를 위해
                             self.naver_idpw_lst_of_dic = jsconverter.lstOFlst_to_lstOFdic(key_lst, idpw_lst)   #######
                             web_dict['idpw']['naver'] = self.naver_idpw_lst_of_dic  
                             jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
@@ -767,7 +895,28 @@ class Main(Ui_Main):
                     else:                                        # 동일 id 없으면
                         self.naver_idpw_lst_of_dic.insert(0, add_idpw_dic)      # 제일 앞으로
                         jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
-                
+                        self.web_id.clear()
+                        self.web_pw.clear()
+                        self.web_id.setPlaceholderText(user_id)
+                        self.web_pw.setPlaceholderText(user_pw)
+                        self.web_id_cb.clear()
+                        key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.naver_idpw_lst_of_dic)
+                        id_lst = [idpw[0] for idpw in idpw_lst]
+                        self.web_id_cb.clear()
+                        self.web_id_cb.addItems(id_lst)
+
+                user_id = self.web_id.placeholderText()
+                user_pw = self.web_pw.placeholderText()
+                naver = website.NaverMail(user_id, user_pw)
+                naver.clipboard_login(naver.ID, naver.PW)
+        else:
+            popup = Util.Errpop()    
+            msg = "<b>ID / PW</b>를 선택(입력)후 다시 로그인 해주세요!!!) "
+            popup.critical_pop(msg)
+
+                    
+                        
+
                         
                         
                     
