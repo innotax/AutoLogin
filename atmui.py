@@ -844,13 +844,6 @@ class Main(Ui_Main):
         if is_idpw_flag==True:
             user_id = add_idpw_dic['id']
             user_pw = add_idpw_dic['pw']
-        # if (self.add_idpw[0] != None and self.add_idpw[1] != None and
-        #     self.add_idpw[0] != "" and self.add_idpw[1] != ""):     # id / pw 모두 입력
-        #     print("4>>",self.add_idpw)
-        #     new_id = self.add_idpw[0]
-        #     new_pw = self.add_idpw[1]
-        #     add_idpw_dic['id'] = new_id
-        #     add_idpw_dic['pw'] = new_pw
 
             if self.web_cb.currentText() == "Naver":
                 # 최초 입력시 빈리스트 인 경우
