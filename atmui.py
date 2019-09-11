@@ -458,39 +458,74 @@ class Main(Ui_Main):
         self.delay_time = str(nts_dict['secret']['딜레이타임']) 
         self.cert_pw = nts_dict['secret']['공인인증서비번'] 
 
+        # mapping text : idpw_list_of_dic
+        self.text_map_WebLstDic = {
+                            "Naver": web_dict['idpw']['Naver'],
+                            "Hanbiro": web_dict['idpw']['Hanbiro'],
+                            "nate": web_dict['idpw']['nate'],
+                            "daum": web_dict['idpw']['daum'],
+                            "gmail": web_dict['idpw']['gmail'],
+                            "bizforms": web_dict['idpw']['bizforms'],
+                            "etaxkorea": web_dict['idpw']['etaxkorea'],
+                            "TheBill": web_dict['idpw']['TheBill']
+                            }
         # web Item list
         self.web_gubun_lst = web_dict['gubun']
         self.email_lst = web_dict['email']
         self.website_lst =  web_dict['websites']
-        # combobox additems
+        # web combobox additems
         self.web_gubun_cb.addItems(self.web_gubun_lst)
         if self.web_gubun_cb.currentText() == "email":
             self.web_cb.addItems(self.email_lst)
+            # Qwidget에 전달할 값 확보
+            text = self.web_cb.currentText()
+            self.setup_web_widgets(text)
+
+            # idpw_lst_of_dic = self.text_map_WebLstDic[text]
+            # self.id_lst, self.pw_lst = self.cb_id_pw_list(idpw_lst_of_dic)
+            # self.setup_web_widgets(self.id_lst, self.pw_lst) 
+
+
         elif self.web_gubun_cb.currentText() == "websites":
             self.web_cb.addItems(self.website_lst)
+            # Qwidget에 전달할 값 확보
+            text = self.web_cb.currentText()
+            self.setup_web_widgets(text)
+
+            # idpw_lst_of_dic = self.text_map_WebLstDic[text]
+            # self.id_lst, self.pw_lst = self.cb_id_pw_list(idpw_lst_of_dic)
+            # self.setup_web_widgets(self.id_lst, self.pw_lst)
+        # web id combobox addItems
+
+        
+
         
         # web list included dic(keys['id','pw'])
-        self.naver_idpw_lst_of_dic = web_dict['idpw']['naver']
+        self.naver_idpw_lst_of_dic = web_dict['idpw']['Naver']
         self.Hanbiro_idpw_lst_of_dic = web_dict['idpw']['Hanbiro']
         self.bizforms_idpw_lst_of_dic = web_dict['idpw']['bizforms']
         self.etaxkorea_idpw_lst_of_dic = web_dict['idpw']['etaxkorea']
         self.Thebill_idpw_lst_of_dic = web_dict['idpw']['TheBill']
         
-        # 초기 id/pw 세팅 위한  self.setup_web_idpw()
-        naver_key_list, naver_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.naver_idpw_lst_of_dic)
-        Hanbiro_key_list, Hanbiro_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Hanbiro_idpw_lst_of_dic)
-        bizforms_key_list, bizforms_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.bizforms_idpw_lst_of_dic)
-        etaxkorea_key_list, etaxkorea_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.etaxkorea_idpw_lst_of_dic)
-        Thebill_key_list, Thebill_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Thebill_idpw_lst_of_dic)
-        
-        
-        self.st1_naver_id, self.st1_naver_pw = naver_idpw_lst[0][0], naver_idpw_lst[0][1]
-        self.st1_Hanbiro_id, self.st1_Hanbiro_pw = Hanbiro_idpw_lst[0][0], Hanbiro_idpw_lst[0][1]
-        self.st1_bizforms_id, self.st1_bizforms_pw = bizforms_idpw_lst[0][0], bizforms_idpw_lst[0][1]
-        self.st1_etaxkorea_id, self.st1_etaxkorea_pw = etaxkorea_idpw_lst[0][0], etaxkorea_idpw_lst[0][1]
-        self.st1_Thebill_id, self.st1_Thebill_pw = Thebill_idpw_lst[0][0], Thebill_idpw_lst[0][1]
+        # # Qwidget에 전달할 값 확보
+        # text = self.web_id_cb.currentText()
+        # idpw_lst_of_dic = self.text_map_WebLstDic[text]
+        # self.id_lst, self.pw_lst = self.cb_id_pw_list(idpw_lst_of_dic)
 
-        self.setup_web_idpw()        
+        # # # 초기 id/pw 세팅 위한  self.setup_web_idpw()
+        # # naver_key_list, naver_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.naver_idpw_lst_of_dic)
+        # # Hanbiro_key_list, Hanbiro_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Hanbiro_idpw_lst_of_dic)
+        # # bizforms_key_list, bizforms_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.bizforms_idpw_lst_of_dic)
+        # # etaxkorea_key_list, etaxkorea_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.etaxkorea_idpw_lst_of_dic)
+        # # Thebill_key_list, Thebill_idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Thebill_idpw_lst_of_dic)
+        
+        # # self.st1_naver_id, self.st1_naver_pw = naver_idpw_lst[0][0], naver_idpw_lst[0][1]
+        # # self.st1_Hanbiro_id, self.st1_Hanbiro_pw = Hanbiro_idpw_lst[0][0], Hanbiro_idpw_lst[0][1]
+        # # self.st1_bizforms_id, self.st1_bizforms_pw = bizforms_idpw_lst[0][0], bizforms_idpw_lst[0][1]
+        # # self.st1_etaxkorea_id, self.st1_etaxkorea_pw = etaxkorea_idpw_lst[0][0], etaxkorea_idpw_lst[0][1]
+        # # self.st1_Thebill_id, self.st1_Thebill_pw = Thebill_idpw_lst[0][0], Thebill_idpw_lst[0][1]
+
+        # self.setup_web_Qwz(self.id_lst, self.pw_lst)        
         ##
         # id / pw 추가 입력을 위한 리스트(2)
         self.add_idpw = [None, None]   # [None for i in range(2)]
@@ -552,30 +587,49 @@ class Main(Ui_Main):
         self.le_cta_id.setPlaceholderText(nts_dict['secret']['세무사관리번호'])
         self.le_bs_id.setPlaceholderText(nts_dict['secret']['부서아이디'])
         self.le_delay_time.setPlaceholderText(str(nts_dict['secret']['딜레이타임']))
+
+    def cb_id_pw_list(self, idpw_lst_of_dic):
+        key_list, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(idpw_lst_of_dic)
+        if idpw_lst == False:   # len(list_of_list) == 0
+            _id_lst = ["ID입력요망"] 
+            _pw_lst = ["PW입력요망"]
+        else:
+            _id_lst = [ idpw[0] for idpw in idpw_lst ]
+            _pw_lst = [ idpw[0] for idpw in idpw_lst ]
+
+        return (_id_lst, _pw_lst)
     
-    def setup_web_idpw(self):
+    def setup_web_widgets(self, text):
+        idpw_lst_of_dic = self.text_map_WebLstDic[text]
+        id_lst, pw_lst = self.cb_id_pw_list(idpw_lst_of_dic)
+        id = id_lst[0]
+        pw = pw_lst[0]
         self.web_id.clear()
         self.web_pw.clear()
-        if self.web_cb.currentText() == "Naver":
-            self.web_id.setPlaceholderText(self.st1_naver_id)
-            self.web_pw.setPlaceholderText(self.st1_naver_pw)
-            self.web_id_cb.addItem(self.st1_naver_id)
-        elif self.web_cb.currentText() == "Hanbiro":
-            self.web_id.setPlaceholderText(self.st1_Hanbiro_id)
-            self.web_pw.setPlaceholderText(self.st1_Hanbiro_pw)
-            self.web_id_cb.addItem(self.st1_Hanbiro_id)
-        elif self.web_cb.currentText() == "bizforms":
-            self.web_id.setPlaceholderText(self.st1_bizforms_id)
-            self.web_pw.setPlaceholderText(self.st1_bizforms_pw)
-            self.web_id_cb.addItem(self.st1_bizforms_id)
-        elif self.web_cb.currentText() == "etaxkorea":
-            self.web_id.setPlaceholderText(self.st1_etaxkorea_id)
-            self.web_pw.setPlaceholderText(self.st1_etaxkorea_pw)
-            self.web_id_cb.addItem(self.st1_etaxkorea_id)
-        elif self.web_cb.currentText() == "TheBill":
-            self.web_id.setPlaceholderText(self.st1_Thebill_id)
-            self.web_pw.setPlaceholderText(self.st1_Thebill_pw)
-            self.web_id_cb.addItem(self.st1_Thebill_id)
+        self.web_id_cb.clear()
+        self.web_id_cb.addItems(id_lst)
+        self.web_id.setPlaceholderText(id)
+        self.web_pw.setPlaceholderText(pw)
+        # if self.web_cb.currentText() == "Naver":
+        #     self.web_id.setPlaceholderText(self.st1_naver_id)
+        #     self.web_pw.setPlaceholderText(self.st1_naver_pw)
+        #     self.web_id_cb.addItem(self.st1_naver_id)
+        # elif self.web_cb.currentText() == "Hanbiro":
+        #     self.web_id.setPlaceholderText(self.st1_Hanbiro_id)
+        #     self.web_pw.setPlaceholderText(self.st1_Hanbiro_pw)
+        #     self.web_id_cb.addItem(self.st1_Hanbiro_id)
+        # elif self.web_cb.currentText() == "bizforms":
+        #     self.web_id.setPlaceholderText(self.st1_bizforms_id)
+        #     self.web_pw.setPlaceholderText(self.st1_bizforms_pw)
+        #     self.web_id_cb.addItem(self.st1_bizforms_id)
+        # elif self.web_cb.currentText() == "etaxkorea":
+        #     self.web_id.setPlaceholderText(self.st1_etaxkorea_id)
+        #     self.web_pw.setPlaceholderText(self.st1_etaxkorea_pw)
+        #     self.web_id_cb.addItem(self.st1_etaxkorea_id)
+        # elif self.web_cb.currentText() == "TheBill":
+        #     self.web_id.setPlaceholderText(self.st1_Thebill_id)
+        #     self.web_pw.setPlaceholderText(self.st1_Thebill_pw)
+        #     self.web_id_cb.addItem(self.st1_Thebill_id)
         
 
     def setup_iftAdapter(self):
@@ -671,12 +725,21 @@ class Main(Ui_Main):
     # web Slot
     @pyqtSlot(str)
     def on_webgubun_activated(self, text):
+        self.web_id.setPlaceholderText("")    
+        self.web_pw.setPlaceholderText("")  
+        self.web_id_cb.clear()
+
         if text == "email":
             self.web_cb.clear()
             self.web_cb.addItems(self.email_lst)
+            text = self.web_cb.currentText()
+            self.setup_web_widgets(text)
         elif text == "websites":
             self.web_cb.clear()
             self.web_cb.addItems(self.website_lst)
+            text = self.web_cb.currentText()
+            self.setup_web_widgets(text)
+
         elif text == "banks":
             self.web_cb.clear()
             popup = Util.Errpop()    
@@ -689,66 +752,71 @@ class Main(Ui_Main):
         self.web_id.setPlaceholderText("")    
         self.web_pw.setPlaceholderText("")    
 
-        if text == "Naver":
-            if self.naver_idpw_lst_of_dic:   # len(list) > 0
-                key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.naver_idpw_lst_of_dic)
-                id_lst = [x[0] for x in idpw_lst]
-                self.web_id_cb.clear()
-                self.web_id_cb.addItems(id_lst)
-                self.web_id.setPlaceholderText(idpw_lst[0][0])    
-                self.web_pw.setPlaceholderText(idpw_lst[0][1])
-            else:
-                self.web_id_cb.clear()
-        elif text == "Hanbiro":
-            if self.Hanbiro_idpw_lst_of_dic:   # len(list) > 0
-                key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Hanbiro_idpw_lst_of_dic)
-                id_lst = [x[0] for x in idpw_lst]
-                self.web_id_cb.clear()
-                self.web_id_cb.addItems(id_lst)
-                self.web_id.setPlaceholderText(idpw_lst[0][0])    
-                self.web_pw.setPlaceholderText(idpw_lst[0][1])
-            else:
-                self.web_id_cb.clear()
-                print(">"*50,self.web_id.placeholderText())
-        elif text == "bizforms":
-            if self.bizforms_idpw_lst_of_dic:   # len(list) > 0
-                key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.bizforms_idpw_lst_of_dic)
-                id_lst = [x[0] for x in idpw_lst]
-                self.web_id_cb.clear()
-                self.web_id_cb.addItems(id_lst)
-                self.web_id.setPlaceholderText(idpw_lst[0][0])    
-                self.web_pw.setPlaceholderText(idpw_lst[0][1])
-            else:
-                self.web_id_cb.clear()
-        elif text == "etaxkorea":
-            if self.etaxkorea_idpw_lst_of_dic:   # len(list) > 0
-                key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.etaxkorea_idpw_lst_of_dic)
-                id_lst = [x[0] for x in idpw_lst]
-                self.web_id_cb.clear()
-                self.web_id_cb.addItems(id_lst)
-                self.web_id.setPlaceholderText(idpw_lst[0][0])    
-                self.web_pw.setPlaceholderText(idpw_lst[0][1])
-            else:
-                self.web_id_cb.clear()
-        elif text == "TheBill":
-            if self.Thebill_idpw_lst_of_dic:   # len(list) > 0
-                key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Thebill_idpw_lst_of_dic)
-                id_lst = [x[0] for x in idpw_lst]
-                self.web_id_cb.clear()
-                self.web_id_cb.addItems(id_lst)
-                self.web_id.setPlaceholderText(idpw_lst[0][0])    
-                self.web_pw.setPlaceholderText(idpw_lst[0][1])
-            else:
-                self.web_id_cb.clear()
+        self.setup_web_widgets(text)
+
+        # if text == "Naver":
+        #     if self.naver_idpw_lst_of_dic:   # len(list) > 0
+        #         key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.naver_idpw_lst_of_dic)
+        #         id_lst = [x[0] for x in idpw_lst]
+        #         self.web_id_cb.clear()
+        #         self.web_id_cb.addItems(id_lst)
+        #         self.web_id.setPlaceholderText(idpw_lst[0][0])    
+        #         self.web_pw.setPlaceholderText(idpw_lst[0][1])
+        #     else:
+        #         self.web_id_cb.clear()
+        # elif text == "Hanbiro":
+        #     if self.Hanbiro_idpw_lst_of_dic:   # len(list) > 0
+        #         key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Hanbiro_idpw_lst_of_dic)
+        #         id_lst = [x[0] for x in idpw_lst]
+        #         self.web_id_cb.clear()
+        #         self.web_id_cb.addItems(id_lst)
+        #         self.web_id.setPlaceholderText(idpw_lst[0][0])    
+        #         self.web_pw.setPlaceholderText(idpw_lst[0][1])
+        #     else:
+        #         self.web_id_cb.clear()
+        #         
+        # elif text == "bizforms":
+        #     if self.bizforms_idpw_lst_of_dic:   # len(list) > 0
+        #         key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.bizforms_idpw_lst_of_dic)
+        #         id_lst = [x[0] for x in idpw_lst]
+        #         self.web_id_cb.clear()
+        #         self.web_id_cb.addItems(id_lst)
+        #         self.web_id.setPlaceholderText(idpw_lst[0][0])    
+        #         self.web_pw.setPlaceholderText(idpw_lst[0][1])
+        #     else:
+        #         self.web_id_cb.clear()
+        # elif text == "etaxkorea":
+        #     if self.etaxkorea_idpw_lst_of_dic:   # len(list) > 0
+        #         key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.etaxkorea_idpw_lst_of_dic)
+        #         id_lst = [x[0] for x in idpw_lst]
+        #         self.web_id_cb.clear()
+        #         self.web_id_cb.addItems(id_lst)
+        #         self.web_id.setPlaceholderText(idpw_lst[0][0])    
+        #         self.web_pw.setPlaceholderText(idpw_lst[0][1])
+        #     else:
+        #         self.web_id_cb.clear()
+        # elif text == "TheBill":
+        #     if self.Thebill_idpw_lst_of_dic:   # len(list) > 0
+        #         key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(self.Thebill_idpw_lst_of_dic)
+        #         id_lst = [x[0] for x in idpw_lst]
+        #         self.web_id_cb.clear()
+        #         self.web_id_cb.addItems(id_lst)
+        #         self.web_id.setPlaceholderText(idpw_lst[0][0])    
+        #         self.web_pw.setPlaceholderText(idpw_lst[0][1])
+        #     else:
+        #         self.web_id_cb.clear()
                 
     @pyqtSlot(str)
     def on_webid_activated(self, text): 
         # text == self.web_id_cb.currentText()
         self.web_id.clear()
         self.web_pw.clear()
+        self.web_id.setPlaceholderText("")
+        self.web_pw.setPlaceholderText("")
+
         if self.web_cb.currentText() == "Naver":
             self.web_id.setPlaceholderText(text)    
-            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(web_dict['idpw']['naver'])
+            key_lst, idpw_lst = jsconverter.lstOFdic_to_tupKeysVals(web_dict['idpw']['Naver'])
             for id, pw in idpw_lst:
                 if id == text:
                     _pw = pw
@@ -794,7 +862,7 @@ class Main(Ui_Main):
             self.add_idpw.pop(0)
             self.add_idpw.insert(0, temp_id)
 
-            print("1>>",self.add_idpw)
+            print("web_id_changed >>",self.add_idpw)
 
     @pyqtSlot()
     def web_pw_changed(self):       
@@ -802,7 +870,7 @@ class Main(Ui_Main):
         if self.web_cb.currentText() == "Naver":
             self.add_idpw.pop(1)
             self.add_idpw.insert(1, temp_pw)
-            print("2>>", self.add_idpw)
+            print("web_pw_changed >>", self.add_idpw)
 
     def web_login_pretest(self):
         add_idpw_dic = dict()
@@ -840,7 +908,7 @@ class Main(Ui_Main):
     @pyqtSlot()
     def web_login_clicked(self):   # >>> web_login_pretest()로 분기
         is_idpw_flag, add_idpw_dic = self.web_login_pretest()
-        print("test>>> ", is_idpw_flag, add_idpw_dic)
+        print("web_login_clicked >>> ", is_idpw_flag, add_idpw_dic)
         if is_idpw_flag==True:
             user_id = add_idpw_dic['id']
             user_pw = add_idpw_dic['pw']
@@ -871,7 +939,7 @@ class Main(Ui_Main):
                             pop_idpw = idpw_lst.pop(idx)     # json file 순서교체를 위해
                             idpw_lst.insert(0,pop_idpw)      # json file 순서교체를 위해
                             self.naver_idpw_lst_of_dic = jsconverter.lstOFlst_to_lstOFdic(key_lst, idpw_lst)   #######
-                            web_dict['idpw']['naver'] = self.naver_idpw_lst_of_dic  
+                            web_dict['idpw']['Naver'] = self.naver_idpw_lst_of_dic  
                             jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
                             
 
@@ -882,7 +950,7 @@ class Main(Ui_Main):
                             pop_idpw = idpw_lst.pop(idx)     # json file 순서교체를 위해
                             idpw_lst.insert(0,pop_idpw)      # json file 순서교체를 위해
                             self.naver_idpw_lst_of_dic = jsconverter.lstOFlst_to_lstOFdic(key_lst, idpw_lst)   #######
-                            web_dict['idpw']['naver'] = self.naver_idpw_lst_of_dic  
+                            web_dict['idpw']['Naver'] = self.naver_idpw_lst_of_dic  
                             jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
 
                     else:                                        # 동일 id 없으면

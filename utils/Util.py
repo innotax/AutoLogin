@@ -147,8 +147,8 @@ class JsonConverter(object):
         if list_of_dict:
             key_list = list(list_of_dict[0].keys())
             list_of_list = [[dic[key] for key in list_of_dict[0].keys()] for dic in list_of_dict]
-            return (key_list, list_of_list)
-        return ([], [['ID입력요망', 'PW입력요망']])
+            return (key_list, list_of_list)  
+        return (False, False)
 
     def lstOFlst_to_lstOFdic(self, key_list, list_of_list):
         """ 이차원(이중) 리스트의 내부 리스트를 전달된 key_list로 딕셔너리로 변환후 리스트[딕셔너리] 반환

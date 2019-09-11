@@ -166,7 +166,7 @@ def get_web_dict():
     web_dict['email'] = ['Naver','Hanbiro','nate','daum','gmail']
     web_dict['websites'] = ['bizforms','etaxkorea','TheBill']
     
-    idpw['naver'] = []
+    idpw['Naver'] = []
     idpw['Hanbiro'] = []
     idpw['nate'] = []
     idpw['daum'] = []
