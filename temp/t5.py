@@ -1,65 +1,69 @@
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QPushButton, 
-    QSizePolicy, QLabel, QFontDialog, QApplication)
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QRegExp
 import sys
+# import numpy
+import pandas as pd
+from PyQt5.QtWidgets import QApplication, QTableView
+from PyQt5.QtCore import  Qt #QAbstractTableModel,
+from PyQt5 import QtCore
 
-class Example(QWidget):
-    
-    def __init__(self):
-        super().__init__()
-        
-        self.initUI()
-        
-        
-    def initUI(self):      
+df = pd.DataFrame({'a': ['Mary', 'Jim', 'John'],
+                   'b': [100, 200, 300],
+                   'c': ['a', 'b', 'c']})
 
-        vbox = QVBoxLayout()
+# class pandasModel(QAbstractTableModel):
 
-        btn = QPushButton('Dialog', self)
-        btn.setSizePolicy(QSizePolicy.Fixed,
-            QSizePolicy.Fixed)
-        
-        btn.move(20, 20)
+#     def __init__(self, data):
+#         QAbstractTableModel.__init__(self)
+#         self._data = data
 
-        vbox.addWidget(btn)
+#     def rowCount(self, parent=None):
+#         return self._data.shape[0]
 
-        connect_funcs = [self.showDialog, self.f1, self.f2, self.f3]
-        btn.clicked.connect(lambda x: x for x in connect_funcs)
-        
-        self.lbl = QLabel('Knowledge only matters', self)
-        self.lbl.move(130, 20)
+#     def columnCount(self, parnet=None):
+#         return self._data.shape[1]
 
-        vbox.addWidget(self.lbl)
-        self.setLayout(vbox)          
-        
-        self.setGeometry(300, 300, 250, 180)
-        self.setWindowTitle('Font dialog')
-        self.show()
-        
-        
-    def showDialog(self):
+#     def data(self, index, role=Qt.DisplayRole):
+#         if index.isValid():
+#             if role == Qt.DisplayRole:
+#                 return str(self._data.iloc[index.row(), index.column()])
+#         return None
 
-        font, ok = QFontDialog.getFont()
-        print(font,ok)
-        if ok:
-            self.lbl.setFont(font)
-    
-    @pyqtSlot()
-    def f1(): 
-        print('*'*10)
-    
-    @pyqtSlot()
-    def f2(): 
-        print('#'*20)
-    
-    @pyqtSlot()
-    def f3(): 
-        print('!'*30)
+#     def headerData(self, col, orientation, role):
+#         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
+#             return self._data.columns[col]
+#         return None
+class PandasModel(QtCore.QAbstractTableModel):
+    """
+    Class to populate a table view with a pandas dataframe
+    """
 
-        
-        
+    def __init__(self, data, parent=None):
+        QtCore.QAbstractTableModel.__init__(self, parent)
+        self._data = data
+
+    def rowCount(self, parent=None):
+        return self._data.shape[0]
+
+    def columnCount(self, parent=None):
+        return self._data.shape[1]
+
+    def data(self, index, role=QtCore.Qt.DisplayRole):
+        if index.isValid():
+            if role == QtCore.Qt.DisplayRole:
+                return str(self._data.iloc[index.row(), index.column()])
+        return None
+
+    def headerData(self, col, orientation, role):
+        if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
+            return self._data.columns[col]
+        if orientation == QtCore.Qt.Vertical and role == QtCore.Qt.DisplayRole:
+            return self._data.index[col]
+        return None
+
 if __name__ == '__main__':
-    
     app = QApplication(sys.argv)
-    ex = Example()
+    model = PandasModel(df)
+    view = QTableView()
+    view.setModel(model)
+    view.resize(800, 600)
+    view.show()
     sys.exit(app.exec_())

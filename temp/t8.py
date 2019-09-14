@@ -1,40 +1,67 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QComboBox
+import sys, json
+# import pandas as pd
+from PyQt5.QtWidgets import (QMainWindow, QApplication, QWidget, QTableWidget,QTableWidgetItem,QVBoxLayout,
+                            QCheckBox, QPushButton, QComboBox)
+from PyQt5 import Qt,QtCore
 
-
-class MyApp(QWidget):
-
+class TableWidget(QWidget):
     def __init__(self):
         super().__init__()
+        self.title = 'Checkbox in Table'
+        self.left = 0
+        self.top = 0
+        self.width = 640
+        self.height = 480        
+        self.numRow = 5
+        self.numCol = 5
 
         self.initUI()
-
+        
     def initUI(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)        
+        self.createTable()               
+        
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.tableWidget) 
+        self.btn = QPushButton("save")
+        self.layout.addWidget(self.btn)
+        self.setLayout(self.layout) 
 
-        self.lbl = QLabel('Option1', self)
-        self.lbl.move(50, 150)
-
-        cb = QComboBox(self)
-        cb.addItem('Option1')
-        cb.addItem('Option2')
-        cb.addItem('Option3')
-        cb.addItem('Option4')
-        cb.move(50, 50)
-
-        cb.activated[str].connect(self.onActivated)
-
-        self.setWindowTitle('QComboBox')
-        self.setGeometry(300, 300, 300, 200)
+        # Show widget
         self.show()
+     
 
-    def onActivated(self, text):
+    def createTable(self):       
+        self.tableWidget = QTableWidget()
+        self.tableWidget.setRowCount(self.numRow)        
+        self.tableWidget.setColumnCount(self.numCol)                
+        self.tableWidget.move(0,0)        
 
-        self.lbl.setText(text)
-        self.lbl.adjustSize()
+        self.InsertTable()
+   
 
+    def InsertTable(self):                        
+        self.checkBoxList = []
+        for i in range(self.numRow):
+            ckbox = QCheckBox()
+            self.checkBoxList.append(ckbox)
 
+        for i in range(self.numRow):                          
+            self.tableWidget.setCellWidget(i,0,self.checkBoxList[i]) 
+
+        self.comboBoxList = []
+        for i in range(self.numRow):
+            cbbox = QComboBox()
+            self.comboBoxList.append(cbbox)
+
+        for i in range(self.numRow):                          
+            self.tableWidget.setCellWidget(i,1,self.comboBoxList[i])                                    
+        
+        self.tableWidget.move(0,0)                 
+
+ 
 if __name__ == '__main__':
-
     app = QApplication(sys.argv)
-    ex = MyApp()
-    sys.exit(app.exec_())
+    ex = TableWidget()
+    sys.exit(app.exec_())  

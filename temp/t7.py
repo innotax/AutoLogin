@@ -1,31 +1,74 @@
-from selenium import webdriver
-# from selenium.webdriver.chrome.options import Options
-import os
+from PyQt5.QtCore import pyqtSlot, Qt
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+import random
 
-chrome_path = r"C:\Ataxtech\AutoLogin\loginAPP\driver\chromedriver"
-# chrome_option = Options()
-# chrome_option.add_argument("--headless")
-# chrome_option.add_argument("--window-size=1920*1080")
-# chrome_option.add_argument("disable-gpu")
-# chrome_option.add_argument("""user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4)
-#      AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36""")
+class MyTable(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
 
-# chrome_option.binary_location= r"C:\Users\taxkm\AppData\Local\Google\Chrome\User Data\PepperFlash\32.0.0.238\pepflashplayer.dll"
-# driver = webdriver.Chrome(executable_path=chrome_path,
-#                             chrome_options=chrome_option)
-# driver.execute_script("Object.defineProperty(navigator, 'languages', 
-#                       {get: function() {return ['ko-KR', 'ko']})")
-# driver.execute_script("Object.defineProperty(navigator, 'plugins', 
-#                       {get: function() {return[1, 2, 3, 4, 5]}})")
+        self.table = QTableWidget(parent)
+        self._mainwin = parent
+
+        self.__make_layout()
+        self.__make_table()
+    
+    def __make_table(self):
+        self.table.setSelectionBehavior(QTableView.SelectRows)
+        # self.table.setSelectionMode(QAbstractItemView.SingleSelection)
+
+        self.table.setColumnCount(5)
+        self.table.setRowCount(10)
+        self.table.setHorizontalHeaderLabels(["코드", "종목명"])
+        header_item = QTableWidgetItem("추가")
+        header_item.setBackground(Qt.red)  # 헤더 배경색 설정 --> app.setStyle() 설정해야만 작동한다.
+        self.table.setHorizontalHeaderItem(2, header_item)
 
 
-# 크롬 headless 모드 실행
-chrome_options = webdriver.ChromeOptions()
-# chrome_options.add_argument('headless')
-chrome_options.add_argument('--disable-gpu')
-chrome_options.add_argument('lang=ko_KR')
+        
+        
 
-driver = webdriver.Chrome(chrome_path, chrome_options=chrome_options)
-driver.implicitly_wait(3)
+    def __make_layout(self):
+        vox = QVBoxLayout()
+        
 
-driver.get('https://developer-ankiwoong.tistory.com/60')
+        # grid = QGridLayout()
+        # vox.addLayout(grid)
+        vox.addWidget(self.table)
+        hbox = QHBoxLayout()
+        flo = QFormLayout()
+        btn1 = QPushButton("All Del")
+        btn2 = QPushButton("All save")
+        hbox.addWidget(btn1)
+        hbox.addWidget(btn2)
+        flo.addRow("삭제 추가 저장", hbox)
+        vox.addLayout(flo)
+        self.setLayout(vox)
+
+        
+
+        
+        # grid.addWidget(btn1, 0, 1)
+        
+        # grid.addWidget(btn2, 0, 2)
+
+        
+
+class MyMain(QMainWindow):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        table = MyTable()
+
+        self.setCentralWidget(table)
+        self.statusbar = self.statusBar()
+
+
+if __name__ == "__main__":
+    import sys
+
+    app = QApplication(sys.argv)
+    app.setStyle(QStyleFactory.create('Fusion'))
+
+    w = MyMain()
+    w.show()
+    sys.exit(app.exec())
