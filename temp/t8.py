@@ -50,15 +50,15 @@ class TableWidget(QWidget):
         for i in range(self.numRow):                          
             self.tableWidget.setCellWidget(i,0,self.checkBoxList[i]) 
 
-        self.comboBoxList = []
-        for i in range(self.numRow):
-            cbbox = QComboBox()
-            self.comboBoxList.append(cbbox)
+        # self.comboBoxList = []
+        # for i in range(self.numRow):
+        #     cbbox = QComboBox()
+        #     self.comboBoxList.append(cbbox)
 
-        for i in range(self.numRow):                          
-            self.tableWidget.setCellWidget(i,1,self.comboBoxList[i])                                    
+        # for i in range(self.numRow):                          
+        #     self.tableWidget.setCellWidget(i,1,self.comboBoxList[i])                                    
         
-        self.tableWidget.move(0,0)                 
+        # self.tableWidget.move(0,0)                 
 
  
 if __name__ == '__main__':

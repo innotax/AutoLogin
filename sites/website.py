@@ -179,14 +179,14 @@ class Etaxkorea(MyChromeDriver):
         self.driver_utils = DriverUtils(self.driver)
         time.sleep(DELAY)
     
-    def login(self, user_id, user_pw):
-        self.driver.find_element_by_xpath('//*[@id="body"]/div[4]/div[1]/div/form/input[3]').clear()
-        self.driver.find_element_by_xpath('//*[@id="body"]/div[4]/div[1]/div/form/input[3]').send_keys(user_id)
+    def login(self, user_id, user_pw): 
+        self.driver.find_element_by_xpath('//*[@id="body"]/div[3]/div[1]/div/form/input[3]').clear()
+        self.driver.find_element_by_xpath('//*[@id="body"]/div[3]/div[1]/div/form/input[3]').send_keys(user_id)
         time.sleep(DELAY)
 
-        self.driver.find_element_by_xpath('//*[@id="body"]/div[4]/div[1]/div/form/input[4]').send_keys(user_pw)
+        self.driver.find_element_by_xpath('//*[@id="body"]/div[3]/div[1]/div/form/input[4]').send_keys(user_pw)
         time.sleep(DELAY)
-        self.driver.find_element_by_xpath('//*[@id="body"]/div[4]/div[1]/div/form/a/img').click()
+        self.driver.find_element_by_xpath('//*[@id="body"]/div[3]/div[1]/div/form/a/img').click()
 
 class TheBill(MyChromeDriver):
     def __init__(self, user_id, user_pw):
