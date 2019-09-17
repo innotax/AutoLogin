@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 import random
 
-'''https://freeprog.tistory.com/333
+''' https://freeprog.tistory.com/333
 '''
 
 class MyTable(QWidget):
@@ -32,8 +32,6 @@ class MyTable(QWidget):
         header_item = QTableWidgetItem("추가")
         header_item.setBackground(Qt.red)  # 헤더 배경색 설정 --> app.setStyle() 설정해야만 작동한다.
         self.table.setHorizontalHeaderItem(2, header_item)
-
-
 
         # cell 에 data 입력하기
         self.table.setItem(0, 0, QTableWidgetItem("000020"))
@@ -69,7 +67,7 @@ class MyTable(QWidget):
         mycom.currentTextChanged.connect(self.__mycom_text_changed)
 
     @pyqtSlot(int, int)
-    def __mycell_clicked(self, row, col):
+    def (self, row, col):
         cell = self.table.item(row, col)
         # print(cell)
 

@@ -936,13 +936,13 @@ class Main(Ui_Main):
         popup = Util.Errpop()    
         msg = "개발중...<br>comming soon..."
         popup.critical_pop(msg)
-
+    # 3. Signal connect Slot
     def make_connection(self, signal_emit_object):
         signal_emit_object.cta_id_changed_signal.connect(self.receive_cta_id)
         signal_emit_object.bs_id_changed_signal.connect(self.receive_bs_id)
         signal_emit_object.delay_time_changed_signal.connect(self.receive_delay_time)
 
-    
+    # 4. receive Signal
     @pyqtSlot(str)
     def receive_cta_id(self, txt):
         self.le_cta_id.setText(txt)
