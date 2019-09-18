@@ -14,6 +14,7 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from data import setdata, dictdata
 from sites import hometax, website
 from utils import Util, driverutil, iftutil
+from UI import websetUi
 
 # ===== Config =====
 # 변수의 스코프  https://umbum.tistory.com/823
@@ -445,6 +446,8 @@ class Ui_Main(QMainWindow):
 
 
 class Main(Ui_Main):
+    # 1. Signal obj
+    json_update_signal = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -540,7 +543,7 @@ class Main(Ui_Main):
         self.btn_web_login.clicked.connect(self.web_login_clicked)
         self.btn_web_set.clicked.connect(self.web_set_clicked)
 
-        self.show()
+        # self.show()
 
     def set_placeholder(self):
         self.le_cta_id.setPlaceholderText(nts_dict['secret']['세무사관리번호'])
@@ -654,6 +657,7 @@ class Main(Ui_Main):
     @pyqtSlot()
     def nts_set_clicked(self):       
         widget = SettingMenu()
+        # 5. Signal connecting Slot
         self.make_connection(widget)
         widget.exec_()
 
@@ -747,8 +751,6 @@ class Main(Ui_Main):
         self.web_id.setPlaceholderText("")
         self.web_id.setPlaceholderText(temp_id)
 
-        print("web_id_changed >>",self.add_idpw)
-
     @pyqtSlot()
     def web_pw_changed(self):       
         temp_pw = self.web_pw.text()
@@ -757,7 +759,6 @@ class Main(Ui_Main):
         self.web_pw.clear()
         self.web_pw.setPlaceholderText("")
         self.web_pw.setPlaceholderText(temp_pw)
-        print("web_pw_changed >>", self.add_idpw)
 
     def web_login_pretest(self):
         add_idpw_dic = dict()
@@ -766,7 +767,7 @@ class Main(Ui_Main):
             self.web_id.placeholderText() == "" or
             self.web_pw.placeholderText() == "PW입력요망" or
             self.web_pw.placeholderText() == ""):
-            print("1"*10)
+            
             return (False, False)
         # 2. id 입력했는데 pw 입력안한 경우
         elif ((self.add_idpw[0] != ( None or "" )) and
@@ -775,7 +776,7 @@ class Main(Ui_Main):
             popup = Util.Errpop()    
             msg = "<b>Password</b>를 입력 후 다시 로그인 해주세요!!!) "
             popup.critical_pop(msg)
-            print("2"*10)
+            
             return(False, False)
         # 3. pw 만입력 id placeholderText 있는 경우 
         elif ((self.add_idpw[0] == ( None or "" )) and
@@ -785,7 +786,7 @@ class Main(Ui_Main):
             new_pw = self.add_idpw[1]
             add_idpw_dic['id'] = new_id
             add_idpw_dic['pw'] = new_pw
-            print("3"*10, new_id, new_pw)
+          
             return (True, add_idpw_dic)
         # 4.
         elif (self.add_idpw[0] != None and self.add_idpw[1] != None and
@@ -794,7 +795,7 @@ class Main(Ui_Main):
             new_pw = self.add_idpw[1]
             add_idpw_dic['id'] = new_id
             add_idpw_dic['pw'] = new_pw
-            print("4"*10, new_id, new_pw)
+           
             return (True, add_idpw_dic)
 
         # 5. (id / pw 가 모두 바뀜) or (placeholderText 유효 id,pw 모두 안 바뀜) or (placeholderText 유효한 상황에서 id, pw 중 하나 바뀜)
@@ -807,7 +808,7 @@ class Main(Ui_Main):
             new_pw = self.web_pw.placeholderText()
             add_idpw_dic['id'] = new_id
             add_idpw_dic['pw'] = new_pw
-            print("5"*10, new_id, new_pw)
+         
             return (True, add_idpw_dic)
         # 6.
         else:
@@ -816,7 +817,7 @@ class Main(Ui_Main):
     @pyqtSlot()
     def web_login_clicked(self):   # >>> web_login_pretest()로 분기
         is_idpw_flag, add_idpw_dic = self.web_login_pretest()
-        print("web_login_clicked >>> ", is_idpw_flag, add_idpw_dic)
+        # print("web_login_clicked >>> ", is_idpw_flag, add_idpw_dic)
         if is_idpw_flag==True:
             user_id = add_idpw_dic['id']
             user_pw = add_idpw_dic['pw']
@@ -834,6 +835,8 @@ class Main(Ui_Main):
             if len(idpw_lst_of_dic)==0:
                 self.text_map_WebLstDic[select_website_str].insert(0, add_idpw_dic)  # 제일 앞으로
                 jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)                # update json file
+                # 2. Signal(json_update_signal) emit
+                self.json_update_signal.emit()
                 self.web_id_cb.clear()
                 self.web_id_cb.addItem(user_id)
             else:
@@ -925,28 +928,78 @@ class Main(Ui_Main):
                 web_dict['websites'].insert(0, pop_web_site)
 
             jsconverter.dict_to_json(web_dict, FULLPATH_WEB_JSON)   # update json file
+            # 2. Signal(json_update_signal) emit
+            self.json_update_signal.emit()
             ##
         else:
             popup = Util.Errpop()    
             msg = "<b>ID / PW</b>를 선택(입력)후 다시 로그인 해주세요!!!) "
             popup.critical_pop(msg)         
-                    
+
     @pyqtSlot()
     def web_set_clicked(self):       
-        popup = Util.Errpop()    
-        msg = "개발중...<br>comming soon..."
-        popup.critical_pop(msg)
+        # webset = websetUi.Ui_WebSetting()  #### 주의 이벤트루프에서 호출    
+        webset.show()
+        # 2. Signal(json_update_signal) emit
+        self.json_update_signal.emit()
+
     # 3. Signal connect Slot
     def make_connection(self, signal_emit_object):
         signal_emit_object.cta_id_changed_signal.connect(self.receive_cta_id)
         signal_emit_object.bs_id_changed_signal.connect(self.receive_bs_id)
         signal_emit_object.delay_time_changed_signal.connect(self.receive_delay_time)
+    
+    # 3. Signal(json_update_signal) connect Slot
+    def make_connection_json_update(self, signal_emit_object):
+        signal_emit_object.json_update_signal.connect(self.receive_json_update)
 
     # 4. receive Signal
     @pyqtSlot(str)
     def receive_cta_id(self, txt):
         self.le_cta_id.setText(txt)
         self.le_cta_id.setPlaceholderText(txt)
+
+    # 4. receive Signal(json_update_signal)
+    @pyqtSlot()
+    def receive_json_update(self):
+        self.update_json()
+        
+    def update_json(self):
+
+        with open(FULLPATH_WEB_JSON, encoding='utf-8') as fn:
+            web_dict = json.load(fn)
+        # mapping text : idpw_list_of_dic
+        self.text_map_WebLstDic = {
+                            "Naver": web_dict['idpw']['Naver'],
+                            "Hanbiro": web_dict['idpw']['Hanbiro'],
+                            "nate": web_dict['idpw']['nate'],
+                            "daum": web_dict['idpw']['daum'],
+                            "gmail": web_dict['idpw']['gmail'],
+                            "bizforms": web_dict['idpw']['bizforms'],
+                            "etaxkorea": web_dict['idpw']['etaxkorea'],
+                            "TheBill": web_dict['idpw']['TheBill']
+                            }
+        # web Item list
+        self.web_gubun_lst = web_dict['gubun']
+        self.email_lst = web_dict['email']
+        self.website_lst =  web_dict['websites']
+        # web combobox additems
+        self.web_gubun_cb.clear()                       # +++
+        self.web_gubun_cb.addItems(self.web_gubun_lst)
+        if self.web_gubun_cb.currentText() == "email":
+            self.web_cb.addItems(self.email_lst)
+            # Qwidget에 전달할 값 확보
+            text = self.web_cb.currentText()
+            self.setup_web_widgets(text)
+
+        elif self.web_gubun_cb.currentText() == "websites":
+            self.web_cb.addItems(self.website_lst)
+            # Qwidget에 전달할 값 확보
+            text = self.web_cb.currentText()
+            self.setup_web_widgets(text)
+        
+
+
 
     @pyqtSlot(str)
     def receive_bs_id(self, txt):
@@ -962,5 +1015,14 @@ class Main(Ui_Main):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     main = Main()
+    # ======== 5. Signal connect Slot : https://hoy.kr/36PrX
+    webset = websetUi.Ui_WebSetting()
+    model = websetUi.PandasModel()
+
+    webset.make_connection_view(model)    
+    webset.make_connection_json_update(main)
+    main.make_connection_json_update(webset)
+
+    main.show()
     sys.exit(app.exec_())
         

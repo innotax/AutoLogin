@@ -94,7 +94,7 @@ class Nts_Login:
             # 공인인증서 로그인 버튼 : 클릭 안될 때  http://bitly.kr/ckLhMIb  # 자바 명령어 실행
             elem = get_element(self.driver, self.cert_login_btn)           # .click()
             self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행
-            time.sleep(self.delay_time + 1)
+            time.sleep(self.delay_time + 3)
 
         # 부서아이디 유무
         elif self.bs_id !="":
@@ -119,12 +119,12 @@ class Nts_Login:
                 # time.sleep(self.delay_time + 1)
                 elem = get_element(self.driver, self.bs_id_login_btn)
                 self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행 http://bitly.kr/ckLhMIb 
-                time.sleep(self.delay_time + 1)
+                time.sleep(self.delay_time + 3)
         else:
             # 공인인증서 로그인 버튼 : 클릭 안될 때  http://bitly.kr/ckLhMIb  # 자바 명령어 실행
             elem = get_element(self.driver, self.cert_login_btn)           # .click()
             self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행 http://bitly.kr/ckLhMIb 
-            time.sleep(self.delay_time + 1)
+            time.sleep(self.delay_time + 3)
 
         # 공인인증서 영역
         elem = get_element(self.driver, self.cert_zone)
@@ -135,12 +135,12 @@ class Nts_Login:
         get_element(self.driver, self.cert_name_elem, attribute="title").click()
         # elem = get_element(self.driver, self.cert_name_elem, attribute="title")
         # self.driver.execute_script("arguments[0].click();", elem)      # 자바 명령어 실행 http://bitly.kr/ckLhMIb 
-        time.sleep(self.delay_time + 0.5)
+        time.sleep(self.delay_time + 1)
 
         # 인증서 비밀번호 입력 + 인증서 확인 버튼
         get_element(self.driver, self.cert_pw_elem).send_keys(self.cert_pw)
         get_element(self.driver, self.cert_confirm_btn).click()
-        time.sleep(self.delay_time + 0.5)
+        time.sleep(self.delay_time + 1)
 
         # 팝업창 (세무사관리번호 로그인)
         alert = self.driver.switch_to.alert  # print(alert.text)         

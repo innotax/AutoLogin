@@ -243,7 +243,7 @@ if __name__ == "__main__":
     # etaxkorea.login(etaxkorea.ID, etaxkorea.PW)
 
     id = 'ctajung47'
-    pw = 'daeho1260'
+    pw = 'innotax1260'
     theBill = TheBill(id, pw)
     theBill.login(theBill.ID, theBill.PW)
 
