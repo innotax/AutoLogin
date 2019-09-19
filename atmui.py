@@ -986,17 +986,25 @@ class Main(Ui_Main):
         self.website_lst =  web_dict['websites']
         # web combobox additems
         self.web_gubun_cb.clear()                       # +++
-        self.web_gubun_cb.addItems(self.web_gubun_lst)
+        self.web_gubun_cb.addItems(list(set(self.web_gubun_lst)))
         if self.web_gubun_cb.currentText() == "email":
             self.web_cb.clear()
+<<<<<<< HEAD
             self.web_cb.addItems(self.email_lst)
+=======
+            self.web_cb.addItems(list(set(self.email_lst)))
+>>>>>>> ce8c4133ecd4f41b3f7910d472f6955a46c762a2
             # Qwidget에 전달할 값 확보
             text = self.web_cb.currentText()
             self.setup_web_widgets(text)
 
         elif self.web_gubun_cb.currentText() == "websites":
             self.web_cb.clear()
+<<<<<<< HEAD
             self.web_cb.addItems(self.website_lst)
+=======
+            self.web_cb.addItems(list(set(self.website_lst)))
+>>>>>>> ce8c4133ecd4f41b3f7910d472f6955a46c762a2
             # Qwidget에 전달할 값 확보
             text = self.web_cb.currentText()
             self.setup_web_widgets(text)
