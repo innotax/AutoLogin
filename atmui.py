@@ -1,4 +1,5 @@
 import os, sys, time, json, zipfile, subprocess
+import pandas as pd
 
 import PyQt5
 # from PyQt5.Qt import QApplication
@@ -987,19 +988,19 @@ class Main(Ui_Main):
         self.web_gubun_cb.clear()                       # +++
         self.web_gubun_cb.addItems(self.web_gubun_lst)
         if self.web_gubun_cb.currentText() == "email":
+            self.web_cb.clear()
             self.web_cb.addItems(self.email_lst)
             # Qwidget에 전달할 값 확보
             text = self.web_cb.currentText()
             self.setup_web_widgets(text)
 
         elif self.web_gubun_cb.currentText() == "websites":
+            self.web_cb.clear()
             self.web_cb.addItems(self.website_lst)
             # Qwidget에 전달할 값 확보
             text = self.web_cb.currentText()
             self.setup_web_widgets(text)
         
-
-
 
     @pyqtSlot(str)
     def receive_bs_id(self, txt):
