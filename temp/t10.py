@@ -1,45 +1,21 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-import numpy as np
-import pandas as pd
-import sys, os, json
+import json
+import win32com.client
 
-# 상위폴더 내 파일 import  https://brownbears.tistory.com/296
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-from utils.pandasmodel import PandasModel, DataFrameModel
+iftCertdll = win32com.client.Dispatch("iftCoreEngine.iftGate")
+iftServicedll = win32com.client.Dispatch("iftWinExAdapter.clsAdapter")
 
 
-#============== 1. json to dic
-fulljs = r'C:\Ataxtech\ATT\Ver1.0\json\web.json'
+def cert_nm_pw():
+    # return 공인인증서 명칭 비밀번호
+    iftCertdll = win32com.client.Dispatch("iftCoreEngine.iftGate")
+    req_js_str = ""
+    js_str = iftCertdll.getUserCert(req_js_str)
+    dic = json.loads(js_str)
 
-with open(fulljs, encoding='utf-8') as fn:
-    dic = json.load(fn)                      # dic : dic_dic_lst_dic
-idpw_dic_lst_dic = dic['idpw']               # idpw_dic_lst_dic : dic_lst_dic
+    cert_nm = dic["cert_nm"]
+    cert_pw = dic["cert_pw"]
 
-# print("  1. >> type(idpw_dic_lst_dic) : ", type(idpw_dic_lst_dic), "="*100)
+    return (str(cert_nm), str(cert_pw))
 
-#============== 2. dic_lst_dic to Dataframe
-columns = ['website', 'id', 'pw']      # website : dic_lst_dic.keys() 컬럼
-web_id_pw = []
-for website in idpw_dic_lst_dic.keys():    
-    idpw_lst_dic = idpw_dic_lst_dic[website]
-    if idpw_lst_dic:
-        for d in idpw_lst_dic:
-            _id = d['id']
-            _pw = d['pw']
-            web_id_pw.append([website, _id, _pw])
-            continue
-        continue
-    web_id_pw.append([website, "", ""])        # id,pw 없는 사이트 관리 위해
-
-
-
-if __name__ == '__main__':
-    app = QtWidgets.QApplication(sys.argv)
-    # model = PandasModel(df)
-    model = PandasModel(web_id_pw)
-    # view = QtWidgets.QTableWidget()
-    view = QtWidgets.QTableView()
-    view.setModel(model)
-    view.resize(800, 600)
-    view.show()
-    sys.exit(app.exec_())
+js_str = cert_nm_pw()
+print(js_str)
